@@ -53,7 +53,9 @@ else :
 		// header they would be orphan closing tags, so only the footer is kept.
 		ob_start();
 		include $imedix_ku_footer;
-		echo preg_replace( '#^(?:\s|</(?:div|section|main)>|<!--.*?-->)+(?=<footer)#s', '', (string) ob_get_clean() ); // phpcs:ignore WordPress.Security.EscapeOutput -- theme markup.
+		// Same at the end: the part closes the theme's #wrap ("End wrap"), never opened here.
+		$imedix_ku_html = preg_replace( '#^(?:\s|</(?:div|section|main)>|<!--.*?-->)+(?=<footer)#s', '', (string) ob_get_clean() );
+		echo preg_replace( '#</div>\s*<!--\s*End wrap\s*-->\s*$#', '', (string) $imedix_ku_html ); // phpcs:ignore WordPress.Security.EscapeOutput -- theme markup.
 	}
 	get_footer();
 endif;

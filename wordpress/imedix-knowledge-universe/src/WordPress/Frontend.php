@@ -79,7 +79,10 @@ final class Frontend {
 	 * highlighting). Removed on this template only; jQuery, Bootstrap and the
 	 * menu script stay because the theme footer may rely on them.
 	 */
-	private const UNUSED_SCRIPTS = '#/(themes/himer/js/(html5|modernizr|scrollbar|theia|owl|matchHeight|prettyPhoto|tabs|tipsy|isotope)\.js|plugins/highlighting-code-block/|wp-includes/js/clipboard(\.min)?\.js)#';
+	private const UNUSED_SCRIPTS = '#/(themes/himer/js/(html5|modernizr|scrollbar|theia|owl|matchHeight|prettyPhoto|tabs|tipsy|isotope)\.js|plugins/highlighting-code-block/|plugins/contact-form-7/|wp-includes/js/clipboard(\.min)?\.js)#';
+
+	/** Plugin styles with nothing to style on this page (code highlighting, contact forms). Matched by handle or source. */
+	private const UNUSED_STYLES = '#^hcb-|^contact-form-7|/plugins/(highlighting-code-block|contact-form-7)/#';
 
 	public static function trim_theme_assets(): void {
 		if ( ! is_singular( 'page' ) || self::TEMPLATE !== get_page_template_slug( get_queried_object_id() ) ) {
@@ -91,6 +94,13 @@ final class Frontend {
 			$src = (string) ( $scripts->registered[ $handle ]->src ?? '' );
 			if ( '' !== $src && preg_match( $pattern, $src ) ) {
 				wp_dequeue_script( $handle );
+			}
+		}
+		$styles = wp_styles();
+		foreach ( (array) $styles->queue as $handle ) {
+			$src = (string) ( $styles->registered[ $handle ]->src ?? '' );
+			if ( preg_match( self::UNUSED_STYLES, (string) $handle ) || ( '' !== $src && preg_match( self::UNUSED_STYLES, $src ) ) ) {
+				wp_dequeue_style( $handle );
 			}
 		}
 	}
