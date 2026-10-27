@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'claude/**']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_sqlite, zip
+          tools: wp-cli
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: PHP lint
+        run: find wordpress bin tests -name '*.php' -print0 | xargs -0 -n1 php -l > /dev/null
+      - name: PHP core tests
+        run: php tests/php/run.php
+
+      - name: Front-end install
+        working-directory: frontend
+        run: npm ci --no-audit --no-fund
+      - name: Fixture graph from tracker snapshot
+        working-directory: frontend
+        run: npm run fixture
+      - name: Typecheck, unit tests, build
+        working-directory: frontend
+        run: |
+          npm run typecheck
+          npm test
+          npm run build
+
+      - name: Browser tests
+        run: |
+          npm install -g playwright@1
+          playwright install --with-deps chromium
+          php bin/render-preview.php --mode=dist --news-fixture
+          NODE_PATH=$(npm root -g) node tests/e2e/run.mjs build/screenshots
+
+      - name: WordPress integration (WordPress 6.5 + SQLite)
+        run: |
+          curl -sSL -o /tmp/wp.zip https://wordpress.org/wordpress-6.5.5.zip
+          curl -sSL -o /tmp/sqlite.zip https://downloads.wordpress.org/plugin/sqlite-database-integration.zip
+          mkdir -p /tmp/wpz && unzip -q /tmp/wp.zip -d /tmp/wpz && (cd /tmp/wpz/wordpress && zip -qr /tmp/wp-flat.zip .)
+          WP_ZIP=/tmp/wp-flat.zip SQLITE_ZIP=/tmp/sqlite.zip WP_CLI=$(which wp) tests/wordpress/run.sh
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: screenshots
+          path: build/screenshots

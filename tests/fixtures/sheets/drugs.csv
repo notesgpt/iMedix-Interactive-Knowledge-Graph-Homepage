@@ -1,0 +1,858 @@
+#,Drug slug,URL,Status,Batch,Note (Verified = standard markers on live site + work recorded in project sessions),Completed on
+1,abacavir,https://www.imedix.com/drugs/abacavir/,Completed,,Verified,
+2,abacavir-lamivudine,https://www.imedix.com/drugs/abacavir-lamivudine/,Completed,,Verified,
+3,abacavir-lamivudine-zidovudine,https://www.imedix.com/drugs/abacavir-lamivudine-zidovudine/,Completed,,Verified,
+4,abanatuss-ped,https://www.imedix.com/drugs/abanatuss-ped/,Pending,,,
+5,abilify,https://www.imedix.com/drugs/abilify/,Pending,Depression,,
+6,absorica,https://www.imedix.com/drugs/absorica/,Pending,,,
+7,accupril,https://www.imedix.com/drugs/accupril/,Retired,,"301 -> /drugs/quinapril-hcl/ (2026-10-20; Accupril NDA discontinued, merged into generic page; post set to draft)",2026-10-20
+8,accuretic,https://www.imedix.com/drugs/accuretic/,Retired,,"301 -> /drugs/quinapril-hydrochlorothiazide/ (2026-10-20; Accuretic NDA discontinued, merged into generic page; post set to draft)",2026-10-20
+9,accutane,https://www.imedix.com/drugs/accutane/,Pending,,,
+10,acebutolol-hcl,https://www.imedix.com/drugs/acebutolol-hcl/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): Sectral discontinued; full rewrite from generic acebutolol label (ANI 2025-11); renal dose-cut angle; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+11,aceon,https://www.imedix.com/drugs/aceon/,Completed,,"BP rebuild 2026-10-22 (v3 model, v6.21): Aceon discontinued; full rewrite from generic perindopril label (Aurobindo ANDA 079070, 2024-03) incl. EUROPA; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-22
+12,aciphex,https://www.imedix.com/drugs/aciphex/,Pending,,,
+13,acitretin,https://www.imedix.com/drugs/acitretin/,Pending,,,
+14,acne-cleansing-bar,https://www.imedix.com/drugs/acne-cleansing-bar/,Pending,,,
+15,acticlate,https://www.imedix.com/drugs/acticlate/,Completed,,Verified,
+16,actidogesic,https://www.imedix.com/drugs/actidogesic/,Retired,Batch B - Analgesics,301 -> /drugs/tylenol/ (store-brand clone; post set to draft),2026-10-18
+17,actidom-dmx,https://www.imedix.com/drugs/actidom-dmx/,Pending,,,
+18,actigall-ursodiol,https://www.imedix.com/drugs/actigall-ursodiol/,Pending,,,
+19,activella,https://www.imedix.com/drugs/activella/,Pending,,,
+20,actos,https://www.imedix.com/drugs/actos/,Completed,Diabetes,"Diabetes rebuild 2026-10-23 (v6.21): legacy page rewritten from Actos PI (Takeda NDA 021073, 2025-03); PROactive fractures / bladder cancer (13-y no difference) / heart failure angle; FAERS host (pioglitazone); reviewer null; audit 0 errors / 0 warnings; live-verified",2026-10-23
+21,acyclovir-400-mg,https://www.imedix.com/drugs/acyclovir-400-mg/,Completed,,Verified,
+22,adalat,https://www.imedix.com/drugs/adalat/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-21 (v3 model, v6.21): Adalat caps + Adalat CC both discontinued; full rewrite from generic nifedipine ER label (Oceanside ANDA 075269, 2026-02) + Procardia caps label; FAERS anchor -> procardia; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+23,adderall,https://www.imedix.com/drugs/adderall/,Pending,,,
+24,addyi,https://www.imedix.com/drugs/addyi/,Completed,,Verified,
+25,adefovir-dipivoxil,https://www.imedix.com/drugs/adefovir-dipivoxil/,Pending,,,
+26,advate-vial,https://www.imedix.com/drugs/advate-vial/,Pending,Batch A - Cardiovascular,,
+27,aftera,https://www.imedix.com/drugs/aftera/,Completed,,Verified,
+28,aimovig-autoinjector,https://www.imedix.com/drugs/aimovig-autoinjector/,Completed,Batch B - Analgesics,Verified,2026-09-28
+29,akynzeo,https://www.imedix.com/drugs/akynzeo/,Pending,,,
+30,alavert,https://www.imedix.com/drugs/alavert/,Completed,,Verified,
+31,albendazole,https://www.imedix.com/drugs/albendazole/,Completed,,Verified,
+32,albenza,https://www.imedix.com/drugs/albenza/,Pending,,,
+33,aldactazide,https://www.imedix.com/drugs/aldactazide/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from spironolactone/HCTZ label (Aldactazide NDA, Prasco 2026-02) + Aldactone PI + RALES; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+34,aldactone,https://www.imedix.com/drugs/aldactone/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Aldactone PI (Pfizer 2025-11) + RALES NEJM 1999; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+35,alertness-aid,https://www.imedix.com/drugs/alertness-aid/,Retired,,301 -> /drugs/vivarin/ (store-brand clone; post set to draft),2026-10-18
+36,alesse,https://www.imedix.com/drugs/alesse/,Completed,,Verified,
+37,alinia,https://www.imedix.com/drugs/alinia/,Pending,,,
+38,alka-seltzer-plus-d,https://www.imedix.com/drugs/alka-seltzer-plus-d/,Retired,,410 (no current label for the -D product; post set to draft),2026-10-18
+39,allegra,https://www.imedix.com/drugs/allegra/,Pending,,,
+40,aller-chlor,https://www.imedix.com/drugs/aller-chlor/,Completed,,Verified,
+41,alli,https://www.imedix.com/drugs/alli/,Pending,,,
+42,alogliptin,https://www.imedix.com/drugs/alogliptin/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Nesina PI (Takeda NDA 022271, 2025-02) and republished; EXAMINE 5,380 (MACE 11.3 vs 11.8; HF hosp 3.9 vs 3.3) / kidney dosing / liver failure / generics only tentative angle; cats Diabetes added; FAERS host (alogliptin 3,765); reviewer null; audit 0 errors, 1 FAQ heuristic warning",2026-10-24
+43,alogliptin-pioglitazone,https://www.imedix.com/drugs/alogliptin-pioglitazone/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Oseni PI (Takeda NDA 022426, 2025-02) and republished; HbA1c -1.7 vs -1.0/-1.2 / boxed HF / liver tests / CrCl<30 not appropriate angle; FAERS anchors -> alogliptin + actos; reviewer null; audit 0/0 after fixes (stub warning, FAQ name). Link from actos restored",2026-10-24
+44,alprazolam,https://www.imedix.com/drugs/alprazolam/,Pending,,,
+45,alprazolam-intensol,https://www.imedix.com/drugs/alprazolam-intensol/,Pending,,,
+46,alprazolam-odt,https://www.imedix.com/drugs/alprazolam-odt/,Pending,,,
+47,alprolix-vial,https://www.imedix.com/drugs/alprolix-vial/,Pending,Batch A - Cardiovascular,,
+48,altace,https://www.imedix.com/drugs/altace/,Retired,,"301 -> /drugs/ramipril/ (2026-10-20; Altace NDAs discontinued, merged into generic page; post set to draft)",2026-10-20
+49,altipres,https://www.imedix.com/drugs/altipres/,Pending,Batch A - Cardiovascular,,
+50,altipres-pediatric,https://www.imedix.com/drugs/altipres-pediatric/,Pending,Batch A - Cardiovascular,,
+51,amabelz,https://www.imedix.com/drugs/amabelz/,Pending,,,
+52,amitiza,https://www.imedix.com/drugs/amitiza/,Pending,,,
+53,amitriptyline,https://www.imedix.com/drugs/amitriptyline/,Pending,Depression,,
+54,amlodipine-besylate,https://www.imedix.com/drugs/amlodipine-besylate/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Norvasc PI (Viatris 2023-02) as RLD; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+55,amoxil,https://www.imedix.com/drugs/amoxil/,Completed,,Verified,
+56,amphetamine-sulfate,https://www.imedix.com/drugs/amphetamine-sulfate/,Pending,,,
+57,ampicillin,https://www.imedix.com/drugs/ampicillin/,Completed,,Verified,
+58,antitussive-dm,https://www.imedix.com/drugs/antitussive-dm/,Pending,,,
+59,apcalis-sx,https://www.imedix.com/drugs/apcalis-sx/,Completed,,Verified,
+60,apidra-vial,https://www.imedix.com/drugs/apidra-vial/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Apidra PI (Sanofi BLA 021629, 2025-11) and republished; rapid-acting mealtime insulin glulisine; SC/pump/IV; T1D vs lispro equal HbA1c, T2D -0.5 vs -0.3 regular; peds from 4y; FAERS host (insulin glulisine 10,108); links to humalog-vial/lantus-vial removed until those pages are republished; reviewer null; audit 0/0",2026-10-24
+61,apixaban-tablet,https://www.imedix.com/drugs/apixaban-tablet/,Completed,,Verified,
+62,aprepitant,https://www.imedix.com/drugs/aprepitant/,Pending,,,
+63,aranelle,https://www.imedix.com/drugs/aranelle/,Pending,,,
+64,arimidex,https://www.imedix.com/drugs/arimidex/,Pending,,,
+65,armour-thyroid,https://www.imedix.com/drugs/armour-thyroid/,Pending,,,
+66,aromasin,https://www.imedix.com/drugs/aromasin/,Pending,,,
+67,asa-butalb-caffeine-codeine,https://www.imedix.com/drugs/asa-butalb-caffeine-codeine/,Completed,Batch B - Analgesics,Verified,2026-09-28
+68,aspirin-ec,https://www.imedix.com/drugs/aspirin-ec/,Pending,Batch B - Analgesics,,
+69,astelin,https://www.imedix.com/drugs/astelin/,Pending,,,
+70,astralean,https://www.imedix.com/drugs/astralean/,Pending,,,
+71,atacand,https://www.imedix.com/drugs/atacand/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Atacand PI (ANI 2025-12); CHARM angle; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+72,atarax,https://www.imedix.com/drugs/atarax/,Pending,,"Audit 2026-10-18: page has standard blocks but only 3 references, reviewer 8232, review date 2026-09-05 - not counted as completed; needs remediation",
+73,atenolol-chlorthalidone,https://www.imedix.com/drugs/atenolol-chlorthalidone/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.20): Tenoretic discontinued; full rewrite from generic atenolol/chlorthalidone label (Marlex ANDA 215560, 2025-09); FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+74,ativan-vial,https://www.imedix.com/drugs/ativan-vial/,Pending,,,
+75,atomoxetine-capsule,https://www.imedix.com/drugs/atomoxetine-capsule/,Pending,,,
+76,atorvastatin-oral,https://www.imedix.com/drugs/atorvastatin-oral/,Pending,,,
+77,atripla,https://www.imedix.com/drugs/atripla/,Completed,,Verified,
+78,aubra-eq,https://www.imedix.com/drugs/aubra-eq/,Completed,,Verified,
+79,augmentin,https://www.imedix.com/drugs/augmentin/,Completed,,Verified,
+80,avana,https://www.imedix.com/drugs/avana/,Completed,,Verified,
+81,avatrombopag-tablet,https://www.imedix.com/drugs/avatrombopag-tablet/,Pending,Batch A - Cardiovascular,,
+82,aviane,https://www.imedix.com/drugs/aviane/,Completed,,Verified,
+83,avodart,https://www.imedix.com/drugs/avodart/,Pending,,,
+84,awake,https://www.imedix.com/drugs/awake/,Retired,,301 -> /drugs/vivarin/ (store-brand clone; post set to draft),2026-10-18
+85,aygestin,https://www.imedix.com/drugs/aygestin/,Pending,,,
+86,ayurslim,https://www.imedix.com/drugs/ayurslim/,Pending,,,
+87,ayvakit,https://www.imedix.com/drugs/ayvakit/,Pending,,,
+88,azasan,https://www.imedix.com/drugs/azasan/,Pending,,,
+89,azilect,https://www.imedix.com/drugs/azilect/,Pending,,,
+90,azithromycin,https://www.imedix.com/drugs/azithromycin/,Completed,,Verified,
+91,azor,https://www.imedix.com/drugs/azor/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Azor PI 2023-07; audit v2 0 errors / 0 warnings; live-verified",2026-10-20
+92,bactrim-ds,https://www.imedix.com/drugs/bactrim-ds/,Completed,,Verified,
+93,bal-care-dha-essential,https://www.imedix.com/drugs/bal-care-dha-essential/,Pending,,,
+94,balsalazide-disodium,https://www.imedix.com/drugs/balsalazide-disodium/,Pending,,,
+95,balziva,https://www.imedix.com/drugs/balziva/,Pending,,,
+96,belbuca-film-medicated,https://www.imedix.com/drugs/belbuca-film-medicated/,Completed,Batch B - Analgesics,Verified,2026-09-28
+97,belsomra,https://www.imedix.com/drugs/belsomra/,Pending,,,
+98,benazepril-hydrochlorothiazide,https://www.imedix.com/drugs/benazepril-hydrochlorothiazide/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-22 (v3 model, v6.21): page had empty product_info; full rewrite from Lotensin HCT label (Validus NDA 020033, 2026-02); not-initial-therapy angle; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-22
+99,benicar,https://www.imedix.com/drugs/benicar/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite, angle 2013 FDA enteropathy DSC; FAERS anchor -> olmesartan-medoxomil; audit v2 0 errors / 0 warnings; live-verified",2026-10-20
+100,benzepro-cleanser,https://www.imedix.com/drugs/benzepro-cleanser/,Pending,,,
+101,benzonatate,https://www.imedix.com/drugs/benzonatate/,Pending,,,
+102,benzphetamine-hcl,https://www.imedix.com/drugs/benzphetamine-hcl/,Pending,,,
+103,benztropine-mesylate,https://www.imedix.com/drugs/benztropine-mesylate/,Pending,,,
+104,betapace,https://www.imedix.com/drugs/betapace/,Pending,Batch A - Cardiovascular,,
+105,betaxolol-hcl,https://www.imedix.com/drugs/betaxolol-hcl/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.20): Kerlone discontinued; full rewrite from generic betaxolol labels (KVK 2024-04 + PuraCap AE table); oral-only FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+106,bethanechol-chloride,https://www.imedix.com/drugs/bethanechol-chloride/,Pending,,,
+107,biaxin,https://www.imedix.com/drugs/biaxin/,Completed,,Verified,
+108,bicalutamide,https://www.imedix.com/drugs/bicalutamide/,Pending,,,
+109,bijuva,https://www.imedix.com/drugs/bijuva/,Completed,,Verified,
+110,bimat,https://www.imedix.com/drugs/bimat/,Pending,,,
+111,bimatoprost-drops,https://www.imedix.com/drugs/bimatoprost-drops/,Pending,Batch A - Cardiovascular,,
+112,binosto,https://www.imedix.com/drugs/binosto/,Pending,,,
+113,bionel-pediatric,https://www.imedix.com/drugs/bionel-pediatric/,Retired,,301 -> /drugs/altipres-pediatric/ (no current FDA label; post set to draft),2026-10-18
+114,bismuth,https://www.imedix.com/drugs/bismuth/,Retired,,301 -> /drugs/bismuth-subsalicylate/ (generic duplicate; post set to draft),2026-10-18
+115,bismuth-subsalicylate,https://www.imedix.com/drugs/bismuth-subsalicylate/,Pending,,,
+116,bisoprolol-hydrochlorothiazide,https://www.imedix.com/drugs/bisoprolol-hydrochlorothiazide/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.20): full rewrite from generic bisoprolol/HCTZ label (ANI ANDA 215562, 2026-08); initial-therapy angle; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+117,blisovi-fe,https://www.imedix.com/drugs/blisovi-fe/,Completed,,Verified,
+118,boniva,https://www.imedix.com/drugs/boniva/,Pending,,,
+119,bonjesta,https://www.imedix.com/drugs/bonjesta/,Pending,,,
+120,bosulif,https://www.imedix.com/drugs/bosulif/,Pending,,,
+121,bromocriptine-mesylate,https://www.imedix.com/drugs/bromocriptine-mesylate/,Completed,Diabetes,"Rebuilt 2026-10-24 (v6.22) as the GENERIC bromocriptine substance page: old text wrongly said generic treats T2D; label ANI NDA 017962 rev 2026-07 = hyperprolactinemia, prolactin-secreting adenomas (11+), acromegaly, Parkinson's; echocardiogram before treatment (valvulopathy), no lactation suppression; diabetes product = Cycloset (own page, linked); title -> 'Bromocriptine'; reviewer emptied; cats kept [223,267,274] (not Diabetes); FAERS host (bromocriptine 646 reports); audit 0/0",2026-10-24
+122,bronkids,https://www.imedix.com/drugs/bronkids/,Pending,,,
+123,budesonide-oral,https://www.imedix.com/drugs/budesonide-oral/,Pending,,,
+124,bumetanide-vial,https://www.imedix.com/drugs/bumetanide-vial/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-21 (v3 model, v6.21): full rewrite from generic bumetanide injection label (Sagent ANDA 074441, 2026-07); Bumex inj. discontinued, Bumex tabs + Enbumyst nasal Rx; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+125,butalbital-aspirin-caffeine,https://www.imedix.com/drugs/butalbital-aspirin-caffeine/,Completed,Batch B - Analgesics,Verified,2026-09-28
+126,candesartan-hydrochlorothiazid,https://www.imedix.com/drugs/candesartan-hydrochlorothiazid/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Atacand HCT label (ANI 2025-12); audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+127,carbamazepine,https://www.imedix.com/drugs/carbamazepine/,Pending,,,
+128,carbidopa,https://www.imedix.com/drugs/carbidopa/,Pending,,,
+129,cardizem-cd,https://www.imedix.com/drugs/cardizem-cd/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Cardizem CD label 2025-12; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-20
+130,cardura,https://www.imedix.com/drugs/cardura/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.21): full rewrite from Cardura PI (Viatris 2023-10) + Cardura XL PI + ALLHAT JAMA 2000; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+131,careprost,https://www.imedix.com/drugs/careprost/,Pending,,,
+132,carisoprodol-compound,https://www.imedix.com/drugs/carisoprodol-compound/,Pending,Batch B - Analgesics,,
+133,carisoprodol-compound-codeine,https://www.imedix.com/drugs/carisoprodol-compound-codeine/,Pending,Batch B - Analgesics,,
+134,casodex,https://www.imedix.com/drugs/casodex/,Pending,,,
+135,caverta,https://www.imedix.com/drugs/caverta/,Completed,,Verified,
+136,celebrex,https://www.imedix.com/drugs/celebrex/,Completed,Batch B - Analgesics,Verified,2026-09-28
+137,celecoxib,https://www.imedix.com/drugs/celecoxib/,Completed,Batch B - Analgesics,Verified,2026-09-28
+138,cenforce,https://www.imedix.com/drugs/cenforce/,Completed,,Verified,
+139,cenforce-d,https://www.imedix.com/drugs/cenforce-d/,Completed,,Verified,
+140,cenforce-professional,https://www.imedix.com/drugs/cenforce-professional/,Completed,,Verified,
+141,centrum-men,https://www.imedix.com/drugs/centrum-men/,Pending,,,
+142,centrum-silver-women,https://www.imedix.com/drugs/centrum-silver-women/,Pending,,,
+143,cerdelga,https://www.imedix.com/drugs/cerdelga/,Pending,,,
+144,chateal,https://www.imedix.com/drugs/chateal/,Completed,,Verified,
+145,chateal-eq,https://www.imedix.com/drugs/chateal-eq/,Completed,,Verified,
+146,childrens-mapap,https://www.imedix.com/drugs/childrens-mapap/,Pending,Batch B - Analgesics,,
+147,childrens-mucus-relief,https://www.imedix.com/drugs/childrens-mucus-relief/,Pending,,,
+148,childrens-multi-symptom-cold,https://www.imedix.com/drugs/childrens-multi-symptom-cold/,Pending,,,
+149,chlordiazepoxide-clidinium,https://www.imedix.com/drugs/chlordiazepoxide-clidinium/,Pending,,,
+150,chlorpromazine-hcl,https://www.imedix.com/drugs/chlorpromazine-hcl/,Pending,,,
+151,cialis,https://www.imedix.com/drugs/cialis/,Completed,,Verified,
+152,cialis-daily,https://www.imedix.com/drugs/cialis-daily/,Completed,,Verified,
+153,cialis-professional,https://www.imedix.com/drugs/cialis-professional/,Completed,,Verified,
+154,cialis-soft,https://www.imedix.com/drugs/cialis-soft/,Completed,,Verified,
+155,cialis-sublingual,https://www.imedix.com/drugs/cialis-sublingual/,Completed,,Verified,
+156,cialis-super-active,https://www.imedix.com/drugs/cialis-super-active/,Completed,,Verified,
+157,cilostazol,https://www.imedix.com/drugs/cilostazol/,Pending,Batch A - Cardiovascular,,
+158,cipro,https://www.imedix.com/drugs/cipro/,Completed,,Verified,
+159,citranatal-b-calm,https://www.imedix.com/drugs/citranatal-b-calm/,Pending,,,
+160,clobex-shampoo,https://www.imedix.com/drugs/clobex-shampoo/,Pending,,,
+161,clomid,https://www.imedix.com/drugs/clomid/,Pending,,,
+162,clonidine,https://www.imedix.com/drugs/clonidine/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.21): Catapres tabs discontinued; full rewrite from generic clonidine tablets label (ANDA 091368, 2026-08); withdrawal angle; Javadin/Qlonilik oral solutions noted; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+163,colchicine,https://www.imedix.com/drugs/colchicine/,Pending,,,
+164,colestid,https://www.imedix.com/drugs/colestid/,Pending,,,
+165,colestipol-hcl,https://www.imedix.com/drugs/colestipol-hcl/,Pending,,,
+166,contractubex,https://www.imedix.com/drugs/contractubex/,Pending,,,
+167,copiktra,https://www.imedix.com/drugs/copiktra/,Pending,,,
+168,coreg,https://www.imedix.com/drugs/coreg/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Coreg PI (Waylis 2026-07) + Coreg CR PI; COPERNICUS/CAPRICORN; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+169,corgard,https://www.imedix.com/drugs/corgard/,Retired,,"301 -> /drugs/nadolol/ (2026-10-20; Corgard NDA discontinued, merged into generic page; post set to draft)",2026-10-20
+170,cortef,https://www.imedix.com/drugs/cortef/,Completed,,Verified,
+171,cortenema-enema,https://www.imedix.com/drugs/cortenema-enema/,Pending,,,
+172,cosopt-drops,https://www.imedix.com/drugs/cosopt-drops/,Completed,,Verified,
+173,cozaar,https://www.imedix.com/drugs/cozaar/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Cozaar PI (Organon 2026-01); angle LVH stroke + RENAAL; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+174,cyclobenzaprine-hcl,https://www.imedix.com/drugs/cyclobenzaprine-hcl/,Pending,,,
+175,cycrin,https://www.imedix.com/drugs/cycrin/,Retired,,"301 -> /drugs/provera/ (empty page, no current label; 4 internal links repointed; post set to draft)",2026-10-18
+176,cytotec,https://www.imedix.com/drugs/cytotec/,Pending,,,
+177,daklinza,https://www.imedix.com/drugs/daklinza/,Completed,,Verified,
+178,danazol,https://www.imedix.com/drugs/danazol/,Pending,,,
+179,decadron,https://www.imedix.com/drugs/decadron/,Pending,,,
+180,deltasone,https://www.imedix.com/drugs/deltasone/,Pending,,,
+181,demadex,https://www.imedix.com/drugs/demadex/,Completed,,Verified,
+182,depakote-er,https://www.imedix.com/drugs/depakote-er/,Pending,,,
+183,despec-dm,https://www.imedix.com/drugs/despec-dm/,Retired,,301 -> /drugs/mucinex-dm/ (no current FDA label; post set to draft),2026-10-18
+184,desyrel-trazodone,https://www.imedix.com/drugs/desyrel-trazodone/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 10572, title 'Desyrel': discontinued-brand page (s5.0.1, NOT redirected); Desyrel NDA 018207 (1981-12-24) discontinued; source = Apotex generic trazodone label + Drugs@FDA; pivot = what a Desyrel prescription means today, inpatient AE data; FAERS anchor -> trazodone-hcl; WAF silently blocked FAQ save (online-purchase FAQ) - replaced, FAQs verified via REST; audit 0/0; verified editor + live",2026-10-26
+185,detrol-la,https://www.imedix.com/drugs/detrol-la/,Pending,,,
+186,dexmethylphenidate-hcl,https://www.imedix.com/drugs/dexmethylphenidate-hcl/,Pending,,,
+187,dextromethorphan-polistirex,https://www.imedix.com/drugs/dextromethorphan-polistirex/,Pending,,,
+188,diamode,https://www.imedix.com/drugs/diamode/,Pending,,,
+189,diclofenac,https://www.imedix.com/drugs/diclofenac/,Pending,Batch B - Analgesics,,
+190,diclofenac-gel,https://www.imedix.com/drugs/diclofenac-gel/,Pending,Batch B - Analgesics,,
+191,diflucan,https://www.imedix.com/drugs/diflucan/,Completed,,Verified,
+192,digitek,https://www.imedix.com/drugs/digitek/,Pending,Batch A - Cardiovascular,,
+193,digoxin,https://www.imedix.com/drugs/digoxin/,Pending,,,
+194,dilt-xr,https://www.imedix.com/drugs/dilt-xr/,Retired,,301 -> /drugs/diltiazem-hcl/ (no current FDA label; post set to draft),2026-10-18
+195,diltiazem-hcl,https://www.imedix.com/drugs/diltiazem-hcl/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Cardizem tablets label 2025-04 + Cardizem CD; IR tablets = angina only; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-20
+196,diotame,https://www.imedix.com/drugs/diotame/,Retired,,301 -> /drugs/pepto-bismol/ (store-brand clone; post set to draft),2026-10-18
+197,diphenhydramine-hcl,https://www.imedix.com/drugs/diphenhydramine-hcl/,Completed,,Verified,
+198,diskets,https://www.imedix.com/drugs/diskets/,Pending,,,
+199,disopyramide-phosphate,https://www.imedix.com/drugs/disopyramide-phosphate/,Pending,Batch A - Cardiovascular,,
+200,disulfiram,https://www.imedix.com/drugs/disulfiram/,Pending,,,
+201,doxycycline-hyclate,https://www.imedix.com/drugs/doxycycline-hyclate/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Acella ANDA 210664 SPL; FAERS block; author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+202,dramamine,https://www.imedix.com/drugs/dramamine/,Pending,,,
+203,dristan-cold,https://www.imedix.com/drugs/dristan-cold/,Retired,,410 (no current label for this combination; post set to draft),2026-10-18
+204,drospirenone-ethinyl-estradiol,https://www.imedix.com/drugs/drospirenone-ethinyl-estradiol/,Pending,,,
+205,droxia,https://www.imedix.com/drugs/droxia/,Pending,,,
+206,dutasteride,https://www.imedix.com/drugs/dutasteride/,Pending,,,
+207,eazzze-the-pain,https://www.imedix.com/drugs/eazzze-the-pain/,Retired,Batch B - Analgesics,301 -> /drugs/tylenol/ (store-brand clone; post set to draft),2026-10-18
+208,ec-naproxen,https://www.imedix.com/drugs/ec-naproxen/,Pending,Batch B - Analgesics,,
+209,ecotrin,https://www.imedix.com/drugs/ecotrin/,Pending,Batch B - Analgesics,,
+210,eliquis,https://www.imedix.com/drugs/eliquis/,Completed,,Verified,
+211,ellura,https://www.imedix.com/drugs/ellura/,Pending,,,
+212,emcyt,https://www.imedix.com/drugs/emcyt/,Pending,,,
+213,emend,https://www.imedix.com/drugs/emend/,Pending,,,
+214,enalapril-maleate,https://www.imedix.com/drugs/enalapril-maleate/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Vasotec label (Bausch 2026-01) + Epaned PI; SOLVD angle; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+215,endocet,https://www.imedix.com/drugs/endocet/,Completed,Batch B - Analgesics,Verified,2026-09-28
+216,enema-disposable,https://www.imedix.com/drugs/enema-disposable/,Pending,,,
+217,enema-hypertonic-laxatives,https://www.imedix.com/drugs/enema-hypertonic-laxatives/,Pending,,,
+218,enskyce,https://www.imedix.com/drugs/enskyce/,Pending,,,
+219,entecavir,https://www.imedix.com/drugs/entecavir/,Pending,,,
+220,entocort-ec,https://www.imedix.com/drugs/entocort-ec/,Pending,,,
+221,epivir,https://www.imedix.com/drugs/epivir/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+222,ergoloid-mesylates,https://www.imedix.com/drugs/ergoloid-mesylates/,Pending,,,
+223,eriacta,https://www.imedix.com/drugs/eriacta/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+224,erythromycin-ethylsuccinate,https://www.imedix.com/drugs/erythromycin-ethylsuccinate/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from E.E.S. SPL; author iMedix Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+225,escitalopram-oxalate,https://www.imedix.com/drugs/escitalopram-oxalate/,Completed,Depression,"Rebuilt 2026-10-25 (v6.22), ID 11866: substance page; title 'Escitalopram'; source Jubilant Cadista generic label ANDA 202280 rev 2026-07; pivot = S-enantiomer, MDD 12+ and adult GAD, 10 vs 20 mg no extra benefit; FAERS host escitalopram oxalate 72,487; cats Depression+Anxiety; reviewer emptied; audit 0/0",2026-10-25
+226,esgic,https://www.imedix.com/drugs/esgic/,Completed,Batch B - Analgesics,Verified; brand discontinued (generic RS label used),2026-09-28
+227,esomeprazole-magnesium,https://www.imedix.com/drugs/esomeprazole-magnesium/,Pending,,,
+228,estrace,https://www.imedix.com/drugs/estrace/,Pending,,,
+229,estring-ring-vaginal,https://www.imedix.com/drugs/estring-ring-vaginal/,Pending,,,
+230,estrogen-methyltestosterone,https://www.imedix.com/drugs/estrogen-methyltestosterone/,Pending,,,
+231,estrostep-fe,https://www.imedix.com/drugs/estrostep-fe/,Completed,,Verified,
+232,etelcalcetide-solution,https://www.imedix.com/drugs/etelcalcetide-solution/,Pending,Batch A - Cardiovascular,,
+233,etodolac,https://www.imedix.com/drugs/etodolac/,Pending,Batch B - Analgesics,,
+234,evecare,https://www.imedix.com/drugs/evecare/,Pending,,,
+235,evista,https://www.imedix.com/drugs/evista/,Pending,,,
+236,evotaz,https://www.imedix.com/drugs/evotaz/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+237,evoxac,https://www.imedix.com/drugs/evoxac/,Pending,,,
+238,evusheld-eua,https://www.imedix.com/drugs/evusheld-eua/,Completed,,Verified,
+239,ex-lax-maximum-strength,https://www.imedix.com/drugs/ex-lax-maximum-strength/,Pending,,,
+240,excedrin-migraine,https://www.imedix.com/drugs/excedrin-migraine/,Pending,Batch B - Analgesics,,
+241,extra-pain-relief,https://www.imedix.com/drugs/extra-pain-relief/,Pending,Batch B - Analgesics,,
+242,ez-nite-sleep,https://www.imedix.com/drugs/ez-nite-sleep/,Retired,,301 -> /drugs/diphenhydramine-hcl/ (store-brand clone; post set to draft),2026-10-18
+243,ezetimibe,https://www.imedix.com/drugs/ezetimibe/,Pending,,,
+244,fabior-foam,https://www.imedix.com/drugs/fabior-foam/,Pending,,,
+245,famciclovir,https://www.imedix.com/drugs/famciclovir/,Pending,,,
+246,farxiga,https://www.imedix.com/drugs/farxiga/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish; was Batch A - Cardiovascular) rewritten from Farxiga PI (AstraZeneca NDA 202293, 2026-06) and republished; T2D from 10y + HF + CKD; DECLARE/DAPA-HF/DELIVER/DAPA-CKD; eGFR 45/25 thresholds; generics approved; Qtern discontinued; FAERS host (dapagliflozin); reviewer null; audit 0/0",2026-10-24
+247,feldene,https://www.imedix.com/drugs/feldene/,Pending,Batch B - Analgesics,,
+248,felodipine-er,https://www.imedix.com/drugs/felodipine-er/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-22 (v3 model, v6.21): page had empty product_info; Plendil + Lexxel discontinued; full rewrite from generic felodipine ER label (Avet ANDA 201964, 2026-08); FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-22
+249,female-cialis,https://www.imedix.com/drugs/female-cialis/,Completed,,Verified,
+250,female-viagra,https://www.imedix.com/drugs/female-viagra/,Pending,,,
+251,femara,https://www.imedix.com/drugs/femara/,Pending,,,
+252,femhrt,https://www.imedix.com/drugs/femhrt/,Pending,,,
+253,fenofibrate-tablet,https://www.imedix.com/drugs/fenofibrate-tablet/,Pending,,,
+254,feriva,https://www.imedix.com/drugs/feriva/,Pending,,,
+255,ferocon,https://www.imedix.com/drugs/ferocon/,Pending,,,
+256,ferrocite-plus,https://www.imedix.com/drugs/ferrocite-plus/,Pending,,,
+257,fildena,https://www.imedix.com/drugs/fildena/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+258,filitra-professional,https://www.imedix.com/drugs/filitra-professional/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+259,finacea-foam,https://www.imedix.com/drugs/finacea-foam/,Pending,,,
+260,fioricet,https://www.imedix.com/drugs/fioricet/,Completed,Batch B - Analgesics,Verified,2026-09-28
+261,fiorinal,https://www.imedix.com/drugs/fiorinal/,Completed,Batch B - Analgesics,Verified; brand discontinued (generic RS label used),2026-09-28
+262,fish-flax-borage-oil,https://www.imedix.com/drugs/fish-flax-borage-oil/,Pending,Batch A - Cardiovascular,,
+263,flagyl,https://www.imedix.com/drugs/flagyl/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Flagyl 375 SPL (Pfizer NDA 020334; only Flagyl form still marketed per Drugs@FDA); FAERS block; author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+264,flomax,https://www.imedix.com/drugs/flomax/,Pending,,,
+265,focalin,https://www.imedix.com/drugs/focalin/,Pending,,,
+266,folbee-plus-cz,https://www.imedix.com/drugs/folbee-plus-cz/,Pending,,,
+267,forzest,https://www.imedix.com/drugs/forzest/,Completed,,Verified,
+268,fosamax,https://www.imedix.com/drugs/fosamax/,Pending,,,
+269,foscarnet-sodium-bottle-infusion,https://www.imedix.com/drugs/foscarnet-sodium-bottle-infusion/,Pending,,,
+270,fosfomycin,https://www.imedix.com/drugs/fosfomycin/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics); live-verified; refs Accessed + review date 2026-10-18",2026-10-18
+271,fosinopril-hydrochlorothiazide,https://www.imedix.com/drugs/fosinopril-hydrochlorothiazide/,Pending,,,
+272,gabapentin,https://www.imedix.com/drugs/gabapentin/,Pending,,,
+273,galantamine-hbr,https://www.imedix.com/drugs/galantamine-hbr/,Pending,,,
+274,gelusil,https://www.imedix.com/drugs/gelusil/,Pending,,,
+275,gemfibrozil,https://www.imedix.com/drugs/gemfibrozil/,Pending,,,
+276,generic-cialis-black,https://www.imedix.com/drugs/generic-cialis-black/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+277,generic-xyzal,https://www.imedix.com/drugs/generic-xyzal/,Completed,,Verified,
+278,gengraf,https://www.imedix.com/drugs/gengraf/,Completed,,Verified,
+279,genvoya,https://www.imedix.com/drugs/genvoya/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+280,geodon,https://www.imedix.com/drugs/geodon/,Pending,,,
+281,geri-tussin-dm,https://www.imedix.com/drugs/geri-tussin-dm/,Pending,,,
+282,glimepiride,https://www.imedix.com/drugs/glimepiride/,Completed,Diabetes,"Diabetes rebuild 2026-10-23 (v6.21): legacy page rewritten from generic glimepiride label (Aurobindo ANDA 202759, 2026-03); Amaryl NDA 020496 discontinued; hypoglycaemia / sulfa allergy / G6PD / not for children angle; cats Diabetes added; FAERS host (glimepiride); existing reviewer kept; audit 0 errors / 0 warnings; live-verified",2026-10-23
+283,glipizide,https://www.imedix.com/drugs/glipizide/,Completed,Diabetes,"Diabetes rebuild 2026-10-23 (v6.21): legacy page rewritten from generic glipizide IR label (ANI ANDA 074497, 2026-07); Glucotrol XL NDA 020329 Rx; 30 min before meal / max 40 mg / hypoglycaemia risk groups / UGDP / G6PD angle; FAERS host (glipizide); existing reviewer kept; audit 0 errors / 0 warnings; live-verified",2026-10-23
+284,glucosamine-chondroitin-msm,https://www.imedix.com/drugs/glucosamine-chondroitin-msm/,Pending,,,
+285,glumetza,https://www.imedix.com/drugs/glumetza/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten and republished; Glumetza NDA 021748 discontinued; from generic metformin ER 500/1000 label (Micro Labs ANDA 212448, 2025-12); ER vs IR equal at same total, 2000 once daily -0.4 more / glyburide add-on (hypo 14 vs 5%) / food effect angle; FAERS anchor -> metformin; reviewer null; audit 0/0. Links from metformin + glucophage restored",2026-10-24
+286,glyburide,https://www.imedix.com/drugs/glyburide/,Completed,Diabetes,"Diabetes rebuild 2026-10-23 (v6.21): legacy page rewritten from generic glyburide label (Avet ANDA 090937, 2025-10; old format, 2 AE rates -> s4.8 exception, 1 expected warning); Micronase + Glynase discontinued, DiaBeta Rx; bosentan CI / prolonged hypoglycaemia angle; cats Diabetes added; FAERS host (glyburide); existing reviewer kept; audit 0 errors; live-verified",2026-10-23
+287,glycopyrrolate,https://www.imedix.com/drugs/glycopyrrolate/,Pending,,,
+288,goserelin-implant,https://www.imedix.com/drugs/goserelin-implant/,Pending,,,
+289,guaiatussin-ac,https://www.imedix.com/drugs/guaiatussin-ac/,Pending,,,
+290,guaifenesin,https://www.imedix.com/drugs/guaifenesin/,Pending,,,
+291,haloperidol,https://www.imedix.com/drugs/haloperidol/,Pending,,,
+292,haloperidol-lactate,https://www.imedix.com/drugs/haloperidol-lactate/,Pending,,,
+293,harvoni,https://www.imedix.com/drugs/harvoni/,Pending,,,
+294,headache-relief,https://www.imedix.com/drugs/headache-relief/,Retired,Batch B - Analgesics,301 -> /drugs/excedrin-migraine/ (store-brand clone; post set to draft),2026-10-18
+295,heartburn-relief,https://www.imedix.com/drugs/heartburn-relief/,Pending,,,
+296,hematinic-plus,https://www.imedix.com/drugs/hematinic-plus/,Pending,,,
+297,heparin-flush-vial,https://www.imedix.com/drugs/heparin-flush-vial/,Completed,,Verified,
+298,heparin-sodium-vial,https://www.imedix.com/drugs/heparin-sodium-vial/,Pending,Batch A - Cardiovascular,,
+299,hetlioz,https://www.imedix.com/drugs/hetlioz/,Pending,,,
+300,hiprex,https://www.imedix.com/drugs/hiprex/,Pending,,,
+301,humalog-vial,https://www.imedix.com/drugs/humalog-vial/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Humalog PI (Eli Lilly BLA 020563, 2026-06) and republished; rapid-acting insulin lispro; U-100 vs U-200 (U-200 never pump/IV); T1D 12-month vs regular insulin; peds 831; FAERS host (insulin lispro 139,157); cats Diabetes added; link to apidra kept; existing reviewer kept; audit 0/0 after fixes (dup sentence, children stub, title)",2026-10-24
+302,hycamtin,https://www.imedix.com/drugs/hycamtin/,Pending,,,
+303,hydrocodone-ibuprofen,https://www.imedix.com/drugs/hydrocodone-ibuprofen/,Completed,Batch B - Analgesics,Verified; post title renamed to Hydrocodone and Ibuprofen 2026-09-28 (H1 verified),2026-09-28
+304,hydromet,https://www.imedix.com/drugs/hydromet/,Pending,,,
+305,hydromorphone-hcl,https://www.imedix.com/drugs/hydromorphone-hcl/,Completed,Batch B - Analgesics,Verified,2026-09-28
+306,hydroxyzine-hcl,https://www.imedix.com/drugs/hydroxyzine-hcl/,Completed,,Verified,
+307,hyophen,https://www.imedix.com/drugs/hyophen/,Completed,,Verified,
+308,hyoscyamine-sulfate,https://www.imedix.com/drugs/hyoscyamine-sulfate/,Pending,,,
+309,hyosyne,https://www.imedix.com/drugs/hyosyne/,Pending,,,
+310,icar-c,https://www.imedix.com/drugs/icar-c/,Pending,,,
+311,icar-c-plus,https://www.imedix.com/drugs/icar-c-plus/,Pending,,,
+312,iclusig,https://www.imedix.com/drugs/iclusig/,Pending,,,
+313,imitrex,https://www.imedix.com/drugs/imitrex/,Completed,Batch B - Analgesics,Verified,2026-09-28
+314,imodium-a-d,https://www.imedix.com/drugs/imodium-a-d/,Pending,,,
+315,imuran,https://www.imedix.com/drugs/imuran/,Pending,,,
+316,inderal,https://www.imedix.com/drugs/inderal/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-20 (v3 model, v6.19): hub - tablets discontinued, Inderal LA/XL current; audit v2 0 errors / 0 warnings; live-verified",2026-10-20
+317,inderal-la,https://www.imedix.com/drugs/inderal-la/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Inderal LA label 2026-08; audit v2 0 errors / 0 warnings; live-verified",2026-10-20
+318,inderal-xl,https://www.imedix.com/drugs/inderal-xl/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Inderal XL PI 2026-08; audit v2 0 errors / 0 warnings; live-verified",2026-10-20
+319,indocin,https://www.imedix.com/drugs/indocin/,Pending,Batch B - Analgesics,,
+320,infant-pain-fever,https://www.imedix.com/drugs/infant-pain-fever/,Retired,Batch B - Analgesics,301 -> /drugs/infants-pain-fever/ (duplicate of same product; post set to draft),2026-10-18
+321,infants-advil,https://www.imedix.com/drugs/infants-advil/,Pending,Batch B - Analgesics,,
+322,infants-motrin,https://www.imedix.com/drugs/infants-motrin/,Pending,Batch B - Analgesics,,
+323,infants-pain-fever,https://www.imedix.com/drugs/infants-pain-fever/,Pending,Batch B - Analgesics,,
+324,infants-pain-relief,https://www.imedix.com/drugs/infants-pain-relief/,Retired,Batch B - Analgesics,301 -> /drugs/infants-pain-fever/ (store-brand clone; post set to draft),2026-10-18
+325,intelence,https://www.imedix.com/drugs/intelence/,Completed,,Rebuilt to standard v6.16 (Tier A); live-verified; refs Accessed + review date 2026-10-18,2026-10-18
+326,invega,https://www.imedix.com/drugs/invega/,Pending,,,
+327,invirase,https://www.imedix.com/drugs/invirase/,Completed,,Rebuilt to standard v6.16 (Tier A) from final 2018 FDA label; status Discontinued; live-verified; refs Accessed + review date 2026-10-18,2026-10-18
+328,invokamet,https://www.imedix.com/drugs/invokamet/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Invokamet/Invokamet XR PI (Janssen NDA 204353/205879, 2026-08) and republished; initial-therapy trial 1,186 (HbA1c -1.78 vs -1.30) / eGFR 45/30 / boxed lactic acidosis + amputation + fractures; FAERS anchors -> invokana + metformin; reviewer null; audit 0/0",2026-10-24
+329,invokana,https://www.imedix.com/drugs/invokana/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Invokana PI (Janssen NDA 204042, 2026-06) and republished; T2D from 10y + MACE + diabetic nephropathy; CANVAS 10,142 / CREDENCE 4,401 / amputation 5.9 vs 2.8 per 1,000 PY; eGFR + UGT inducer dosing; cats Diabetes added; FAERS host (canagliflozin 31,055); existing reviewer kept; audit 0/0 after liver DS rows",2026-10-24
+330,irbesartan,https://www.imedix.com/drugs/irbesartan/,Completed,Blood Pressure,"BP rebuild 2026-10-23 (v6.21), added to BP group with ARB cluster: legacy page rewritten from generic irbesartan label (Macleods ANDA 202254, 2026-08); HTN / no cough excess / peds not effective angle; FAERS host; reviewer null; audit 0 errors / 0 warnings; live-verified",2026-10-23
+331,irbesartan-hydrochlorothiazide,https://www.imedix.com/drugs/irbesartan-hydrochlorothiazide/,Completed,Blood Pressure,"BP rebuild 2026-10-23 (v6.21), added to BP group with ARB cluster: legacy page rewritten from Avalide PI (Sanofi NDA 020758, 2025-10); results-by-strength / add-on / kidney-limit angle; FAERS anchors -> irbesartan + HCTZ; existing reviewer kept; audit 0 errors / 0 warnings; live-verified",2026-10-23
+332,isentress,https://www.imedix.com/drugs/isentress/,Completed,,Rebuilt to standard v6.16 (Tier A) from Merck SPL; live-verified; refs Accessed + review date 2026-10-18,2026-10-18
+333,isoniazid,https://www.imedix.com/drugs/isoniazid/,Pending,,,
+334,isordil,https://www.imedix.com/drugs/isordil/,Pending,Batch A - Cardiovascular,,
+335,isordil-titradose,https://www.imedix.com/drugs/isordil-titradose/,Pending,Batch A - Cardiovascular,,
+336,isosorbide-mononitrate,https://www.imedix.com/drugs/isosorbide-mononitrate/,Pending,Batch A - Cardiovascular,,
+337,isradipine,https://www.imedix.com/drugs/isradipine/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-22 (v3 model, v6.21): page had empty product_info; DynaCirc + DynaCirc CR discontinued; full rewrite from generic isradipine caps label (Teva ANDA 077317, 2023-11); FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-22
+338,itraconazole,https://www.imedix.com/drugs/itraconazole/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+339,ivermectin,https://www.imedix.com/drugs/ivermectin/,Pending,,,
+340,jakafi,https://www.imedix.com/drugs/jakafi/,Pending,,,
+341,jalyn,https://www.imedix.com/drugs/jalyn/,Pending,,,
+342,jantoven,https://www.imedix.com/drugs/jantoven/,Pending,,,
+343,janumet,https://www.imedix.com/drugs/janumet/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Janumet PI (Merck NDA 022044, 2026-08) and republished; covers Janumet XR (NDA 202270, redirect target); factorial 1,091 (HbA1c up to -1.9) / bioequivalence / boxed lactic acidosis angle; FAERS anchors -> januvia + metformin; existing reviewer kept; audit 0 errors / 0 warnings",2026-10-24
+344,januvia,https://www.imedix.com/drugs/januvia/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (was draft after 24.10 unpublish) rewritten from Januvia PI (Merck NDA 021995, 2024-11) and republished; DPP-4 / kidney dosing 100-50-25 / pancreatitis / paediatric not effective angle; FAERS host (sitagliptin 94,409); reviewer null; audit 0 errors / 0 warnings",2026-10-24
+345,jardiance,https://www.imedix.com/drugs/jardiance/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Jardiance PI (Boehringer NDA 204629, 2026-01) and republished; T2D from 10y + HF + CKD + CV death; EMPA-REG/EMPEROR-R/EMPEROR-P/EMPA-KIDNEY; generics only tentative/discontinued; cats Diabetes added; FAERS host (empagliflozin 72,157); existing reviewer kept; audit 0/0",2026-10-24
+346,jolessa,https://www.imedix.com/drugs/jolessa/,Completed,,Verified,
+347,juluca,https://www.imedix.com/drugs/juluca/,Completed,,"Rebuilt to standard v6.16 (Tier A), saved 2026-10-18; live-verified; refs/review date still say 2026-10-06 - re-date pending",
+348,junel,https://www.imedix.com/drugs/junel/,Pending,,,
+349,junel-fe,https://www.imedix.com/drugs/junel-fe/,Completed,,Verified,
+350,junior-pain-reliever,https://www.imedix.com/drugs/junior-pain-reliever/,Retired,Batch B - Analgesics,301 -> /drugs/tylenol/ (store-brand clone; post set to draft),2026-10-18
+351,jynarque,https://www.imedix.com/drugs/jynarque/,Pending,Batch A - Cardiovascular,,
+352,k-phos-original,https://www.imedix.com/drugs/k-phos-original/,Pending,,,
+353,kaletra,https://www.imedix.com/drugs/kaletra/,Completed,,Rebuilt to standard v6.16 (Tier A); live-verified; refs Accessed + review date 2026-10-18,2026-10-18
+354,kamagra,https://www.imedix.com/drugs/kamagra/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+355,kamagra-chewable,https://www.imedix.com/drugs/kamagra-chewable/,Completed,,Verified,
+356,kamagra-effervescent,https://www.imedix.com/drugs/kamagra-effervescent/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+357,kamagra-gold,https://www.imedix.com/drugs/kamagra-gold/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+358,kamagra-oral-jelly,https://www.imedix.com/drugs/kamagra-oral-jelly/,Completed,,Verified,
+359,kamagra-polo,https://www.imedix.com/drugs/kamagra-polo/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+360,kamagra-soft,https://www.imedix.com/drugs/kamagra-soft/,Completed,,Verified,
+361,kamagra-super,https://www.imedix.com/drugs/kamagra-super/,Completed,,Verified,
+362,kapvay,https://www.imedix.com/drugs/kapvay/,Completed,,Verified,
+363,keflex,https://www.imedix.com/drugs/keflex/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics); brand Keflex discontinued per Drugs@FDA (status set Discontinued), content from generic cephalexin SPL (Lupin); author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+364,keppra,https://www.imedix.com/drugs/keppra/,Pending,,,
+365,ketoconazole,https://www.imedix.com/drugs/ketoconazole/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+366,ketoprofen,https://www.imedix.com/drugs/ketoprofen/,Pending,Batch B - Analgesics,,
+367,korlym,https://www.imedix.com/drugs/korlym/,Pending,,,
+368,kuvan,https://www.imedix.com/drugs/kuvan/,Pending,,,
+369,lactinex,https://www.imedix.com/drugs/lactinex/,Pending,,,
+370,lactulose,https://www.imedix.com/drugs/lactulose/,Pending,,,
+371,lady-era-pill,https://www.imedix.com/drugs/lady-era-pill/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+372,lamisil,https://www.imedix.com/drugs/lamisil/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+373,lanoxin,https://www.imedix.com/drugs/lanoxin/,Pending,Batch A - Cardiovascular,,
+374,lansoprazole,https://www.imedix.com/drugs/lansoprazole/,Pending,,,
+375,lantus-vial,https://www.imedix.com/drugs/lantus-vial/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Lantus PI (Sanofi BLA 021081, 2025-06; set d5e07a0c fetched by set_id since brand search returned only 2023 repackager copy) and republished; basal insulin glargine, 24 h effect vs NPH 14.5 h, never dilute/mix; ORIGIN 12,537 HR 1.02; peds 174; FAERS host (insulin glargine 248,927); cats Diabetes added; existing reviewer kept; audit 0/0 after uses-length fix",2026-10-24
+376,lasix,https://www.imedix.com/drugs/lasix/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.21): Lasix tablets discontinued (FR not safety); Lasix ONYU SC approved 2025-10-07; full rewrite from Lasix tablets label + ONYU PI + DOSE trial; SE frequencies exception (labelling gives none); FAERS block hosted here; audit 0 errors / 1 expected warning; live-verified",2026-10-21
+377,laxative,https://www.imedix.com/drugs/laxative/,Pending,,,
+378,lentinan,https://www.imedix.com/drugs/lentinan/,Pending,,,
+379,letrozole,https://www.imedix.com/drugs/letrozole/,Pending,,,
+380,levaquin,https://www.imedix.com/drugs/levaquin/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics); brand discontinued in all forms per Drugs@FDA (status Discontinued); clinical from generic levofloxacin SPL (Dr. Reddy's ANDA 076710); FAERS block; author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+381,levitra,https://www.imedix.com/drugs/levitra/,Completed,,Verified,
+382,levitra-oral-jelly,https://www.imedix.com/drugs/levitra-oral-jelly/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+383,levocetirizine-dihydrochloride,https://www.imedix.com/drugs/levocetirizine-dihydrochloride/,Completed,,Verified,
+384,levonorg-eth-estrad-eth,https://www.imedix.com/drugs/levonorg-eth-estrad-eth/,Completed,,Verified,
+385,levothyroxine-sodium,https://www.imedix.com/drugs/levothyroxine-sodium/,Pending,,,
+386,lexapro,https://www.imedix.com/drugs/lexapro/,Completed,Depression,"Rebuilt 2026-10-25 (v6.22), ID 13253: brand page; source Lexapro PI (Allergan/AbbVie NDA 021323, 2023-10); pivot = brand-only pediatric GAD indication from age 7 (PARS diff 1.42; generics omit it under marketing exclusivity), growth monitoring, oral solution NDA 021365 discontinued, tablet ID FL; SE = adult GAD table; FAERS anchor -> escitalopram-oxalate; cats Depression+Anxiety; reviewer emptied; audit 0/0",2026-10-25
+387,lialda,https://www.imedix.com/drugs/lialda/,Pending,,,
+388,linezolid-tablet,https://www.imedix.com/drugs/linezolid-tablet/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Rising ANDA 078845 SPL; FAERS block; live-verified; refs Accessed + review date 2026-10-18",2026-10-18
+389,linzess,https://www.imedix.com/drugs/linzess/,Pending,,,
+390,lipitor,https://www.imedix.com/drugs/lipitor/,Pending,,,
+391,little-remedies-fever-pain,https://www.imedix.com/drugs/little-remedies-fever-pain/,Pending,Batch B - Analgesics,,
+392,lopid,https://www.imedix.com/drugs/lopid/,Pending,,,
+393,lopressor,https://www.imedix.com/drugs/lopressor/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Lopressor PIs (NDA 017963 2023-09; NDA 218698 12.5 mg 2026-01); FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+394,loratadine,https://www.imedix.com/drugs/loratadine/,Completed,,Verified,
+395,lorazepam,https://www.imedix.com/drugs/lorazepam/,Pending,,,
+396,lorcet,https://www.imedix.com/drugs/lorcet/,Completed,Batch B - Analgesics,"Verified; brand discontinued, no current label (FR 2011 325 mg notice used)",2026-09-28
+397,losartan-hydrochlorothiazide,https://www.imedix.com/drugs/losartan-hydrochlorothiazide/,Completed,Blood Pressure,"BP rebuild 2026-10-23 (v6.21), added to BP group with ARB cluster: legacy page rewritten from Hyzaar PI (Organon NDA 020387, 2025-11); factorial / switching / liver-limit angle; FAERS anchors -> losartan-potassium + HCTZ; existing reviewer kept; audit 0 errors / 0 warnings; live-verified",2026-10-23
+398,losartan-potassium,https://www.imedix.com/drugs/losartan-potassium/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Cozaar PI + FDA ARB recalls page; angle nitrosamine recalls; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+399,loteprednol-etabonate-ophthalmic-eye,https://www.imedix.com/drugs/loteprednol-etabonate-ophthalmic-eye/,Pending,,,
+400,lotrel,https://www.imedix.com/drugs/lotrel/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-21 (v3 model, v6.19): Lotrel brand discontinued; full rewrite from generic amlodipine/benazepril label (Avet 2026-10); audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+401,lovastatin,https://www.imedix.com/drugs/lovastatin/,Pending,,,
+402,lovenox-syringe,https://www.imedix.com/drugs/lovenox-syringe/,Pending,,,
+403,lupron-depot-intramuscular,https://www.imedix.com/drugs/lupron-depot-intramuscular/,Pending,,,
+404,lyrica,https://www.imedix.com/drugs/lyrica/,Completed,Diabetes,"Diabetes-group rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Lyrica PI (Viatris NDA 021446/022488, 2025-04) and republished; DPN pain + PHN + SCI + fibromyalgia + adjunct POS from 1 month; Schedule V; taper >=1 week; CrCl dosing table; DPN AEs dizziness 21 vs 5%, somnolence 12 vs 3%; NOT a glucose-lowering drug (stated on page); generics approved, Lyrica CR separate; FAERS host (pregabalin 270,564); cats [262,269,223]; reviewer nulled (was empty); audit 0/0 after fixes (caption, mechanism word, FAQ digit)",2026-10-24
+405,lyza,https://www.imedix.com/drugs/lyza/,Pending,,,
+406,malegra-dxt,https://www.imedix.com/drugs/malegra-dxt/,Completed,,Verified,
+407,malegra-fxt,https://www.imedix.com/drugs/malegra-fxt/,Completed,,Verified,
+408,mapap-arthritis-pain,https://www.imedix.com/drugs/mapap-arthritis-pain/,Pending,Batch B - Analgesics,,
+409,maxalt,https://www.imedix.com/drugs/maxalt/,Completed,Batch B - Analgesics,Verified,2026-09-28
+410,meclizine-hcl,https://www.imedix.com/drugs/meclizine-hcl/,Pending,,,
+411,mefloquine-hcl,https://www.imedix.com/drugs/mefloquine-hcl/,Pending,,,
+412,melatonin,https://www.imedix.com/drugs/melatonin/,Pending,,,
+413,mens-daily-gummies,https://www.imedix.com/drugs/mens-daily-gummies/,Pending,,,
+414,meperidine-hcl-cartridge,https://www.imedix.com/drugs/meperidine-hcl-cartridge/,Completed,Batch B - Analgesics,Verified,2026-09-28
+415,metabiotic,https://www.imedix.com/drugs/metabiotic/,Pending,,,
+416,metaxall,https://www.imedix.com/drugs/metaxall/,Pending,,,
+417,metformin,https://www.imedix.com/drugs/metformin/,Completed,Diabetes,"Diabetes rebuild 2026-10-23 (v6.21): legacy page rewritten from generic metformin IR label (Aurobindo ANDA 077095, 2026-07; children 10+); lactic acidosis / eGFR thresholds / GI effects angle; FAERS host (metformin incl. combos); existing reviewer kept; audit 0 errors / 0 warnings; live-verified",2026-10-23
+418,methitest,https://www.imedix.com/drugs/methitest/,Pending,,,
+419,microgestin-fe,https://www.imedix.com/drugs/microgestin-fe/,Completed,,Verified,
+420,midazolam-hcl,https://www.imedix.com/drugs/midazolam-hcl/,Pending,,,
+421,minipress,https://www.imedix.com/drugs/minipress/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.21): full rewrite from prazosin capsules label under Minipress NDA 017442 (Prasco 2026-03); first-dose syncope angle; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+422,minocin,https://www.imedix.com/drugs/minocin/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Minocin IV SPL (Melinta) + generic minocycline caps (Torrent); form status per Drugs@FDA; FAERS block; author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+423,miralax,https://www.imedix.com/drugs/miralax/,Pending,,,
+424,modafinil,https://www.imedix.com/drugs/modafinil/,Pending,,,
+425,modalert,https://www.imedix.com/drugs/modalert/,Pending,,,
+426,molindone-hcl,https://www.imedix.com/drugs/molindone-hcl/,Pending,,,
+427,montelukast-sodium,https://www.imedix.com/drugs/montelukast-sodium/,Pending,,,
+428,motilium,https://www.imedix.com/drugs/motilium/,Pending,,,
+429,motion-sickness-ii,https://www.imedix.com/drugs/motion-sickness-ii/,Retired,,301 -> /drugs/meclizine-hcl/ (store-brand clone; post set to draft),2026-10-18
+430,motion-sickness-relief,https://www.imedix.com/drugs/motion-sickness-relief/,Pending,,,
+431,motrin-ib,https://www.imedix.com/drugs/motrin-ib/,Pending,Batch B - Analgesics,,
+432,movantik,https://www.imedix.com/drugs/movantik/,Pending,,,
+433,mucinex-dm,https://www.imedix.com/drugs/mucinex-dm/,Pending,,,
+434,mucus-relief-dm,https://www.imedix.com/drugs/mucus-relief-dm/,Pending,,,
+435,mucus-relief-severe-cold,https://www.imedix.com/drugs/mucus-relief-severe-cold/,Pending,,,
+436,multaq,https://www.imedix.com/drugs/multaq/,Pending,Batch A - Cardiovascular,,
+437,multi-symptom-allergy-relief,https://www.imedix.com/drugs/multi-symptom-allergy-relief/,Pending,,,
+438,mycophenolate-mofetil,https://www.imedix.com/drugs/mycophenolate-mofetil/,Pending,Batch A - Cardiovascular,,
+439,myfortic,https://www.imedix.com/drugs/myfortic/,Pending,,,
+440,mynephron,https://www.imedix.com/drugs/mynephron/,Pending,,,
+441,myrbetriq,https://www.imedix.com/drugs/myrbetriq/,Pending,,,
+442,nabumetone,https://www.imedix.com/drugs/nabumetone/,Pending,Batch B - Analgesics,,
+443,nadolol,https://www.imedix.com/drugs/nadolol/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): Corgard discontinued; full rewrite from generic nadolol label (BluePoint 2026-09); renal-interval angle; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+444,naltrexone-hcl,https://www.imedix.com/drugs/naltrexone-hcl/,Pending,,,
+445,namzaric,https://www.imedix.com/drugs/namzaric/,Pending,,,
+446,nateglinide,https://www.imedix.com/drugs/nateglinide/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from generic nateglinide label (Strides ANDA 077463, 2025-02) and republished; Starlix NDA 021204 discontinued; meal-time dosing / vs glyburide worse after SU switch / hypo 2.4 vs 0.4% / weight angle; FAERS host (nateglinide 1,333); reviewer null; audit 0 errors / 0 warnings",2026-10-24
+447,natural-fiber,https://www.imedix.com/drugs/natural-fiber/,Pending,,,
+448,neevodha,https://www.imedix.com/drugs/neevodha/,Pending,,,
+449,neomycin-sulfate,https://www.imedix.com/drugs/neomycin-sulfate/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Solaris ANDA 065220 SPL; FAERS block (topical caveat); author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+450,nestabs-abc,https://www.imedix.com/drugs/nestabs-abc/,Pending,,,
+451,neurontin,https://www.imedix.com/drugs/neurontin/,Pending,,,
+452,nexafed-sinus-pressure-pain,https://www.imedix.com/drugs/nexafed-sinus-pressure-pain/,Pending,,,
+453,nexium-capsuledelayed-release-enteric-coated,https://www.imedix.com/drugs/nexium-capsuledelayed-release-enteric-coated/,Pending,,,
+454,nexium__trashed,https://www.imedix.com/drugs/nexium__trashed/,Retired,,301 -> /drugs/nexium-capsuledelayed-release-enteric-coated/ (__trashed slug artefact; post set to draft),2026-10-18
+455,niacin-tablet,https://www.imedix.com/drugs/niacin-tablet/,Pending,,,
+456,nicorette-gum,https://www.imedix.com/drugs/nicorette-gum/,Pending,,,
+457,nicotine-lozenge,https://www.imedix.com/drugs/nicotine-lozenge/,Pending,,,
+458,night-time-pain-medicine,https://www.imedix.com/drugs/night-time-pain-medicine/,Pending,Batch B - Analgesics,,
+459,nighttime-allergy-relief,https://www.imedix.com/drugs/nighttime-allergy-relief/,Retired,,301 -> /drugs/diphenhydramine-hcl/ (store-brand clone; post set to draft),2026-10-18
+460,nighttime-sleep-aid,https://www.imedix.com/drugs/nighttime-sleep-aid/,Retired,,301 -> /drugs/diphenhydramine-hcl/ (store-brand clone; post set to draft),2026-10-18
+461,nilandron,https://www.imedix.com/drugs/nilandron/,Pending,,,
+462,nilutamide,https://www.imedix.com/drugs/nilutamide/,Pending,,,
+463,nimodipine,https://www.imedix.com/drugs/nimodipine/,Completed,,Verified,
+464,nisoldipine,https://www.imedix.com/drugs/nisoldipine/,Completed,,"BP rebuild 2026-10-22 (v3 model, v6.21): Sular only 8.5 mg Rx, other strengths discontinued; full rewrite from Sular label (Covis NDA 020356, 2026-03); food/grapefruit/phenytoin angle; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-22
+465,nitro-bid-ointment,https://www.imedix.com/drugs/nitro-bid-ointment/,Pending,Batch A - Cardiovascular,,
+466,nitro-time,https://www.imedix.com/drugs/nitro-time/,Pending,Batch A - Cardiovascular,,
+467,nitrofurantoin-mono-macro,https://www.imedix.com/drugs/nitrofurantoin-mono-macro/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Macrobid-application SPL; live-verified; refs Accessed + review date 2026-10-18",2026-10-18
+468,nitroglycerin,https://www.imedix.com/drugs/nitroglycerin/,Pending,Batch A - Cardiovascular,,
+469,niva-plus,https://www.imedix.com/drugs/niva-plus/,Pending,,,
+470,nizagara-100,https://www.imedix.com/drugs/nizagara-100/,Completed,,Verified,
+471,nizatidine,https://www.imedix.com/drugs/nizatidine/,Pending,,,
+472,nolvadex,https://www.imedix.com/drugs/nolvadex/,Pending,,,
+473,norco,https://www.imedix.com/drugs/norco/,Completed,Batch B - Analgesics,"Verified; brand discontinued (Drugs@FDA), repackager NDC uses name",2026-09-28
+474,norethin-eth-estra-ferrous-fum,https://www.imedix.com/drugs/norethin-eth-estra-ferrous-fum/,Completed,,Verified,
+475,norethindrone,https://www.imedix.com/drugs/norethindrone/,Pending,,,
+476,norpace,https://www.imedix.com/drugs/norpace/,Pending,Batch A - Cardiovascular,,
+477,norpace-cr,https://www.imedix.com/drugs/norpace-cr/,Pending,Batch A - Cardiovascular,,
+478,nulev,https://www.imedix.com/drugs/nulev/,Pending,,,
+479,nuretin,https://www.imedix.com/drugs/nuretin/,Pending,,,
+480,nymalize,https://www.imedix.com/drugs/nymalize/,Completed,,Verified,
+481,nystatin,https://www.imedix.com/drugs/nystatin/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+482,nytol-quickcaps,https://www.imedix.com/drugs/nytol-quickcaps/,Pending,,,
+483,o-cal-fa,https://www.imedix.com/drugs/o-cal-fa/,Pending,,,
+484,o-cal-prenatal,https://www.imedix.com/drugs/o-cal-prenatal/,Pending,,,
+485,ob-complete,https://www.imedix.com/drugs/ob-complete/,Pending,,,
+486,ob-complete-petite,https://www.imedix.com/drugs/ob-complete-petite/,Pending,,,
+487,obtrex-dha,https://www.imedix.com/drugs/obtrex-dha/,Pending,,,
+488,ocean-blue-prenatal-dha,https://www.imedix.com/drugs/ocean-blue-prenatal-dha/,Pending,,,
+489,ofloxacin,https://www.imedix.com/drugs/ofloxacin/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Modavar ANDA 091656 SPL; Floxin brand discontinued per Drugs@FDA; FAERS block (incl. eye/ear drops caveat); author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+490,olmesartan-amlodipine-hctz,https://www.imedix.com/drugs/olmesartan-amlodipine-hctz/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Tribenzor PI 2023-07; audit v2 0 errors / 0 warnings; live-verified",2026-10-20
+491,olmesartan-hydrochlorothiazide,https://www.imedix.com/drugs/olmesartan-hydrochlorothiazide/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Benicar HCT PI 2026-03; audit v2 0 errors / 0 warnings; live-verified",2026-10-20
+492,olmesartan-medoxomil,https://www.imedix.com/drugs/olmesartan-medoxomil/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Benicar PI 2025-09; FAERS block hosted here; audit v2 0 errors / 0 warnings; live-verified",2026-10-20
+493,omega-3,https://www.imedix.com/drugs/omega-3/,Pending,,,
+494,omega-power,https://www.imedix.com/drugs/omega-power/,Pending,,,
+495,omeprazole,https://www.imedix.com/drugs/omeprazole/,Completed,,Verified,
+496,omeprazole-sodium-bicarbonate,https://www.imedix.com/drugs/omeprazole-sodium-bicarbonate/,Pending,,,
+497,omnitrope-cartridge,https://www.imedix.com/drugs/omnitrope-cartridge/,Pending,,,
+498,oncovite,https://www.imedix.com/drugs/oncovite/,Pending,,,
+499,opsumit,https://www.imedix.com/drugs/opsumit/,Pending,Batch A - Cardiovascular,,
+500,orgovyx,https://www.imedix.com/drugs/orgovyx/,Pending,,,
+501,orkambi,https://www.imedix.com/drugs/orkambi/,Pending,,,
+502,orlistat,https://www.imedix.com/drugs/orlistat/,Pending,,,
+503,orphenadrine-citrate,https://www.imedix.com/drugs/orphenadrine-citrate/,Pending,,,
+504,oseltamivir-phosphate,https://www.imedix.com/drugs/oseltamivir-phosphate/,Completed,,Verified,
+505,osmoprep,https://www.imedix.com/drugs/osmoprep/,Pending,,,
+506,otezla,https://www.imedix.com/drugs/otezla/,Pending,,,
+507,ovace-cleanser,https://www.imedix.com/drugs/ovace-cleanser/,Pending,,,
+508,oxandrin,https://www.imedix.com/drugs/oxandrin/,Pending,,,
+509,oxandrolone,https://www.imedix.com/drugs/oxandrolone/,Pending,,,
+510,oxaprozin,https://www.imedix.com/drugs/oxaprozin/,Pending,Batch B - Analgesics,,
+511,oxaydo,https://www.imedix.com/drugs/oxaydo/,Completed,Batch B - Analgesics,"Verified; status Discontinued per Drugs@FDA, NDC listings still active",2026-09-28
+512,oxazepam,https://www.imedix.com/drugs/oxazepam/,Pending,,,
+513,oxcarbazepine,https://www.imedix.com/drugs/oxcarbazepine/,Pending,,,
+514,oxybutynin-chloride,https://www.imedix.com/drugs/oxybutynin-chloride/,Pending,,,
+515,oxycodone-hcl,https://www.imedix.com/drugs/oxycodone-hcl/,Completed,Batch B - Analgesics,Verified,2026-09-28
+516,oxycontin,https://www.imedix.com/drugs/oxycontin/,Completed,Batch B - Analgesics,Verified,2026-09-28
+517,oxymorphone-hcl,https://www.imedix.com/drugs/oxymorphone-hcl/,Completed,Batch B - Analgesics,Verified,2026-09-28
+518,ozempic,https://www.imedix.com/drugs/ozempic/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Ozempic injection PI (Novo Nordisk NDA 209637, 2026-07; DailyMed SPL via repackager copy) and republished; T2D + CV (SUSTAIN-6 3,297, HR 0.74) + CKD (FLOW 3,533, HR 0.76); boxed thyroid; retinopathy 3.0 vs 1.8%; not a weight-loss approval (Wegovy); FAERS host (semaglutide 73,001); reviewer nulled (was empty); audit 0/0",2026-10-24
+519,pacerone,https://www.imedix.com/drugs/pacerone/,Pending,Batch A - Cardiovascular,,
+520,pain-reliever-plus,https://www.imedix.com/drugs/pain-reliever-plus/,Pending,Batch B - Analgesics,,
+521,pamelor,https://www.imedix.com/drugs/pamelor/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 14325, title 'Pamelor': only nortriptyline page (generic URL 410); source Pamelor labelling SpecGx NDA 018013 rev 2024-12 (old format, no AE frequencies -> s4.8 exception warning); Drugs@FDA lists Pamelor capsules discontinued; pivot = plasma-level monitoring 50-150 ng/mL, cardiac/anticholinergic risks; FAERS host nortriptyline 5,763; audit 0 errors; verified editor + live",2026-10-26
+522,papain,https://www.imedix.com/drugs/papain/,Pending,,,
+523,paracetamol,https://www.imedix.com/drugs/paracetamol/,Pending,Batch B - Analgesics,,
+524,parlodel,https://www.imedix.com/drugs/parlodel/,Retired,,"410 (empty page, no current label, no bromocriptine page; post set to draft)",2026-10-18
+525,paroxetine,https://www.imedix.com/drugs/paroxetine/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 14359, title 'Paroxetine': substance page; source Mylan generic label ANDA 078902 rev 2026-02; pivot = paroxetine across products (HCl, CR, mesylate salts), MDD AE table (nausea 26 vs 9, somnolence 23 vs 9), discontinuation/tapering (t1/2 ~21 h in uses), CYP2D6 interactions; FAERS anchor -> paxil-oral; cats Depression+Anxiety; reviewer emptied; audit 0/0",2026-10-26
+526,paxil-oral,https://www.imedix.com/drugs/paxil-oral/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 14345 (slug paxil-oral), title 'Paxil': source Paxil PI (Apotex NDA 020031, 2024-10, set ef3b5cbe; openFDA has no brand metadata, found via DailyMed); pivot = brand: 1992 approval, engraved tablets, Paxil CR separate NDA, capsules/suspension/50 mg discontinued; embryofetal warning, CYP2D6/tamoxifen, 6 adult indications; SE = sexual ranges; FAERS host paroxetine HCl 41,100; links paroxetine; cats Depression+Anxiety; audit 0/0",2026-10-26
+527,pedialyte-electrolyte-singles,https://www.imedix.com/drugs/pedialyte-electrolyte-singles/,Pending,,,
+528,penegra,https://www.imedix.com/drugs/penegra/,Completed,,Verified,
+529,peppermint,https://www.imedix.com/drugs/peppermint/,Pending,,,
+530,pepto-bismol,https://www.imedix.com/drugs/pepto-bismol/,Pending,,,
+531,phenobarbital,https://www.imedix.com/drugs/phenobarbital/,Pending,,,
+532,pilocarpine-hcl,https://www.imedix.com/drugs/pilocarpine-hcl/,Pending,,,
+533,piroxicam,https://www.imedix.com/drugs/piroxicam/,Pending,Batch B - Analgesics,,
+534,plan-b-one-step,https://www.imedix.com/drugs/plan-b-one-step/,Completed,,Verified,
+535,pnv-dha,https://www.imedix.com/drugs/pnv-dha/,Pending,,,
+536,pnv-select,https://www.imedix.com/drugs/pnv-select/,Pending,,,
+537,ponstel,https://www.imedix.com/drugs/ponstel/,Pending,Batch B - Analgesics,,
+538,prednisolone,https://www.imedix.com/drugs/prednisolone/,Pending,,,
+539,prena1-pearl,https://www.imedix.com/drugs/prena1-pearl/,Pending,,,
+540,prenate-enhance,https://www.imedix.com/drugs/prenate-enhance/,Pending,,,
+541,preplus,https://www.imedix.com/drugs/preplus/,Pending,,,
+542,prevident-paste,https://www.imedix.com/drugs/prevident-paste/,Pending,,,
+543,priligy,https://www.imedix.com/drugs/priligy/,Pending,,Bulk-edited only; not remediated,
+544,prilosec,https://www.imedix.com/drugs/prilosec/,Completed,,Verified,
+545,procaine,https://www.imedix.com/drugs/procaine/,Pending,,,
+546,procardia,https://www.imedix.com/drugs/procardia/,Completed,Batch A - Cardiovascular,"BP rebuild 2026-10-21 (v3 model, v6.21): Procardia caps discontinued (FR not safety), XL Rx; full rewrite from Procardia caps label (Pfizer) + Procardia XL label; angina-only + no acute BP lowering angle; nifedipine FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+547,procysbi,https://www.imedix.com/drugs/procysbi/,Pending,,,
+548,progesterone,https://www.imedix.com/drugs/progesterone/,Completed,,Verified,
+549,prograf,https://www.imedix.com/drugs/prograf/,Pending,,,
+550,promethazine-hcl,https://www.imedix.com/drugs/promethazine-hcl/,Pending,,,
+551,prometrium,https://www.imedix.com/drugs/prometrium/,Completed,,Verified,
+552,propecia,https://www.imedix.com/drugs/propecia/,Pending,,,
+553,propranolol-hcl,https://www.imedix.com/drugs/propranolol-hcl/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Par propranolol tablets label 2026-08 + Inderal XL PI; FAERS block hosted here; audit v2 0 errors / 0 warnings; live-verified",2026-10-20
+554,proscar,https://www.imedix.com/drugs/proscar/,Pending,,,
+555,provera,https://www.imedix.com/drugs/provera/,Pending,,,
+556,provigil,https://www.imedix.com/drugs/provigil/,Pending,,,
+557,pylera,https://www.imedix.com/drugs/pylera/,Pending,,,
+558,pyridium,https://www.imedix.com/drugs/pyridium/,Pending,,,
+559,qsymia,https://www.imedix.com/drugs/qsymia/,Pending,,,
+560,qtern,https://www.imedix.com/drugs/qtern/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten and republished; Qtern NDA 209091 + Qternmet XR discontinued; from generic dapagliflozin-saxagliptin label (Novadoz ANDA 211533, 2026-04); add-on to metformin 870 (HbA1c -1.02) / SAVOR HF hosp 3.5 vs 2.8% / eGFR<45 CI / CYP3A4 inhibitors; FAERS anchor -> farxiga; reviewer null; audit 0/0 after liver DS row",2026-10-24
+561,qualaquin,https://www.imedix.com/drugs/qualaquin/,Pending,,,
+562,quartette,https://www.imedix.com/drugs/quartette/,Completed,,Verified,
+563,quazepam,https://www.imedix.com/drugs/quazepam/,Pending,,,
+564,quflora,https://www.imedix.com/drugs/quflora/,Pending,,,
+565,quflora-fe,https://www.imedix.com/drugs/quflora-fe/,Pending,,,
+566,quinapril-hcl,https://www.imedix.com/drugs/quinapril-hcl/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from quinapril tablets label (Aurobindo 2024-05) + FDA-posted Pfizer Accupril recall 2022-04; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+567,quinapril-hydrochlorothiazide,https://www.imedix.com/drugs/quinapril-hydrochlorothiazide/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from quinapril/HCTZ label (Aurobindo 2024-04) + FDA-posted Pfizer Accuretic recall 2022-03; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+568,quinidine-gluconate,https://www.imedix.com/drugs/quinidine-gluconate/,Pending,Batch A - Cardiovascular,,
+569,quinidine-sulfate,https://www.imedix.com/drugs/quinidine-sulfate/,Pending,Batch A - Cardiovascular,,
+570,quinine-sulfate,https://www.imedix.com/drugs/quinine-sulfate/,Pending,,,
+571,ramipril,https://www.imedix.com/drugs/ramipril/,Completed,,"BP rebuild 2026-10-22 (v3 model, v6.21): Altace caps/tabs + Vostally discontinued; full rewrite from generic ramipril caps label (BluePoint ANDA 091604, 2026-09) incl. HOPE/AIRE; FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-22
+572,ranexa,https://www.imedix.com/drugs/ranexa/,Pending,,,
+573,ranolazine-er,https://www.imedix.com/drugs/ranolazine-er/,Pending,Batch A - Cardiovascular,,
+574,rapamune-tablet,https://www.imedix.com/drugs/rapamune-tablet/,Pending,Batch A - Cardiovascular,,
+575,rasagiline-mesylate,https://www.imedix.com/drugs/rasagiline-mesylate/,Pending,,,
+576,rayaldee,https://www.imedix.com/drugs/rayaldee/,Pending,,,
+577,razadyne,https://www.imedix.com/drugs/razadyne/,Pending,,,
+578,reglan,https://www.imedix.com/drugs/reglan/,Pending,,,
+579,regranex-gel,https://www.imedix.com/drugs/regranex-gel/,Completed,Diabetes,"Diabetes-group rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Regranex PI (LRM Therapeutics BLA 103691, rev 2026-05, change in BLA holder) and republished; becaplermin 0.01% gel, diabetic neuropathic ulcers adjunct; 4 RCTs 922 pts, closure 50 vs 35% (n=382); cancer data mixed (RR 1.8 mortality, VA HR 0.9, >=3 tubes RR 5.2); no boxed warning in current label; FAERS only 1 report so no table (lead only); interaction row severity Minor as placeholder for 'unknown'; reviewer nulled; audit 0/0",2026-10-24
+580,remeron,https://www.imedix.com/drugs/remeron/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 14716, title 'Remeron': brand page (only mirtazapine page; generic URL is 410); source Organon PI NDA 020415/021208 rev 2025-08; Remeron 1996, SolTab 2001, 45 mg tab discontinued (not safety); somnolence 54 vs 18, appetite/weight, agranulocytosis 2/2,796, lipids, PKU (SolTab); FAERS host mirtazapine 91,057; audit 0/0; verified editor + live",2026-10-26
+581,restoril,https://www.imedix.com/drugs/restoril/,Pending,,,
+582,retrovir,https://www.imedix.com/drugs/retrovir/,Pending,,,
+583,revatio,https://www.imedix.com/drugs/revatio/,Pending,Batch A - Cardiovascular,Bulk-edited only; not remediated,
+584,revlimid,https://www.imedix.com/drugs/revlimid/,Pending,,,
+585,rexulti,https://www.imedix.com/drugs/rexulti/,Pending,,,
+586,reyataz,https://www.imedix.com/drugs/reyataz/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+587,ribavirin,https://www.imedix.com/drugs/ribavirin/,Completed,,Verified,
+588,rid-shampoo,https://www.imedix.com/drugs/rid-shampoo/,Pending,,,
+589,riluzole,https://www.imedix.com/drugs/riluzole/,Pending,,,
+590,rinvoq,https://www.imedix.com/drugs/rinvoq/,Pending,,,
+591,risaquad,https://www.imedix.com/drugs/risaquad/,Pending,,,
+592,rivastigmine,https://www.imedix.com/drugs/rivastigmine/,Pending,,,
+593,rizatriptan,https://www.imedix.com/drugs/rizatriptan/,Completed,Batch B - Analgesics,Verified,2026-09-28
+594,robaxin,https://www.imedix.com/drugs/robaxin/,Pending,,,
+595,rogaine,https://www.imedix.com/drugs/rogaine/,Pending,,,
+596,ropinirole-hcl,https://www.imedix.com/drugs/ropinirole-hcl/,Pending,,,
+597,rosuvastatin-calcium,https://www.imedix.com/drugs/rosuvastatin-calcium/,Pending,,,
+598,roxicodone,https://www.imedix.com/drugs/roxicodone/,Completed,Batch B - Analgesics,Verified,2026-09-28
+599,roxybond,https://www.imedix.com/drugs/roxybond/,Completed,Batch B - Analgesics,Verified,2026-09-28
+600,rybelsus,https://www.imedix.com/drugs/rybelsus/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Rybelsus/Ozempic tablets PI (Novo Nordisk NDA 213051, 2026-01) and republished; empty-stomach dosing / 3-7-14 mg steps / CV outcome trial 9,650 (MACE 12.0 vs 13.8%) / not interchangeable with Ozempic tablets; FAERS anchor -> ozempic; existing reviewer kept; audit 0/0",2026-10-24
+601,savella,https://www.imedix.com/drugs/savella/,Pending,,,
+602,saxenda,https://www.imedix.com/drugs/saxenda/,Completed,Diabetes,"Diabetes-group rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Saxenda PI (Novo Nordisk NDA 206321, 2026-02) and republished on CURRENT slug (slug change to /drugs/saxenda/ pending Eric); weight mgmt adults + 12y; Study 1 3,731 (-7.4 vs -3.0%); HR +2-3 bpm; boxed thyroid; generic liraglutide approved; cats Weight Loss added; FAERS host (liraglutide 50,705); existing reviewer kept; audit 0/0",2026-10-24
+603,senna-plus,https://www.imedix.com/drugs/senna-plus/,Pending,,,
+604,seroquel,https://www.imedix.com/drugs/seroquel/,Pending,,,
+605,sertraline-hcl,https://www.imedix.com/drugs/sertraline-hcl/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 15009: substance page, title 'Sertraline'; source Cipla generic label ANDA 077397 rev 2026-02; pivot = six indications with condition-specific starting doses, weekly titration, pooled common AEs (nausea 26 vs 12), QT thorough study, pediatric OCD trial (92 pts) only; FAERS anchor -> zoloft; cats Depression+Anxiety; reviewer emptied; audit 0/0",2026-10-26
+606,shuddha-guggulu,https://www.imedix.com/drugs/shuddha-guggulu/,Pending,,,
+607,silagra,https://www.imedix.com/drugs/silagra/,Completed,,Verified,
+608,sildalis,https://www.imedix.com/drugs/sildalis/,Completed,,Verified,
+609,sinequan,https://www.imedix.com/drugs/sinequan/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 147799, title 'Sinequan': discontinued-brand page (Pfizer NDA 016798, 1969, discontinued not for safety); source Mylan doxepin capsules PLR label ANDA 070791 rev 2025-10; pivot = what a Sinequan prescription means, doxepin capsules vs low-dose doxepin (NDA 022036), AE in 1,635 pts; FAERS host doxepin 12,555; audit 0/0 after fixes; verified editor + live",2026-10-26
+610,singulair,https://www.imedix.com/drugs/singulair/,Pending,,,
+611,sinus-allergy-pe,https://www.imedix.com/drugs/sinus-allergy-pe/,Completed,,Verified,
+612,skelaxin,https://www.imedix.com/drugs/skelaxin/,Pending,,,
+613,sleep-ii,https://www.imedix.com/drugs/sleep-ii/,Retired,,301 -> /drugs/diphenhydramine-hcl/ (store-brand clone; post set to draft),2026-10-18
+614,sleeping,https://www.imedix.com/drugs/sleeping/,Retired,,301 -> /drugs/diphenhydramine-hcl/ (store-brand clone; post set to draft),2026-10-18
+615,sorine,https://www.imedix.com/drugs/sorine/,Pending,Batch A - Cardiovascular,,
+616,spiriva-respimat-mist-inhaler,https://www.imedix.com/drugs/spiriva-respimat-mist-inhaler/,Pending,,,
+617,spironolactone,https://www.imedix.com/drugs/spironolactone/,Pending,,,
+618,sporanox,https://www.imedix.com/drugs/sporanox/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+619,stendra,https://www.imedix.com/drugs/stendra/,Completed,,Verified,
+620,stiolto-respimat-mist-inhaler,https://www.imedix.com/drugs/stiolto-respimat-mist-inhaler/,Pending,,,
+621,strattera,https://www.imedix.com/drugs/strattera/,Pending,,,
+622,striverdi-respimat-mist-inhaler,https://www.imedix.com/drugs/striverdi-respimat-mist-inhaler/,Pending,,,
+623,stromectol,https://www.imedix.com/drugs/stromectol/,Completed,,Verified,
+624,sucralfate-malate-polymerized-paste,https://www.imedix.com/drugs/sucralfate-malate-polymerized-paste/,Pending,,,
+625,sudafed,https://www.imedix.com/drugs/sudafed/,Completed,,Verified,
+626,sudogest-cold-allergy,https://www.imedix.com/drugs/sudogest-cold-allergy/,Completed,,Verified,
+627,suhagra,https://www.imedix.com/drugs/suhagra/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+628,sulindac,https://www.imedix.com/drugs/sulindac/,Pending,Batch B - Analgesics,,
+629,super-avana,https://www.imedix.com/drugs/super-avana/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+630,super-p-force-jelly,https://www.imedix.com/drugs/super-p-force-jelly/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+631,super-vidalista,https://www.imedix.com/drugs/super-vidalista/,Completed,,Verified,
+632,synthroid,https://www.imedix.com/drugs/synthroid/,Pending,,,
+633,syphilis-test,https://www.imedix.com/drugs/syphilis-test/,Pending,,,
+634,tadacip,https://www.imedix.com/drugs/tadacip/,Completed,,Verified,
+635,tadalis,https://www.imedix.com/drugs/tadalis/,Completed,,Verified,
+636,tadalista,https://www.imedix.com/drugs/tadalista/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+637,tadalista-professional,https://www.imedix.com/drugs/tadalista-professional/,Completed,,Verified,
+638,tadalista-super-active,https://www.imedix.com/drugs/tadalista-super-active/,Completed,,Verified,
+639,tadapox,https://www.imedix.com/drugs/tadapox/,Completed,,Verified,
+640,tadora,https://www.imedix.com/drugs/tadora/,Completed,,Verified,
+641,tafinlar,https://www.imedix.com/drugs/tafinlar/,Pending,,,
+642,tamsulosin-hcl,https://www.imedix.com/drugs/tamsulosin-hcl/,Pending,,,
+643,tandem-plus,https://www.imedix.com/drugs/tandem-plus/,Pending,,,
+644,tapazole,https://www.imedix.com/drugs/tapazole/,Pending,,,
+645,tarceva,https://www.imedix.com/drugs/tarceva/,Pending,,,
+646,taztia-xt,https://www.imedix.com/drugs/taztia-xt/,Retired,,"301 -> /drugs/diltiazem-hcl/ (2026-10-20; Taztia XT ANDA discontinued, merged into generic page; post set to draft)",2026-10-20
+647,tecfidera,https://www.imedix.com/drugs/tecfidera/,Pending,,,
+648,tegretol-tablet,https://www.imedix.com/drugs/tegretol-tablet/,Pending,,,
+649,tekturna,https://www.imedix.com/drugs/tekturna/,Completed,,"BP rebuild 2026-10-22 (v3 model, v6.21): full rewrite from Tekturna PI (LXO NDA 021985, 2024-03) incl. ALTITUDE; pellets + combos discontinued; activeingredient set to 'Aliskiren' (salt name broke ii-graph sidebar); FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-22
+650,telmisartan-amlodipine,https://www.imedix.com/drugs/telmisartan-amlodipine/,Completed,Blood Pressure,"BP rebuild 2026-10-23 (v6.21), added to BP group with ARB cluster: legacy page rewritten from generic telmisartan/amlodipine label (Lupin ANDA 201586, 2023-12); Twynsta discontinued; factorial / initial therapy / ankle-swelling angle; FAERS anchors -> micardis + amlodipine-besylate; existing reviewer kept; audit 0 errors / 0 warnings; live-verified",2026-10-23
+651,telmisartan-hydrochlorothiazid,https://www.imedix.com/drugs/telmisartan-hydrochlorothiazid/,Completed,Blood Pressure,"BP rebuild 2026-10-23 (v6.21), added to BP group with ARB cluster: legacy page rewritten from Micardis HCT PI (Boehringer NDA 021162, 2024-12; brand still Rx); factorial / switching / liver-dosing angle; FAERS anchors -> micardis + HCTZ; existing reviewer kept; audit 0 errors / 0 warnings; live-verified",2026-10-23
+652,terbinafine-hcl,https://www.imedix.com/drugs/terbinafine-hcl/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+653,testolone,https://www.imedix.com/drugs/testolone/,Pending,,,
+654,tetracycline-hcl,https://www.imedix.com/drugs/tetracycline-hcl/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Breckenridge ANDA 210662 SPL; FAERS block; author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+655,tiazac,https://www.imedix.com/drugs/tiazac/,Completed,,"BP rebuild 2026-10-20 (v3 model, v6.19): full rewrite from Tiazac label 2026-08; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-20
+656,tibsovo,https://www.imedix.com/drugs/tibsovo/,Pending,,,
+657,tinidazole,https://www.imedix.com/drugs/tinidazole/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Tindamax SPL; live-verified; refs Accessed + review date 2026-10-18",2026-10-18
+658,tobramycin-sulfate-vial,https://www.imedix.com/drugs/tobramycin-sulfate-vial/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Fresenius Kabi ANDA 065122 SPL; Nebcin discontinued per Drugs@FDA; FAERS block (inhaled caveat); author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+659,toradol,https://www.imedix.com/drugs/toradol/,Pending,Batch B - Analgesics,,
+660,total-allergy,https://www.imedix.com/drugs/total-allergy/,Retired,,301 -> /drugs/diphenhydramine-hcl/ (store-brand clone; post set to draft),2026-10-18
+661,toujeo-solostar-insulin-pen,https://www.imedix.com/drugs/toujeo-solostar-insulin-pen/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Toujeo PI (Sanofi BLA 206538, 2025-05) and republished; U-300 glargine, 3x concentrated; vs Lantus HbA1c similar but higher dose needed; switching rules (same unit dose / 80% from twice-daily); peds from 6y (463); FAERS anchor -> lantus-vial; cats Diabetes added; existing reviewer kept; audit 0 errors; 2 FAQ warnings fixed in republish",2026-10-24
+662,trandolapril,https://www.imedix.com/drugs/trandolapril/,Pending,,,
+663,trazodone-hcl,https://www.imedix.com/drugs/trazodone-hcl/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 15486, title 'Trazodone': substance page; source Apotex label ANDA 071196/071258 rev 2026-03; pivot = MDD-only, after-food divided dosing, drowsiness 41 vs 20 (outpatients), priapism, orthostatic hypotension, new oral solution Raldesy NDA 218637 (2024-11-26); FAERS host trazodone 15,551; audit 0/0 after title-pattern and warnings fixes; verified editor + live",2026-10-26
+664,tri-legest-fe,https://www.imedix.com/drugs/tri-legest-fe/,Completed,,Verified,
+665,triazolam,https://www.imedix.com/drugs/triazolam/,Pending,,,
+666,trimethoprim,https://www.imedix.com/drugs/trimethoprim/,Pending,,,
+667,triple-omega,https://www.imedix.com/drugs/triple-omega/,Pending,Batch A - Cardiovascular,,
+668,tums-smoothies,https://www.imedix.com/drugs/tums-smoothies/,Pending,,,
+669,tusnel-dm-pediatric,https://www.imedix.com/drugs/tusnel-dm-pediatric/,Completed,,Verified,
+670,twynsta,https://www.imedix.com/drugs/twynsta/,Retired,Batch A - Cardiovascular,"301 -> /drugs/telmisartan-amlodipine/ (2026-10-20; Twynsta NDA discontinued, merged into generic page; post set to draft)",2026-10-20
+671,tydemy,https://www.imedix.com/drugs/tydemy/,Pending,,,
+672,tylenol,https://www.imedix.com/drugs/tylenol/,Pending,Batch B - Analgesics,,
+673,uloric,https://www.imedix.com/drugs/uloric/,Pending,,,
+674,ultracet,https://www.imedix.com/drugs/ultracet/,Completed,Batch B - Analgesics,Verified; brand discontinued (generic label used),2026-09-28
+675,ultram,https://www.imedix.com/drugs/ultram/,Completed,Batch B - Analgesics,Verified; brand discontinued (generic label used),2026-09-28
+676,umecta-foam,https://www.imedix.com/drugs/umecta-foam/,Pending,,,
+677,unisom,https://www.imedix.com/drugs/unisom/,Pending,,,
+678,unisom-sleep-aid,https://www.imedix.com/drugs/unisom-sleep-aid/,Pending,,,
+679,unisom-sleepmelts,https://www.imedix.com/drugs/unisom-sleepmelts/,Pending,,,
+680,unithroid,https://www.imedix.com/drugs/unithroid/,Pending,,,
+681,uptravi,https://www.imedix.com/drugs/uptravi/,Pending,Batch A - Cardiovascular,,
+682,urelle,https://www.imedix.com/drugs/urelle/,Completed,,Verified,
+683,uribel,https://www.imedix.com/drugs/uribel/,Completed,,Verified,
+684,urinary-pain-relief,https://www.imedix.com/drugs/urinary-pain-relief/,Pending,,,
+685,uro-mp,https://www.imedix.com/drugs/uro-mp/,Completed,,Verified,
+686,urocit-k,https://www.imedix.com/drugs/urocit-k/,Pending,,,
+687,uroxatral,https://www.imedix.com/drugs/uroxatral/,Pending,,,
+688,urso,https://www.imedix.com/drugs/urso/,Pending,,,
+689,urso-forte,https://www.imedix.com/drugs/urso-forte/,Pending,,,
+690,ursodiol,https://www.imedix.com/drugs/ursodiol/,Pending,,,
+691,ustell,https://www.imedix.com/drugs/ustell/,Completed,,Verified,
+692,valacyclovir,https://www.imedix.com/drugs/valacyclovir/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+693,valcyte,https://www.imedix.com/drugs/valcyte/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+694,valganciclovir-hcl,https://www.imedix.com/drugs/valganciclovir-hcl/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+695,valium,https://www.imedix.com/drugs/valium/,Pending,,,
+696,valproic-acid,https://www.imedix.com/drugs/valproic-acid/,Pending,,,
+697,valsartan,https://www.imedix.com/drugs/valsartan/,Completed,Blood Pressure,"BP rebuild 2026-10-23 (v6.21), added to BP group with ARB cluster: legacy page rewritten from generic valsartan label (Jubilant Cadista ANDA 203536, 2026-08); cats BP+Heart Disease; FAERS host (valsartan incl. combos); reviewer null; audit 0 errors / 0 warnings; live-verified",2026-10-23
+698,valsartan-hydrochlorothiazide,https://www.imedix.com/drugs/valsartan-hydrochlorothiazide/,Completed,Blood Pressure,"BP rebuild 2026-10-23 (v6.21), added to BP group with ARB cluster: legacy page rewritten from Diovan HCT PI (Novartis NDA 020818, 2026-02); initial-therapy angle; FAERS anchors -> valsartan + HCTZ; reviewer null; audit 0 errors / 0 warnings; overlap 8-11% within cluster; live-verified",2026-10-23
+699,valtrex,https://www.imedix.com/drugs/valtrex/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+700,vanacof-dm,https://www.imedix.com/drugs/vanacof-dm/,Pending,,,
+701,vaniqa,https://www.imedix.com/drugs/vaniqa/,Pending,,,
+702,varubi,https://www.imedix.com/drugs/varubi/,Pending,,,
+703,vascepa,https://www.imedix.com/drugs/vascepa/,Pending,,,
+704,vaseretic,https://www.imedix.com/drugs/vaseretic/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from Vaseretic label (Bausch 2020-08); not initial therapy; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+705,vegetable-laxative,https://www.imedix.com/drugs/vegetable-laxative/,Pending,,,
+706,velivet,https://www.imedix.com/drugs/velivet/,Pending,,,
+707,velphoro,https://www.imedix.com/drugs/velphoro/,Pending,,,
+708,verapamil-hcl,https://www.imedix.com/drugs/verapamil-hcl/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from verapamil tablets label (AvKARE ANDA071881, 2026-01); FAERS block hosted here; audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+709,verdeso-foam,https://www.imedix.com/drugs/verdeso-foam/,Pending,,,
+710,verelan,https://www.imedix.com/drugs/verelan/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from verapamil SR capsules label (Verelan NDA 019614, Wilshire 2024-11); audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+711,verelan-pm,https://www.imedix.com/drugs/verelan-pm/,Completed,,"BP rebuild 2026-10-21 (v3 model, v6.19): full rewrite from verapamil ER (PM) PI (Verelan PM NDA 020943, Wilshire 2024-11); audit v2.1 0 errors / 0 warnings; live-verified",2026-10-21
+712,versacloz,https://www.imedix.com/drugs/versacloz/,Pending,,,
+713,vfend,https://www.imedix.com/drugs/vfend/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+714,viactiv,https://www.imedix.com/drugs/viactiv/,Pending,,,
+715,viagra-oral-jelly,https://www.imedix.com/drugs/viagra-oral-jelly/,Pending,,Bulk-edited only; not remediated,
+716,viagra-professional,https://www.imedix.com/drugs/viagra-professional/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+717,viagra-soft,https://www.imedix.com/drugs/viagra-soft/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+718,viagra-strips,https://www.imedix.com/drugs/viagra-strips/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+719,viagra-super-active,https://www.imedix.com/drugs/viagra-super-active/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+720,viagra-super-force,https://www.imedix.com/drugs/viagra-super-force/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+721,viberzi,https://www.imedix.com/drugs/viberzi/,Pending,,,
+722,vibramycin,https://www.imedix.com/drugs/vibramycin/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics); brand discontinued in all forms per Drugs@FDA (status Discontinued); clinical content from generic doxycycline SPL; author Editorial Team, no reviewer; live-verified; refs Accessed 2026-10-18",2026-10-18
+723,vicks-dayquil,https://www.imedix.com/drugs/vicks-dayquil/,Completed,,Verified,
+724,vidalista,https://www.imedix.com/drugs/vidalista/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+725,vidalista-80mg-yellow,https://www.imedix.com/drugs/vidalista-80mg-yellow/,Completed,,Verified,
+726,vidalista-black,https://www.imedix.com/drugs/vidalista-black/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+727,vidalista-ct,https://www.imedix.com/drugs/vidalista-ct/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+728,vidalista-professional,https://www.imedix.com/drugs/vidalista-professional/,Completed,,Upgrade 2026-10-20: v3 generics model + std v6.19; audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+729,viekira-pak,https://www.imedix.com/drugs/viekira-pak/,Pending,,,
+730,vigora,https://www.imedix.com/drugs/vigora/,Completed,,Verified,
+731,vinate-m,https://www.imedix.com/drugs/vinate-m/,Pending,,,
+732,viokace,https://www.imedix.com/drugs/viokace/,Pending,,,
+733,viorele,https://www.imedix.com/drugs/viorele/,Pending,,,
+734,viramune,https://www.imedix.com/drugs/viramune/,Completed,,Rebuilt to standard v6.16 (Tier A); live-verified; refs Accessed + review date 2026-10-18,2026-10-18
+735,viread,https://www.imedix.com/drugs/viread/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; HBV trial data to add to Uses; refs/review date still say 2026-10-06 - re-date pending",
+736,vitafol-ob,https://www.imedix.com/drugs/vitafol-ob/,Pending,,,
+737,vitafol-obdha,https://www.imedix.com/drugs/vitafol-obdha/,Pending,,,
+738,vitafol-ultra,https://www.imedix.com/drugs/vitafol-ultra/,Pending,,,
+739,vital-d-rx,https://www.imedix.com/drugs/vital-d-rx/,Pending,,,
+740,vitapearl,https://www.imedix.com/drugs/vitapearl/,Pending,,,
+741,vitrakvi,https://www.imedix.com/drugs/vitrakvi/,Pending,,,
+742,vivarin,https://www.imedix.com/drugs/vivarin/,Pending,,,
+743,vivlodex,https://www.imedix.com/drugs/vivlodex/,Pending,Batch B - Analgesics,,
+744,vivotif,https://www.imedix.com/drugs/vivotif/,Pending,,,
+745,vyfemla,https://www.imedix.com/drugs/vyfemla/,Pending,,,
+746,wal-dryl-allergy,https://www.imedix.com/drugs/wal-dryl-allergy/,Completed,,Verified,
+747,wal-fex-allergy,https://www.imedix.com/drugs/wal-fex-allergy/,Completed,,Verified,
+748,wal-profen,https://www.imedix.com/drugs/wal-profen/,Pending,Batch B - Analgesics,,
+749,wal-proxen,https://www.imedix.com/drugs/wal-proxen/,Pending,Batch B - Analgesics,,
+750,wal-sleep-z,https://www.imedix.com/drugs/wal-sleep-z/,Retired,,301 -> /drugs/diphenhydramine-hcl/ (store-brand clone; post set to draft),2026-10-18
+751,wal-som,https://www.imedix.com/drugs/wal-som/,Retired,,301 -> /drugs/unisom-sleep-aid/ (store-brand clone; post set to draft),2026-10-18
+752,wal-tussin,https://www.imedix.com/drugs/wal-tussin/,Pending,,,
+753,wal-tussin-cough,https://www.imedix.com/drugs/wal-tussin-cough/,Pending,,,
+754,warfarin-sodium,https://www.imedix.com/drugs/warfarin-sodium/,Completed,,Verified,
+755,wegovy,https://www.imedix.com/drugs/wegovy/,Completed,Diabetes,"Diabetes-group rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten and republished on CURRENT slug (change to /drugs/wegovy/ pending Eric); source = current Wegovy PI injection+tablets (Novo NDA 215256/218316, SPL v19 2026-06-18, via FDA Label SPL - openFDA only had 2024 repackager copy); SELECT 17,604 (MACE 6.5 vs 8.0%, HR 0.80) / weight -14.9 vs -2.4% / adolescents BMI -16.1% / MASH accelerated approval / tablets 1.5-25 mg / 7.2 mg max; cats Weight Loss added; FAERS anchor -> ozempic; existing reviewer kept; audit 0/0",2026-10-24
+756,wellbutrin-sr,https://www.imedix.com/drugs/wellbutrin-sr/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 16033, title 'Wellbutrin SR' (was 'Wellbutrin'): GSK PI NDA 020358 rev 2025-11; pivot = twice-daily SR, seizure 0.1% -> 0.4% at max, hypertension, same ingredient as Zyban; Wellbutrin IR (1985) and Zyban discontinued; FAERS host bupropion HCl 109,678; links bupropion; audit 0/0; verified editor + live + FAQs via REST",2026-10-26
+757,what-is-viagra,https://www.imedix.com/drugs/what-is-viagra/,Completed,,Upgrade 2026-10-20: rebuilt v3 brand hub + std v6.19 (Concerns added; FAERS refreshed); audit v2 (imedix-audit-v2.js) 0 errors / 0 warnings; live-verified,2026-10-20
+758,womens-aspirin,https://www.imedix.com/drugs/womens-aspirin/,Pending,Batch B - Analgesics,,
+759,womens-gentle-laxative,https://www.imedix.com/drugs/womens-gentle-laxative/,Pending,,,
+760,womens-multivitamin,https://www.imedix.com/drugs/womens-multivitamin/,Pending,,,
+761,wymzya-fe,https://www.imedix.com/drugs/wymzya-fe/,Completed,,Verified,
+762,xadago,https://www.imedix.com/drugs/xadago/,Pending,,,
+763,xalkori,https://www.imedix.com/drugs/xalkori/,Pending,,,
+764,xanax,https://www.imedix.com/drugs/xanax/,Pending,,,
+765,xarelto-oral,https://www.imedix.com/drugs/xarelto-oral/,Pending,Batch A - Cardiovascular,,
+766,xatmep,https://www.imedix.com/drugs/xatmep/,Pending,,,
+767,xeljanz,https://www.imedix.com/drugs/xeljanz/,Pending,,,
+768,xeloda,https://www.imedix.com/drugs/xeloda/,Pending,,,
+769,xenical,https://www.imedix.com/drugs/xenical/,Pending,,,
+770,xifaxan,https://www.imedix.com/drugs/xifaxan/,Pending,,,
+771,xigduo-xr,https://www.imedix.com/drugs/xigduo-xr/,Completed,Diabetes,"Diabetes rebuild 2026-10-24 (v6.22): legacy page (draft after 24.10 unpublish) rewritten from Xigduo XR PI (AstraZeneca NDA 205649, 2026-08) and republished; initial trial 638 (HbA1c -2.0 vs -1.5/-1.4) / eGFR 30-45 not started, <30 CI / dapagliflozin HF+CKD indications / generics approved; FAERS anchors -> farxiga + metformin; reviewer null; audit 0/0 after stub fix",2026-10-24
+772,xofluza,https://www.imedix.com/drugs/xofluza/,Pending,,,
+773,xospata,https://www.imedix.com/drugs/xospata/,Pending,,,
+774,yaz,https://www.imedix.com/drugs/yaz/,Pending,,,
+775,z-sleep,https://www.imedix.com/drugs/z-sleep/,Retired,,301 -> /drugs/diphenhydramine-hcl/ (store-brand clone; post set to draft),2026-10-18
+776,zafirlukast,https://www.imedix.com/drugs/zafirlukast/,Pending,,,
+777,zaleplon,https://www.imedix.com/drugs/zaleplon/,Pending,,,
+778,zenegra,https://www.imedix.com/drugs/zenegra/,Completed,,Verified,
+779,zetia,https://www.imedix.com/drugs/zetia/,Pending,,,
+780,zithromax,https://www.imedix.com/drugs/zithromax/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Zithromax oral SPL (Pfizer); author iMedix Editorial Team, no reviewer; FAERS block; live-verified; refs Accessed 2026-10-18",2026-10-18
+781,zofran,https://www.imedix.com/drugs/zofran/,Pending,,,
+782,zoloft,https://www.imedix.com/drugs/zoloft/,Completed,Depression,"Rebuilt 2026-10-26 (v6.22), ID 16339: brand page; source Zoloft PI (Viatris NDA 019839/020990, DailyMed 2023-08-08 = current); pivot = the Zoloft product: 1991 approval, tablets engraved ZOLOFT, 150/200 mg discontinued, oral solution 20 mg/mL with 12% alcohol (disulfiram CI) + latex dropper + dilution, PMDD luteal dosing, false-positive benzodiazepine screens; SE = sexual Table 4; FAERS host sertraline HCl 117,835; cats Depression+Anxiety; links sertraline-hcl; audit 0/0",2026-10-26
+783,zolpidem-tartrate,https://www.imedix.com/drugs/zolpidem-tartrate/,Pending,,,
+784,zomig,https://www.imedix.com/drugs/zomig/,Completed,Batch B - Analgesics,Verified,2026-09-28
+785,zortress,https://www.imedix.com/drugs/zortress/,Pending,,,
+786,zovirax,https://www.imedix.com/drugs/zovirax/,Completed,,"Rebuilt to standard v6.16 (Tier A), 6-11 Oct 2026 (exact day not recorded); live-verified; refs/review date still say 2026-10-06 - re-date pending",
+787,zyprexa,https://www.imedix.com/drugs/zyprexa/,Pending,,,
+788,zyrtec-d,https://www.imedix.com/drugs/zyrtec-d/,Completed,,Verified,
+789,zyvox,https://www.imedix.com/drugs/zyvox/,Completed,,"Rebuilt to standard v6.16 (Tier A, antibiotics) from Zyvox I.V. SPL (current Zyvox labelling = IV only); live-verified; refs Accessed + review date 2026-10-18",2026-10-18
+790,zzzquil,https://www.imedix.com/drugs/zzzquil/,Pending,,,
+791,avalide,,Completed,Blood Pressure,"NEW page created 2026-10-23 (v6.21), ID 151931: Avalide PI (Sanofi NDA 020758, 2025-10); initial-therapy Studies V/VI angle; FAERS anchor -> irbesartan; reviewer nulled; ii-graph OK; overlap 11-13% within cluster. PENDING: Updated line on first edit",2026-10-23
+792,avapro,https://www.imedix.com/drugs/avapro/,Completed,Blood Pressure,"NEW page created 2026-10-23 (v6.21), ID 151930: Avapro PI (Sanofi NDA 020757, 2026-08); IDNT diabetic nephropathy angle; FAERS anchor -> irbesartan; reviewer nulled; ii-graph OK; overlap 15% with irbesartan. PENDING: Updated line on first edit",2026-10-23
+793,bystolic,https://www.imedix.com/drugs/bystolic/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151920: Bystolic PI (Allergan/AbbVie NDA 021742, 2024-08); Byvalson discontinued; FAERS host (no nebivolol page); reviewer nulled; audit 0 content errors. PENDING: ii-graph (Nebivolol not in KB catalogue); Updated line on first edit",2026-10-22
+794,calan,https://www.imedix.com/drugs/calan/,Not needed,Blood Pressure,"Not created: Calan NDAs discontinued; covered by /drugs/verapamil-hcl/, /drugs/verelan/",
+795,coumadin,https://www.imedix.com/drugs/coumadin/,Not needed,Heart Disease,Not created: Coumadin NDA discontinued; covered by /drugs/warfarin-sodium/ (Heart Disease),
+796,diovan,https://www.imedix.com/drugs/diovan/,Completed,Blood Pressure,"NEW page created 2026-10-23 (v6.21), ID 151929: Diovan PI (Novartis NDA 021283, 2026-08); Val-HeFT / VALIANT / paediatric suspension angle; FAERS anchor -> valsartan; reviewer nulled; ii-graph OK; overlap 12% with valsartan. PENDING: Updated line on first edit",2026-10-23
+797,dipyridamole,https://www.imedix.com/drugs/dipyridamole/,To create,Heart Disease,"Antiplatelet, not BP: moved to Heart Disease group",
+798,doxazosin,https://www.imedix.com/drugs/doxazosin/,Not needed,Blood Pressure,Not created: same ingredient as /drugs/cardura/ (active brand),
+799,furosemide,https://www.imedix.com/drugs/furosemide/,Not needed,Blood Pressure,Not created: same ingredient as /drugs/lasix/,
+800,hydrochlorothiazide,https://www.imedix.com/drugs/hydrochlorothiazide/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151925: generic HCTZ label (Accord ANDA 202556, 2026-04); NMSC Sentinel / glaucoma / potassium angle; s4.8 exception (no AE rates in label, 1 expected warning); FAERS host (HCTZ incl. combos); reviewer nulled; ii-graph OK. PENDING: Updated line on first edit",2026-10-22
+801,hytrin,https://www.imedix.com/drugs/hytrin/,Completed,Blood Pressure,"NEW page created 2026-10-23 (v6.21), ID 151928: Hytrin tabs/caps + Tezruly discontinued; from generic terazosin caps label (Amerisyn ANDA 074823, 2026-09; BPH + hypertension); first-dose syncope angle; FAERS host; reviewer nulled; audit 0 content errors; overlap 8-9% with cardura/minipress. PENDING: ii-graph (Terazosin not in KB catalogue); Updated line on first edit",2026-10-23
+802,hyzaar,https://www.imedix.com/drugs/hyzaar/,Completed,Blood Pressure,"NEW page created 2026-10-23 (v6.21), ID 151932: Hyzaar PI (Organon NDA 020387, 2025-11); LIFE trial / Black-subgroup angle; FAERS anchor -> losartan-potassium; reviewer nulled; ii-graph OK; overlap 16% with losartan-hctz. PENDING: Updated line on first edit",2026-10-23
+803,innopran-xl,https://www.imedix.com/drugs/innopran-xl/,Not needed,Blood Pressure,"Not created: same product/labeler as /drugs/inderal-xl/ (ANI, both current labels)",
+804,isoptin,https://www.imedix.com/drugs/isoptin/,Not needed,Blood Pressure,Not created: no Drugs@FDA record; covered by verapamil pages,
+805,lisinopril,https://www.imedix.com/drugs/lisinopril/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151915: generic lisinopril label (Aurobindo ANDA 077622) + Qbrelis PI; FAERS host; reviewer nulled; audit 0 content errors. PENDING: ii-graph sidebar (Lisinopril not in KB ingredient catalogue - KB update later); Updated line appears on first edit",2026-10-22
+806,lozol,https://www.imedix.com/drugs/lozol/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151926: Lozol + Widaplik discontinued; from generic indapamide label (ANI ANDA 074299, 2025-09); low-sodium/potassium angle; FAERS host; reviewer nulled; audit 0 content errors. NOTE: empty page was briefly live (~1 min) after a rejected save - reverted to draft, fixed, republished. PENDING: ii-graph (Indapamide not in KB catalogue); Updated line on first edit",2026-10-22
+807,micardis,https://www.imedix.com/drugs/micardis/,Completed,Blood Pressure,"NEW page created 2026-10-23 (v6.21), ID 151933: Micardis + Twynsta discontinued (Micardis HCT Rx); from generic telmisartan label (Alembic ANDA 202130, 2026-05); ONTARGET dual-blockade / kidney-liver dosing angle; FAERS host (telmisartan); reviewer nulled; ii-graph OK. PENDING: Updated line on first edit",2026-10-23
+808,midamor,https://www.imedix.com/drugs/midamor/,Completed,Blood Pressure,"NEW page created 2026-10-23 (v6.21), ID 151927: Midamor Rx (Padagis NDA 018200, label 2023-05); Moduretic discontinued; hyperkalaemia angle; FAERS host (amiloride); reviewer nulled; audit 0 content errors. PENDING: ii-graph (Amiloride not in KB catalogue); Updated line on first edit",2026-10-23
+809,moduretic,https://www.imedix.com/drugs/moduretic/,Not needed,Blood Pressure,Not created: no Drugs@FDA record or current label,
+810,norvasc,https://www.imedix.com/drugs/norvasc/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151919: Norvasc PI (Viatris NDA 019787, 2023-02); CAMELOT / vasospastic angina / HF studies angle; Katerzia + Norliqva noted; FAERS anchor -> amlodipine-besylate; reviewer nulled; ii-graph OK; overlap 8%. PENDING: Updated line on first edit",2026-10-22
+811,plavix,https://www.imedix.com/drugs/plavix/,To create,Heart Disease,"Antiplatelet, not BP: moved to Heart Disease group",
+812,plendil,https://www.imedix.com/drugs/plendil/,Not needed,Blood Pressure,Not created: Plendil discontinued; covered by /drugs/felodipine-er/,
+813,prazosin,https://www.imedix.com/drugs/prazosin/,Not needed,Blood Pressure,Not created: same ingredient as /drugs/minipress/ (active brand),
+814,prinivil,https://www.imedix.com/drugs/prinivil/,Not needed,Blood Pressure,Not created: Prinivil discontinued; covered by new lisinopril/zestril pages,
+815,serpina,https://www.imedix.com/drugs/serpina/,Not needed,Blood Pressure,"Not created: herbal product, no US drug record",
+816,tenormin,https://www.imedix.com/drugs/tenormin/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151921: Tenormin label (Upsher-Smith NDA 018240, 2025-09); ISIS-1 / kidney maximums / US volunteered AE angle; FAERS host (atenolol); reviewer nulled; ii-graph OK; overlap 10% with atenolol-chlorthalidone. PENDING: Updated line on first edit",2026-10-22
+817,toprol-xl,https://www.imedix.com/drugs/toprol-xl/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151922: Toprol-XL PI (Melinta NDA 019962, 2026-03); MERIT-HF / succinate vs tartrate angle; FAERS host (metoprolol succinate; tartrate on lopressor); reviewer nulled; ii-graph OK; overlap 11% with lopressor. PENDING: Updated line on first edit",2026-10-22
+818,torsemide,https://www.imedix.com/drugs/torsemide/,Completed,Blood Pressure,"NEW page created 2026-10-23 (v6.21), ID 151934: generic torsemide label (Aurobindo ANDA 078249, 2024-05); Demadex discontinued, Soaanz Rx (status only); CYP2C9 / ototoxicity / urinary-excretion angle, distinct from demadex (overlap 4%), no redirect; FAERS host; reviewer nulled; ii-graph OK. PENDING: Updated line on first edit",2026-10-23
+819,trandate,https://www.imedix.com/drugs/trandate/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151924: Trandate + Normodyne discontinued; from generic labetalol label (BluePoint ANDA 207743, 2026-06); liver-injury angle; FAERS host (labetalol); reviewer nulled; audit 0 content errors. PENDING: ii-graph (Labetalol not in KB catalogue); Updated line on first edit",2026-10-22
+820,vasodilan,https://www.imedix.com/drugs/vasodilan/,Not needed,Blood Pressure,"Not created: no Drugs@FDA record; peripheral vasodilator, not BP",
+821,vasotec,https://www.imedix.com/drugs/vasotec/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151918: Vasotec label (Bausch NDA 018998, 2026-01); first-dose supervision / dialysis / HF AE angle; FAERS anchor -> enalapril-maleate; reviewer nulled; ii-graph OK; overlap 7-8%. PENDING: Updated line on first edit",2026-10-22
+822,zebeta,https://www.imedix.com/drugs/zebeta/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151923: Zebeta discontinued; from generic bisoprolol label (Advagen ANDA 075643, 2025-11); FAERS host (bisoprolol fumarate); reviewer nulled; ii-graph OK; overlap 11% with bisoprolol-hctz. PENDING: Updated line on first edit",2026-10-22
+823,zestoretic,https://www.imedix.com/drugs/zestoretic/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151917: Zestoretic label (Almatica NDA 019888, 2025-03); not-initial-therapy angle; FAERS anchor -> lisinopril; reviewer nulled; audit 0 content errors; overlap 9-10% with lisinopril/zestril. PENDING: ii-graph (Lisinopril not in KB catalogue); Updated line on first edit",2026-10-22
+824,zestril,https://www.imedix.com/drugs/zestril/,Completed,Blood Pressure,"NEW page created 2026-10-22 (v6.21), ID 151916: Zestril PI (Upsher-Smith NDA 019777, 2025-01); GISSI-3/ATLAS angle; FAERS anchor -> lisinopril; reviewer nulled; audit 0 content errors; overlap with lisinopril 15%. PENDING: ii-graph (Lisinopril not in KB catalogue); Updated line on first edit",2026-10-22
+825,actoplus-met,https://www.imedix.com/drugs/actoplus-met/,Completed,Diabetes,"NEW page created 2026-10-23 (v6.21), ID 151935: Actoplus Met PI (Takeda NDA 021842, 2026-08; 15/850 Rx, 15/500 + XR discontinued); two boxed warnings / HbA1c -1.8 vs -1.0 angle; FAERS anchors -> actos + metformin; reviewer nulled; ii-graph OK. PENDING: Updated line on first edit",2026-10-23
+826,duetact,https://www.imedix.com/drugs/duetact/,Completed,Diabetes,"NEW page created 2026-10-23 (v6.21), ID 151936: Duetact PI (Takeda NDA 021925, 2025-03; 30/2, 30/4 Rx); approved on bioequivalence / hypoglycaemia / sulfa allergy angle; FAERS anchor -> actos; reviewer nulled; ii-graph OK. PENDING: Updated line on first edit",2026-10-23
+827,prandin,https://www.imedix.com/drugs/prandin/,Completed,Diabetes,"NEW page created 2026-10-23 (v6.21), ID 151937: Prandin discontinued; from generic repaglinide label (Aurobindo ANDA 203820, 2024-05); meal-time dosing / gemfibrozil 8.1x / clopidogrel angle; FAERS host (repaglinide); reviewer nulled. PENDING: ii-graph (Repaglinide not in KB catalogue); Updated line on first edit",2026-10-23
+828,precose,https://www.imedix.com/drugs/precose/,Completed,Diabetes,"NEW page created 2026-10-23 (v6.21), ID 151938: Precose discontinued; from generic acarbose label (Strides ANDA 090912, 2026-07); GI effects / glucose-not-sucrose / liver enzymes angle; FAERS host (acarbose); reviewer nulled. PENDING: ii-graph (Acarbose not in KB catalogue); Updated line on first edit",2026-10-23
+829,glyset,https://www.imedix.com/drugs/glyset/,Completed,Diabetes,"NEW page created 2026-10-23 (v6.21), ID 151939: Glyset discontinued; from generic miglitol label (Westminster ANDA 203965, 2021-12); absorbed / renally cleared vs acarbose, GI effects, ranitidine/propranolol angle; FAERS host (miglitol); reviewer nulled. PENDING: ii-graph (Miglitol not in KB catalogue); Updated line on first edit",2026-10-23
+830,glucophage,https://www.imedix.com/drugs/glucophage/,Completed,Diabetes,"NEW page created 2026-10-24 (v6.22), ID 151940: Glucophage NDA 020357 + Glucophage XR NDA 021202 discontinued (FR: not for safety); from generic metformin ER label (Sun ANDA 077336, 2026-06); XR / swallow whole / tablet shell / ER GI rates angle; FAQ per v6.22; FAERS anchor -> metformin; reviewer nulled; ii-graph OK. PENDING: Updated line on first edit",2026-10-24
+831,amaryl,https://www.imedix.com/drugs/amaryl/,Completed,Diabetes,"NEW page created 2026-10-24 (v6.22), ID 151941: Amaryl NDA 020496 discontinued; from generic glimepiride label (Aurobindo ANDA 202759, 2026-03); paediatric trial vs metformin (272, not met) / kidney start dose angle; FAQ per v6.22; FAERS anchor -> glimepiride; reviewer nulled. Fixes after first audit: mg in uses, forbidden word in GI, 2 stub warnings, liver DS row. PENDING: Updated line on first edit",2026-10-24
+832,glucotrol-xl,https://www.imedix.com/drugs/glucotrol-xl/,Completed,Diabetes,"NEW page created 2026-10-24 (v6.22), ID 151942: Glucotrol XL PI (Roerig/Pfizer NDA 020329, 2026-07; brand Rx); non-dissolving shell / GI obstruction / switching from IR glipizide angle; FAQ per v6.22; FAERS anchor -> glipizide; reviewer nulled. Fixes: PI manufacturer parenthetical, mg in uses, kidney DS row. PENDING: Updated line on first edit",2026-10-24
+833,micronase,https://www.imedix.com/drugs/micronase/,Completed,Diabetes,"NEW page created 2026-10-24 (v6.22), ID 151943: Micronase NDA 017498 (1984) discontinued; from generic non-micronised glyburide label (Avet ANDA 090937) + micronised glyburide label (Teva ANDA 074686) for non-bioequivalence / retitration angle; s4.8 exception (1 expected warning); FAQ per v6.22; FAERS anchor -> glyburide; reviewer nulled. PENDING: Updated line on first edit",2026-10-24
+834,glycomet,https://www.imedix.com/drugs/glycomet/,Not needed,Diabetes,Not created: not in Drugs@FDA (non-US metformin brand); covered by /drugs/metformin/,
+835,diabecon,https://www.imedix.com/drugs/diabecon/,Not needed,Diabetes,"Not created: not in Drugs@FDA (herbal product, not an FDA-approved drug)",
+836,cycloset,https://www.imedix.com/drugs/cycloset/,Completed,Diabetes,"New page 2026-10-24 (v6.22), ID 151944: brand page for the only bromocriptine with a T2D indication (Cycloset NDA 020866, Avvisto, label 2026-01); pair to /drugs/bromocriptine-mesylate/ (generic, no diabetes indication); FAERS anchor -> bromocriptine page; audit: only same-day 'Updated date' false alarm (theme shows publish date 24.10.26)",2026-10-24
+837,humalog-mix-75-25,https://www.imedix.com/drugs/humalog-mix-75-25/,Completed,Diabetes,"New page 2026-10-24 (v6.22), ID 151945: target for 3 broken 301s (humalog-mix-75-25 kwikpen/vial, humalog-mix-50-50 kwikpen pointed at a missing page); Lilly PI BLA 021017 rev 2026-06; vial + KwikPen; 75% protamine/25% lispro; no clinical-studies section so SE table = 'frequency not stated' (s4.8 exception, warning only); open: sidebar ii-graph missing (insulin lispro protamine not in KB catalogue); 301 sources still to retarget",2026-10-24
+838,humalog-mix-50-50,https://www.imedix.com/drugs/humalog-mix-50-50/,Completed,Diabetes,"New page 2026-10-24 (v6.22), ID 151946: Lilly PI BLA 021018 rev 2026-07; KwikPen only (no vial in label); 50% protamine/50% lispro; separate BLA from Mix75/25; SE table 'frequency not stated' (s4.8 exception); open: sidebar ii-graph missing (KB catalogue); FAERS anchor -> humalog-vial",2026-10-24
+839,humulin-70-30,https://www.imedix.com/drugs/humulin-70-30/,Completed,Diabetes,"New page 2026-10-24 (v6.22), ID 151947: target for broken 301 humulin-70-30-kwikpen; Lilly PI BLA 019717 rev 2026-06; OTC (Drugs@FDA), adults only; FAERS host for human insulin (39,520 reports); SE table 'frequency not stated' (s4.8 exception); open: sidebar ii-graph missing (KB catalogue)",2026-10-24
+,,,,,,
+840,novolin-70-30,https://www.imedix.com/drugs/novolin-70-30/,Completed,Diabetes,"New page 2026-10-24 (v6.22), ID 151948: target for broken 301 novolin-70-30-flexpen; Novo Nordisk PI BLA 019991, DailyMed 'Updated November 23, 2022' = current revision (checked 2026-10-25, page note updated, republished 2026-10-25); OTC, adults AND pediatric patients; vial + FlexPen, ReliOn listing; FAERS anchor -> humulin-70-30; SE table 'frequency not stated' (s4.8 exception); open: sidebar ii-graph missing (KB catalogue)",2026-10-25
+841,anafranil,https://www.imedix.com/drugs/anafranil/,To create,Depression,Plan 2026-10-25: brand clomipramine NDA019906 Rx; US label = OCD only (not depression),
+842,bupropion,https://www.imedix.com/drugs/bupropion/,Completed,Depression,"New page 2026-10-26 (v6.22), ID 152003: substance page; Apotex IR label ANDA 076143 rev 2026-09; pivot = IR/SR/XL forms, seizure 0.4% up to 450 mg/day (10x above), weight loss 28%, other products (Forfivo XL, Auvelity); cats Depression + Quit Smoking; FAERS anchor -> wellbutrin-sr; audit: only same-day 'Updated' false alarm; verified editor + live + FAQs via REST",2026-10-26
+843,wellbutrin-xl,https://www.imedix.com/drugs/wellbutrin-xl/,Completed,Depression,"New page 2026-10-26 (v6.22), ID 152001: Bausch PI NDA 021515 rev 2026-02; pivot = once-daily XL + SAD prevention (depression-free 81.4 vs 69.7 etc.), seizure not formally evaluated for XL; old XL 301 retargeted from wellbutrin-sr to wellbutrin-xl (Yoast); FAERS anchor -> wellbutrin-sr; audit: only same-day 'Updated' false alarm; verified editor + live + FAQs via REST",2026-10-26
+844,zyban,https://www.imedix.com/drugs/zyban/,Completed,Depression,"New page 2026-10-26 (v6.22), ID 152002: discontinued smoking-cessation brand (NDA 020711, 1997); source Dr. Reddy's bupropion SR smoking-cessation label ANDA 206122 rev 2025-10; pivot = what a Zyban prescription means today, quit-day dosing, 36 vs 17% quit, NRT; cat Quit Smoking; FAERS anchor -> wellbutrin-sr; FAQ2 resaved after stale save",2026-10-26
+845,celexa,https://www.imedix.com/drugs/celexa/,Completed,Depression,"New page 2026-10-25 (v6.22), ID 151990: brand page; source Celexa PI (Allergan/AbbVie NDA 020822, DailyMed 2023-10-09 = current); pivot = the Celexa product: approved 1998-07-17, 60 mg tablet + oral solution NDA 021046 discontinued (not for safety), tablet ID imprints FP/F P, brand vs generic; SE selection = male sexual dysfunction Table 4; FAERS anchor -> citalopram; linked from /drugs/citalopram/; audit 0 W",2026-10-25
+846,citalopram,https://www.imedix.com/drugs/citalopram/,Completed,Depression,"New page 2026-10-25 (v6.22), ID 151986: substance page; source Aurobindo generic label ANDA 077031 rev 2024-05; pivot = QT dose ceiling (max halved >60/hepatic/CYP2C19), 2 positive + 3 negative trials, relapse prevention; suicidality by age (Table 1); FAERS host citalopram HBr 106,550; cats Depression; audit 0 W, E only same-day 'Updated' + ii-graph missing (citalopram not in KB catalogue); links to celexa/lexapro pages to add when live",2026-10-25
+847,cymbalta,https://www.imedix.com/drugs/cymbalta/,To create,Depression,Plan 2026-10-25: brand duloxetine (Lilly) Rx; depression + pain indications,
+848,effexor-xr,https://www.imedix.com/drugs/effexor-xr/,Completed,Depression,"New page 2026-10-26 (v6.22), ID 152190: Viatris PI NDA 020699 rev 2023-08; Effexor XR 1997, Effexor IR (NDA 020151, 1993) discontinued; 4 adult indications; nausea 30.0 vs 11.8; dose-related BP; renal/hepatic reductions; discontinuation; pediatric trials 1,559 failed; FAERS host venlafaxine 131,556; cats Depression+Anxiety; audit: same-day 'Updated' + ii-graph missing (venlafaxine not in KB catalogue); verified editor + live + FAQs via REST",2026-10-26
+849,pristiq,https://www.imedix.com/drugs/pristiq/,Completed,Depression,"New page 2026-10-26 (v6.22), ID 152191: Pfizer PI NDA 021992 rev 2026-04; Pristiq 2008; pivot = fixed 50 mg dose (no benefit above), dose-dependent AEs (nausea 22 vs 10, 41 at max), desvenlafaxine = major active metabolite of venlafaxine (links effexor-xr), renal/hepatic dosing; pediatric trials 587 failed; FAERS host desvenlafaxine 26,840; audit: same-day 'Updated' + ii-graph missing; verified editor + live + FAQs via REST",2026-10-26
+850,emsam,https://www.imedix.com/drugs/emsam/,To create,Depression,Plan 2026-10-25: brand selegiline transdermal NDA021336 Rx; old emsam-patch URL is 410,
+851,lithium,https://www.imedix.com/drugs/lithium/,To create,Depression,Plan 2026-10-25: substance page lithium carbonate (Lithobid NDA018027 Rx + generics); old lithium-carbonate URL is 410,
+852,clozaril,https://www.imedix.com/drugs/clozaril/,To create,Depression,"Plan 2026-10-25: brand clozapine NDA019758 Rx; schizophrenia, not depression (category to decide)",
+853,bupron-sr,https://www.imedix.com/drugs/bupron-sr/,To create,Depression,Plan 2026-10-25: not in Drugs@FDA (non-US bupropion brand) -> Not Approved page,
+854,venlor,https://www.imedix.com/drugs/venlor/,To create,Depression,Plan 2026-10-25: not in Drugs@FDA (non-US venlafaxine brand) -> Not Approved page,
+855,elavil,https://www.imedix.com/drugs/elavil/,To create,Depression,Plan 2026-10-25: discontinued brand amitriptyline (Elavil NDA012703/012704 disc.); s5.0.1 pivot 'what an Elavil prescription means today'; source = current generic label,
+856,endep,https://www.imedix.com/drugs/endep/,To create,Depression,"Plan 2026-10-25: discontinued US amitriptyline brand (Roche ANDAs 083639/085749/085303 disc.); s5.0.1 discontinued-brand pivot, distinct regulatory history from Elavil",

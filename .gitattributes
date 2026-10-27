@@ -1,0 +1,3 @@
+# Third-party UI UX Pro Max skill installed with its official CLI (uipro init --ai claude).
+.claude/skills/** linguist-vendored
+tests/fixtures/** linguist-generated
