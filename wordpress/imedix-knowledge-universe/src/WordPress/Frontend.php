@@ -24,6 +24,8 @@ final class Frontend {
 		add_filter( 'template_include', array( self::class, 'template_include' ), 99 );
 		add_filter( 'body_class', array( self::class, 'body_class' ) );
 		add_action( 'wp_enqueue_scripts', array( self::class, 'maybe_enqueue' ) );
+		add_action( 'wp_enqueue_scripts', array( self::class, 'trim_theme_assets' ), 100 );
+		add_action( 'wp', array( self::class, 'drop_header_preload' ) );
 		add_filter( 'script_loader_tag', array( self::class, 'module_tag' ), 10, 2 );
 		add_shortcode( self::SHORTCODE, array( self::class, 'shortcode' ) );
 	}
@@ -69,6 +71,35 @@ final class Frontend {
 			$classes[] = 'imedix-ku-page';
 		}
 		return $classes;
+	}
+
+	/**
+	 * Theme and plugin scripts that the Knowledge Universe page never uses
+	 * (carousel, lightbox, masonry, sticky sidebar, tooltips, IE8 shims, code
+	 * highlighting). Removed on this template only; jQuery, Bootstrap and the
+	 * menu script stay because the theme footer may rely on them.
+	 */
+	private const UNUSED_SCRIPTS = '#/(themes/himer/js/(html5|modernizr|scrollbar|theia|owl|matchHeight|prettyPhoto|tabs|tipsy|isotope)\.js|plugins/highlighting-code-block/|wp-includes/js/clipboard(\.min)?\.js)#';
+
+	public static function trim_theme_assets(): void {
+		if ( ! is_singular( 'page' ) || self::TEMPLATE !== get_page_template_slug( get_queried_object_id() ) ) {
+			return;
+		}
+		$pattern = (string) apply_filters( 'imedix_ku_unused_scripts', self::UNUSED_SCRIPTS );
+		$scripts = wp_scripts();
+		foreach ( (array) $scripts->queue as $handle ) {
+			$src = (string) ( $scripts->registered[ $handle ]->src ?? '' );
+			if ( '' !== $src && preg_match( $pattern, $src ) ) {
+				wp_dequeue_script( $handle );
+			}
+		}
+	}
+
+	/** The page has no visible site header, so the header logo must not be preloaded (iMedix child theme). */
+	public static function drop_header_preload(): void {
+		if ( is_singular( 'page' ) && self::TEMPLATE === get_page_template_slug( get_queried_object_id() ) ) {
+			remove_action( 'wp_head', 'imedix_preload_critical_resources', 2 );
+		}
 	}
 
 	public static function maybe_enqueue(): void {

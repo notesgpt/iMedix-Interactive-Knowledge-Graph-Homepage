@@ -49,7 +49,11 @@ else :
 	// The homepage deliberately has no visible site header.
 	$imedix_ku_footer = locate_template( (string) apply_filters( 'imedix_ku_footer_part', 'includes/parts/new-footer.php' ) );
 	if ( $imedix_ku_footer ) {
+		// The part first closes the wrappers its header part opened; without that
+		// header they would be orphan closing tags, so only the footer is kept.
+		ob_start();
 		include $imedix_ku_footer;
+		echo preg_replace( '#^(?:\s|</(?:div|section|main)>|<!--.*?-->)+(?=<footer)#s', '', (string) ob_get_clean() ); // phpcs:ignore WordPress.Security.EscapeOutput -- theme markup.
 	}
 	get_footer();
 endif;
