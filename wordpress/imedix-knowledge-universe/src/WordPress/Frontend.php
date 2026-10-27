@@ -142,7 +142,8 @@ final class Frontend {
 		$state  = Sync::state();
 		$origin = (string) wp_parse_url( home_url(), PHP_URL_SCHEME ) . '://' . (string) wp_parse_url( home_url(), PHP_URL_HOST );
 		$config = array(
-			'graphUrl'     => ! empty( $state['file'] ) ? $state['file'] : rest_url( Rest::NS . '/graph' ),
+			// The URL is stored at sync time; a WP-CLI/cron sync has no HTTPS context, so re-apply the request scheme.
+			'graphUrl'     => ! empty( $state['file'] ) ? set_url_scheme( $state['file'] ) : rest_url( Rest::NS . '/graph' ),
 			'graphRestUrl' => rest_url( Rest::NS . '/graph' ),
 			'graphVersion' => (string) ( $state['version'] ?? '' ),
 			'newsUrl'      => rest_url( Rest::NS . '/news' ),

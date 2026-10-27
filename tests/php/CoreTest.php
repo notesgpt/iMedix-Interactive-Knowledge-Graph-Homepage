@@ -43,9 +43,18 @@ test( 'Topics::parse', function () {
 	T::eq( array( 'Erectile Dysfunction' ), Topics::parse( 'ED (v1)' ), 'alias + annotation' );
 	T::eq( array( 'Erectile Dysfunction', "Men's Health" ), Topics::parse( "ED / Men's Health" ), 'split' );
 	T::eq( array( 'Gastrointestinal', 'Antibiotics' ), Topics::parse( 'Gastrointestinal / Antibiotics (rename → H. pylori infection)' ), 'rename note' );
-	T::eq( array( "Men's Health", "Women's Health" ), Topics::parse( "Men's/Woman's Health" ), 'slash without spaces' );
-	T::eq( array( 'Cardiovascular' ), Topics::parse( 'Batch A - Cardiovascular' ), 'batch prefix' );
-	T::eq( array(), Topics::parse( 'Other (hub)' ), 'ignored' );
+	T::eq( array( "Men's Health", "Woman's Health" ), Topics::parse( "Men's/Woman's Health" ), 'slash without spaces' );
+	T::eq( array( 'Heart Disease' ), Topics::parse( 'Batch A - Cardiovascular' ), 'batch prefix + alias' );
+	T::eq( array(), Topics::parse( 'Other (hub)' ), 'Other is never a topic' );
+	T::eq( array(), Topics::parse( 'Unknown grouping' ), 'unknown label → no topic' );
+	T::eq( array( 'Antibiotics' ), Topics::parse( 'Other / Antibiotics' ), 'Other dropped next to a real category' );
+	T::eq( array( 'Anti Viral' ), Topics::parse( 'HIV / Antiviral' ), 'aliases collapse' );
+	T::eq( array( 'Anti Viral' ), Topics::parse( 'Other (Antiviral / Hepatitis C)' ), 'category named in parenthesis replaces Other' );
+	T::eq( array( 'Quit Smoking' ), Topics::parse( 'Other (Smoking Cessation)' ), 'smoking cessation' );
+	T::eq( array( 'Antibiotics' ), Topics::parse( 'Antibiotics (rename → Lyme disease)' ), 'annotation without a category is dropped' );
+	foreach ( Topics::CATEGORIES as $cat ) {
+		T::eq( $cat, Topics::category( $cat ), "category $cat resolves to itself" );
+	}
 	T::eq( array(), Topics::parse( '' ), 'empty' );
 } );
 

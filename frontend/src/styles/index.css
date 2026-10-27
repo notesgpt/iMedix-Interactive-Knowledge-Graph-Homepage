@@ -473,6 +473,22 @@
 .ku-legend__item--disease strong {
   color: var(--ku-cat-disease-strong);
 }
+/* What a hero line means: an FDA-approved use, from FDA labels — not a complete list. */
+.ku-legend__item--note {
+  display: none !important;
+  color: var(--ku-ink-2);
+  font-size: 13px;
+  font-weight: var(--ku-weight-regular, 400);
+}
+.ku-has-links .ku-legend__item--note {
+  display: inline-flex !important;
+}
+.ku-legend__line {
+  width: 18px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
 
 .ku-icon--play,
 [aria-pressed='true'] > .ku-icon--pause {
@@ -753,9 +769,9 @@
   --ku-ink-2: var(--ku-hero-ink-2);
   --ku-ink-3: var(--ku-hero-ink-3);
   --ku-accent-on-dark: var(--ku-hero-ink);
-  --ku-glass: rgb(var(--ku-white-rgb) / 0.9);
-  --ku-glass-strong: rgb(var(--ku-white-rgb) / 0.97);
-  --ku-panel: rgb(var(--ku-white-rgb) / 0.88);
+  --ku-glass: rgb(var(--ku-white-rgb) / 0.6);
+  --ku-glass-strong: rgb(var(--ku-white-rgb) / 0.78);
+  --ku-panel: rgb(var(--ku-white-rgb) / 0.66);
   --ku-panel-strong: var(--ku-white);
   --ku-panel-hover: var(--ku-white);
   --ku-hairline: var(--ku-hero-line);
@@ -1218,17 +1234,17 @@
    12 px controls (chips, buttons, options), 16 px fields and floating panels,
    22 px cards. Surfaces are frosted glass — translucent white with background
    blur and saturation, a bright inner edge and a hairline — so they share the
-   light of the grid and tints behind them. Text sits on ≥ 85 % white, so the
-   contrast audit still passes everywhere. */
+   light of the grid and tints behind them. The page behind is near-white, so
+   text contrast holds at these alphas (checked by the e2e contrast audit). */
 .imedix-ku {
   --ku-r-s: 12px;
   --ku-r-m: 16px;
   --ku-r-l: 22px;
-  --ku-glass: rgb(var(--ku-white-rgb) / 0.68);
-  --ku-glass-strong: rgb(var(--ku-white-rgb) / 0.86);
+  --ku-glass: rgb(var(--ku-white-rgb) / 0.5);
+  --ku-glass-strong: rgb(var(--ku-white-rgb) / 0.72);
   --ku-glass-edge: inset 0 1px 0 rgb(var(--ku-white-rgb) / 0.9), 0 0 0 1px rgb(var(--ku-navy-rgb) / 0.07);
   --ku-glass-lift: 0 1px 2px rgb(var(--ku-navy-rgb) / 0.04), 0 18px 40px -26px rgb(var(--ku-navy-rgb) / 0.35);
-  --ku-glass-blur: saturate(180%) blur(20px);
+  --ku-glass-blur: saturate(180%) blur(24px);
 }
 .ku-glassy,
 .ku-float,
@@ -1519,19 +1535,105 @@
   padding: 0;
   list-style: none;
 }
+.ku-area__list li {
+  border-top: 1px solid rgb(var(--ku-navy-rgb) / 0.07);
+}
+.ku-area__list li:first-child {
+  border-top: 0;
+}
 .ku-area__list a {
   display: flex;
   align-items: center;
   min-height: 40px;
   padding: 6px 0;
-  border-top: 1px solid rgb(var(--ku-navy-rgb) / 0.07);
   color: var(--ku-text) !important;
   font-size: 15px;
   line-height: 1.35;
   text-decoration: none;
 }
-.ku-area__list li:first-child a {
-  border-top: 0;
+/* FDA-approved use + its label (signed KG), under the medicine. */
+.ku-area__claim {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr);
+  align-items: start;
+  gap: 6px 6px;
+  margin-top: -2px;
+  padding-bottom: 10px;
+  color: var(--ku-hero-ink-2);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+.ku-area__check {
+  width: 14px;
+  height: 14px;
+  margin-top: 2px;
+  color: var(--ku-cat-drug-strong);
+  stroke-width: 2.25;
+}
+.ku-area__list a.ku-area__src {
+  grid-column: 2;
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgb(var(--ku-white-rgb) / 0.85);
+  box-shadow: inset 0 0 0 1px rgb(var(--ku-navy-rgb) / 0.12);
+  color: var(--ku-cat-drug-strong) !important;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.ku-area__src .ku-icon {
+  width: 13px;
+  height: 13px;
+}
+.ku-area__src .ku-area__ext {
+  width: 11px;
+  height: 11px;
+  opacity: 0.7;
+}
+.ku-area__list a.ku-area__src:hover {
+  background: var(--ku-white);
+  box-shadow: inset 0 0 0 1px rgb(var(--ku-navy-rgb) / 0.22);
+}
+.ku-area__list a.ku-area__src:focus-visible,
+.ku-area__list a.ku-area__ing:focus-visible {
+  outline: 2px solid var(--ku-cat-drug-strong);
+  outline-offset: 2px;
+}
+/* Active ingredient → its iMedix ingredient page. */
+.ku-area__list a.ku-area__ing {
+  display: inline;
+  min-height: 0;
+  padding: 0;
+  color: inherit !important;
+  font-size: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgb(var(--ku-navy-rgb) / 0.25);
+  text-underline-offset: 2px;
+}
+.ku-area__list a.ku-area__ing:hover {
+  color: var(--ku-cat-drug-strong) !important;
+  text-decoration-color: currentColor;
+}
+.ku-area__active + .ku-area__claim {
+  margin-top: -4px;
+}
+/* Active ingredient under the brand name (YMYL: the medicine, not just the brand). */
+.ku-area__active {
+  display: block;
+  margin-top: -8px;
+  padding-bottom: 8px;
+  color: var(--ku-hero-ink-2);
+  font-size: 13px;
+  line-height: 1.35;
 }
 .ku-area__list a:hover {
   color: var(--ku-cat-drug-strong) !important;

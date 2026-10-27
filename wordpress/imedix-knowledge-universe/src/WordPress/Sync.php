@@ -64,8 +64,10 @@ final class Sync {
 		$state['trigger']     = $trigger;
 
 		try {
-			$tables = SheetSource::fetch_all();
-			$hash   = substr( hash( 'sha256', (string) wp_json_encode( $tables ) ), 0, 16 );
+			$tables    = SheetSource::fetch_all();
+			$published = self::sitemap_paths();
+			$kg        = KgSource::claims();
+			$hash      = substr( hash( 'sha256', (string) wp_json_encode( array( $tables, $published, $kg ) ) ), 0, 16 );
 
 			if ( ! $force && $hash === ( $state['hash'] ?? '' ) && empty( $state['dirty'] ) && self::graph() ) {
 				$state['lastResult'] = 'unchanged';
@@ -88,6 +90,8 @@ final class Sync {
 						'disease' => $s['base_disease'],
 					),
 					'resolver'       => $resolver,
+					'published_paths' => $published,
+					'kg_claims'      => $kg,
 					'spreadsheet_id' => $s['spreadsheet_id'],
 					'source_hash'    => $hash,
 				)
@@ -156,6 +160,46 @@ final class Sync {
 	}
 
 	/**
+	 * Paths of every published drug, disease and ingredient page, read from the
+	 * site's own XML sitemaps (drugs-, diseases-, ingredients-sitemap.xml and
+	 * their numbered pages). The sitemaps are the source of truth for what readers can see; the
+	 * tracker only adds categories and registration. Returns null when a sitemap
+	 * cannot be read, so the build falls back to the tracker's status rules.
+	 *
+	 * @return string[]|null
+	 */
+	private static function sitemap_paths(): ?array {
+		$names    = (array) apply_filters( 'imedix_ku_sitemaps', array( 'drugs-sitemap', 'diseases-sitemap', 'ingredients-sitemap' ) );
+		$optional = array( 'ingredients-sitemap' ); // Ingredient pages enrich the graph; drugs and diseases are required.
+		$paths = array();
+		foreach ( $names as $name ) {
+			for ( $page = 1; $page <= 20; $page++ ) {
+				$url = home_url( '/' . $name . ( 1 === $page ? '' : (string) $page ) . '.xml' );
+				$res = wp_remote_get( $url, array( 'timeout' => 20 ) );
+				$ok  = ! is_wp_error( $res ) && 200 === wp_remote_retrieve_response_code( $res );
+				if ( ! $ok ) {
+					if ( 1 === $page && ! in_array( $name, $optional, true ) ) {
+						return null; // The first page must exist.
+					}
+					break;
+				}
+				if ( ! preg_match_all( '#<loc>\s*([^<\s]+)\s*</loc>#i', wp_remote_retrieve_body( $res ), $m ) ) {
+					break;
+				}
+				foreach ( $m[1] as $loc ) {
+					$path = wp_parse_url( html_entity_decode( $loc ), PHP_URL_PATH );
+					if ( is_string( $path ) ) {
+						$paths[] = trailingslashit( $path );
+					}
+				}
+			}
+		}
+		$paths = array_values( array_unique( $paths ) );
+		sort( $paths );
+		return $paths ? $paths : null;
+	}
+
+	/**
 	 * Write a versioned static copy to uploads so it can be served (and cached
 	 * as immutable) by the web server/CDN. Returns the public URL or null.
 	 */
@@ -172,10 +216,15 @@ final class Sync {
 		if ( false === file_put_contents( $dir . '/' . $name, $json, LOCK_EX ) ) {
 			return null;
 		}
+		// Page caches may still serve HTML that points at a previous file: keep those for a day.
 		foreach ( (array) glob( $dir . '/graph-*.json' ) as $old ) {
-			if ( is_string( $old ) && basename( $old ) !== $name ) {
+			if ( is_string( $old ) && basename( $old ) !== $name && (int) filemtime( $old ) < time() - DAY_IN_SECONDS ) {
 				wp_delete_file( $old );
 			}
+		}
+		// File names are content-versioned, so browsers and CDNs may keep them for good (Apache/LiteSpeed).
+		if ( ! file_exists( $dir . '/.htaccess' ) ) {
+			file_put_contents( $dir . '/.htaccess', "<IfModule mod_headers.c>\n\t<FilesMatch \"^graph-[a-f0-9]+\\.json$\">\n\t\tHeader set Cache-Control \"public, max-age=31536000, immutable\"\n\t</FilesMatch>\n</IfModule>\n" );
 		}
 		return set_url_scheme( trailingslashit( $uploads['baseurl'] ) . self::UPLOAD_DIR . '/' . $name );
 	}
@@ -183,8 +232,8 @@ final class Sync {
 	public static function delete_files(): void {
 		$uploads = wp_upload_dir( null, false );
 		$dir     = trailingslashit( $uploads['basedir'] ) . self::UPLOAD_DIR;
-		foreach ( (array) glob( $dir . '/graph-*.json' ) as $file ) {
-			if ( is_string( $file ) ) {
+		foreach ( array_merge( (array) glob( $dir . '/graph-*.json' ), array( $dir . '/.htaccess' ) ) as $file ) {
+			if ( is_string( $file ) && file_exists( $file ) ) {
 				wp_delete_file( $file );
 			}
 		}

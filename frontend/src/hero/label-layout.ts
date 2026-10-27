@@ -40,6 +40,8 @@ export interface LayoutInput {
   /** the first `anchored` labels are placed as close to `anchor` as possible */
   anchor?: Point | null;
   anchored?: number;
+  /** partner[i] = an earlier label related to label i: placed close to it, with a clear line between them */
+  partner?: (number | null)[];
   gap?: number;
   margin?: number;
   seed?: number;
@@ -52,28 +54,90 @@ export function labelCount(width: number): number {
   return width < 700 ? 4 : width < 1100 ? 6 : 8;
 }
 
-/** Short, recognisable names read best as floating labels (no pack sizes, no codes). */
+/** Short, recognisable names read best as floating labels (no pack sizes, no codes, no "Generic …"). */
 export function readableName(name: string): boolean {
-  return name.length <= 18 && !/[\d()]/.test(name);
+  return name.length <= 18 && !/[\d()]/.test(name) && !/^generic\b/i.test(name);
 }
 
 function rank(g: KGraph, i: number): number {
   const n = g.nodes[i];
-  return (readableName(n.name) ? 4 : 0) + (n.status === 'completed' ? 2 : 0) + Math.min(n.degree, 8) * 0.1;
+  // Degree (tracker groupings + article links) is the only importance signal; capped below the status bonus.
+  return (readableName(n.name) ? 4 : 0) + (n.status === 'completed' ? 2 : 0) + Math.min(n.degree, 19) * 0.1;
 }
 
-/** Real, linkable drug and disease guides, alternating type, best first. */
+/**
+ * A real relationship between two guides: the medicine (or its substance) is
+ * FDA-approved for a condition covered by the disease guide, as signed in the
+ * iMedix knowledge graph (`kg` pairs, from FDA labels — not a complete list).
+ * Article links are navigation, not claims, and never draw a line.
+ */
+export function related(g: KGraph, a: number, b: number): boolean {
+  return g.incident[a].some((k) => {
+    const e = g.edges[k];
+    return e.type === 'kg' && (e.source === b || e.target === b);
+  });
+}
+
+/**
+ * Hero labels. First, disease–drug pairs joined by a real relationship (one
+ * pair per category, best first) — the only labels that get a connecting line.
+ * The remaining slots take single guides from categories not shown yet.
+ * Unregistered products are never featured (they stay searchable).
+ */
 export function pickLabels(g: KGraph, count: number): number[] {
-  const lists = LABEL_TYPES.map((type) =>
-    g.nodes
-      .filter((n) => n.type === type && n.url)
-      .sort((a, b) => rank(g, b.index) - rank(g, a.index) || hash32(a.id) - hash32(b.id))
-      .map((n) => n.index),
-  );
+  const eligible = (i: number) => {
+    const n = g.nodes[i];
+    return (n.type === 'drug' || n.type === 'disease') && !!n.url && n.registered;
+  };
+  const featured = (i: number) => eligible(i) && readableName(g.nodes[i].name);
+  // A related pair explains itself, so its labels may carry a longer name ("High Blood Pressure (Hypertension)").
+  const pairable = (i: number) => eligible(i) && g.nodes[i].name.length <= 36;
+  const pairs: { d: number; m: number; cat: string; score: number; key: number }[] = [];
+  for (const e of g.edges) {
+    if (e.type !== 'kg' || !pairable(e.source) || !pairable(e.target)) continue;
+    const [a, b] = [g.nodes[e.source], g.nodes[e.target]];
+    if (a.type === b.type) continue;
+    const [d, m] = a.type === 'disease' ? [a, b] : [b, a];
+    pairs.push({ d: d.index, m: m.index, cat: d.category, score: rank(g, d.index) + rank(g, m.index), key: hash32(d.id + m.id) });
+  }
+  pairs.sort((x, y) => y.score - x.score || x.key - y.key);
+
   const out: number[] = [];
-  for (let k = 0; out.length < count && k < Math.max(...lists.map((l) => l.length)); k++) {
+  const cats = new Set<string>();
+  for (const p of pairs) {
+    if (out.length + 2 > count) break;
+    if (cats.has(p.cat) || out.includes(p.d) || out.includes(p.m)) continue;
+    out.push(p.d, p.m);
+    cats.add(p.cat);
+  }
+  for (const i of pickSingles(g, count, featured, cats, out)) if (out.length < count) out.push(i);
+  return out;
+}
+
+/** Single guides, alternating type, one per category before any repeats. */
+function pickSingles(g: KGraph, count: number, featured: (i: number) => boolean, shown: Set<string>, taken: number[]): number[] {
+  const lists = LABEL_TYPES.map((type) => {
+    const sorted = g.nodes
+      .filter((n) => n.type === type && featured(n.index) && !taken.includes(n.index))
+      .sort((a, b) => rank(g, b.index) - rank(g, a.index) || hash32(a.id) - hash32(b.id));
+    const seen = new Set<string>();
+    const first = sorted.filter((n) => !seen.has(n.category) && seen.add(n.category));
+    const rest = sorted.filter((n) => !first.includes(n));
+    return [...first, ...rest].map((n) => n.index);
+  });
+  const out: number[] = [];
+  const used = new Set<string>(shown);
+  count -= taken.length;
+  const take = (list: number[]) => {
+    // Across both types, prefer a category not shown yet.
+    const i = list.find((x) => !out.includes(x) && !used.has(g.nodes[x].category)) ?? list.find((x) => !out.includes(x));
+    if (i === undefined) return;
+    out.push(i);
+    used.add(g.nodes[i].category);
+  };
+  while (out.length < count && out.length < lists[0].length + lists[1].length) {
     // Diseases first: they read as the "health" half of the platform's title.
-    for (const list of [lists[1], lists[0]]) if (list[k] !== undefined && out.length < count) out.push(list[k]);
+    for (const list of [lists[1], lists[0]]) if (out.length < count) take(list);
   }
   return out;
 }
@@ -95,9 +159,12 @@ export function layoutLabels(input: LayoutInput): (Point | null)[] {
   const rand = mulberry32(input.seed ?? 11);
   const placed: Rect[] = [];
   const centres: Point[] = [];
+  const at: (Rect | null)[] = [];
   return sizes.map((size, i) => {
     let best: { p: Point; rect: Rect; score: number } | null = null;
-    const tries = i < anchored ? 220 : 90;
+    const mate = input.partner?.[i] ?? null;
+    const mateRect = mate !== null ? at[mate] : null;
+    const tries = i < anchored || mateRect ? 220 : 90;
     for (let k = 0; k < tries; k++) {
       const x = margin + rand() * Math.max(0, width - size.w - 2 * margin);
       const y = margin + rand() * Math.max(0, height - size.h - 2 * margin);
@@ -105,7 +172,12 @@ export function layoutLabels(input: LayoutInput): (Point | null)[] {
       if (overlaps(rect, safe, gap) || avoid.some((a) => overlaps(rect, a, gap)) || placed.some((p) => overlaps(rect, p, gap))) continue;
       const c = { x: x + size.w / 2, y: y + size.h / 2 };
       let score: number;
-      if (i < anchored) {
+      if (mateRect && i >= anchored) {
+        // Beside its related guide, with nothing between them, at a readable distance.
+        const m = { x: (mateRect.l + mateRect.r) / 2, y: (mateRect.t + mateRect.b) / 2 };
+        const blocked = [safe, ...avoid, ...placed.filter((p) => p !== mateRect)].some((r) => segmentHitsRect(m.x, m.y, c.x, c.y, r));
+        score = (blocked ? -1000 : 0) - Math.abs(Math.hypot(c.x - m.x, c.y - m.y) - 190);
+      } else if (i < anchored) {
         score = -Math.hypot(c.x - input.anchor!.x, c.y - input.anchor!.y);
       } else {
         let spread = 320;
@@ -115,12 +187,17 @@ export function layoutLabels(input: LayoutInput): (Point | null)[] {
       }
       if (!best || score > best.score) best = { p: { x, y }, rect, score };
     }
-    if (!best) return null;
+    if (!best) {
+      at.push(null);
+      return null;
+    }
     placed.push(best.rect);
+    at.push(best.rect);
     centres.push({ x: (best.rect.l + best.rect.r) / 2, y: (best.rect.t + best.rect.b) / 2 });
     return best.p;
   });
 }
+
 
 /* ------------------------------------------------------------- network */
 
@@ -136,7 +213,7 @@ export interface NetNode {
 
 export interface Network {
   nodes: NetNode[];
-  /** line segments [x1, y1, x2, y2] */
+  /** line segments [x1, y1, x2, y2], one per real relationship */
   edges: [number, number, number, number][];
 }
 
@@ -145,9 +222,11 @@ export interface NetworkInput {
   height: number;
   safe: Rect;
   avoid: Rect[];
-  /** placed labels (their centres are network endpoints) */
-  labels: Rect[];
-  /** number of junction dots (blurred depth dots are added on top) */
+  /** placed labels in display order (null = not shown) */
+  labels: (Rect | null)[];
+  /** pairs of label positions joined by a real relationship */
+  links: [number, number][];
+  /** number of out-of-focus depth dots */
   count: number;
   seed?: number;
 }
@@ -177,88 +256,35 @@ export function segmentHitsRect(x1: number, y1: number, x2: number, y2: number, 
 }
 
 /**
- * Decorative network behind the labels, as in a molecule/graph illustration:
- * small junction dots in the free space, each label tied to its nearest
- * junctions, junctions tied to their nearest neighbours, plus a few large
- * blurred dots for depth. It is ornament, not data: lines never join two
- * labels directly (that would read as a medical relationship) and never cross
- * the text column, the statistics or a label.
+ * The hero network is data, not ornament: a line joins two labels only when
+ * the guides are really related (see `related`), and only when it can be drawn
+ * without crossing the text column, the statistics or another label. A few
+ * out-of-focus dots give depth; they carry no lines.
  */
 export function buildNetwork(input: NetworkInput): Network {
-  const { width, height, safe, avoid, labels, count } = input;
+  const { width, height, safe, avoid, labels, links, count } = input;
   const rand = mulberry32(input.seed ?? 23);
   const blocked = [safe, ...avoid];
-  const free = (x: number, y: number, pad: number) =>
-    x > pad && y > pad && x < width - pad && y < height - pad &&
-    ![...blocked, ...labels].some((r) => x > r.l - pad && x < r.r + pad && y > r.t - pad && y < r.b + pad);
-
   const nodes: NetNode[] = [];
-  const tones: NetNode['tone'][] = ['drug', 'steel', 'disease', 'steel', 'drug'];
-  for (let k = 0; k < count * 40 && nodes.filter((n) => !n.blur).length < count; k++) {
+  for (let k = 0, made = 0; k < 400 && made < count; k++) {
     const x = rand() * width;
     const y = rand() * height;
-    if (!free(x, y, 18)) continue;
-    if (nodes.some((n) => Math.hypot(n.x - x, n.y - y) < 70)) continue;
-    nodes.push({ x, y, r: 2.5 + rand() * 2.5, tone: tones[nodes.length % tones.length], blur: false });
-  }
-  // Out-of-focus dots: a shallow depth of field, never under the text.
-  for (let k = 0, made = 0; k < 400 && made < Math.ceil(count / 3); k++) {
-    const x = rand() * width;
-    const y = rand() * height;
-    if (blocked.some((r) => x > r.l - 30 && x < r.r + 30 && y > r.t - 30 && y < r.b + 30)) continue;
+    if ([...blocked, ...labels.filter((r): r is Rect => r !== null)].some((r) => x > r.l - 30 && x < r.r + 30 && y > r.t - 30 && y < r.b + 30)) continue;
     nodes.push({ x, y, r: 7 + rand() * 9, tone: rand() < 0.65 ? 'drug' : 'disease', blur: true });
     made++;
   }
 
-  const sharp = nodes.filter((n) => !n.blur);
   const edges: Network['edges'] = [];
-  const seen = new Set<string>();
-  const clear = (x1: number, y1: number, x2: number, y2: number, skip: Rect | null) =>
-    !blocked.some((r) => segmentHitsRect(x1, y1, x2, y2, r)) &&
-    !labels.some((r) => r !== skip && segmentHitsRect(x1, y1, x2, y2, r));
-  const link = (x1: number, y1: number, x2: number, y2: number, key: string, skip: Rect | null) => {
-    if (seen.has(key) || !clear(x1, y1, x2, y2, skip)) return false;
-    seen.add(key);
+  const centre = (r: Rect) => [(r.l + r.r) / 2, (r.t + r.b) / 2] as const;
+  for (const [a, b] of links) {
+    const ra = labels[a];
+    const rb = labels[b];
+    if (!ra || !rb) continue;
+    const [x1, y1] = centre(ra);
+    const [x2, y2] = centre(rb);
+    const others = labels.filter((r, i): r is Rect => r !== null && i !== a && i !== b);
+    if ([...blocked, ...others].some((r) => segmentHitsRect(x1, y1, x2, y2, r))) continue;
     edges.push([x1, y1, x2, y2]);
-    return true;
-  };
-  const byDistance = (x: number, y: number) =>
-    sharp.map((n, i) => ({ n, i, d: Math.hypot(n.x - x, n.y - y) })).sort((a, b) => a.d - b.d);
-
-  // Each label: one or two junctions within reach (line starts at its centre, hidden under it).
-  labels.forEach((r, li) => {
-    const cx = (r.l + r.r) / 2;
-    const cy = (r.t + r.b) / 2;
-    let made = 0;
-    for (const { n, i, d } of byDistance(cx, cy)) {
-      if (made >= 2 || d > 300) break;
-      if (link(cx, cy, n.x, n.y, `L${li}-${i}`, r)) made++;
-    }
-    // Nothing in reach: give the label a junction of its own just beside it.
-    for (let k = 0; !made && k < 48; k++) {
-      const angle = (k / 16) * Math.PI * 2;
-      const dist = 40 + Math.floor(k / 16) * 35 + Math.max(r.r - r.l, r.b - r.t) / 2;
-      const x = cx + Math.cos(angle) * dist;
-      const y = cy + Math.sin(angle) * dist * 0.7;
-      if (!free(x, y, 10)) continue;
-      const node: NetNode = { x, y, r: 3, tone: 'steel', blur: false };
-      sharp.push(node);
-      nodes.push(node);
-      if (link(cx, cy, x, y, `L${li}-${sharp.length - 1}`, r)) made++;
-      else {
-        sharp.pop();
-        nodes.pop();
-      }
-    }
-  });
-  // Junctions: two nearest neighbours each.
-  sharp.forEach((a, i) => {
-    let made = 0;
-    for (const { n: b, i: j, d } of byDistance(a.x, a.y)) {
-      if (j === i) continue;
-      if (made >= 2 || d > 260) break;
-      if (link(a.x, a.y, b.x, b.y, i < j ? `N${i}-${j}` : `N${j}-${i}`, null)) made++;
-    }
-  });
+  }
   return { nodes, edges };
 }

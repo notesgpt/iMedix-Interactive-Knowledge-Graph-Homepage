@@ -7,14 +7,15 @@
  * autocomplete, or a hovered "Recently updated" chip, highlights its label.
  * Motion is a slow CSS drift that stops for reduced motion and on hover/focus.
  *
- * Behind the labels a thin decorative network (junction dots, a few blurred
- * depth dots, hairlines) ties each label into the composition. It is drawn in an
- * aria-hidden SVG and never joins two labels directly, so it cannot be read as
- * a medical relationship.
+ * Behind the labels, hairlines join only a medicine and a condition it is
+ * FDA-approved for (signed iMedix knowledge graph, from FDA labels — not a
+ * complete list); unrelated labels stand alone. A few blurred dots give depth.
+ * Drawn in an aria-hidden SVG.
+ * Unregistered products are never featured here, only found through search.
  */
 import type { Bus } from '../bus';
 import type { KGraph } from '../types';
-import { buildNetwork, labelCount, layoutLabels, pickLabels, type Rect } from './label-layout';
+import { buildNetwork, labelCount, layoutLabels, pickLabels, related, type Rect } from './label-layout';
 
 const TYPE_LABEL: Record<string, string> = { drug: 'Drug', disease: 'Disease' };
 const MAX_MATCHES = 4;
@@ -139,7 +140,9 @@ export class FloatingLabels {
     name.textContent = node.name;
     const type = document.createElement('span');
     type.className = 'ku-float__type';
-    type.textContent = TYPE_LABEL[node.type] ?? node.type;
+    // Brand and active ingredient together, when it fits a label.
+    const active = node.actives && node.actives.length <= 26 && node.actives.toLowerCase() !== node.name.toLowerCase() ? node.actives : null;
+    type.textContent = (TYPE_LABEL[node.type] ?? node.type) + (active ? ` · ${active}` : '');
     text.append(name, type);
     a.append(dot, text);
     a.addEventListener('pointerenter', () => this.highlight(index));
@@ -198,6 +201,14 @@ export class FloatingLabels {
       li.classList.remove('is-leaving');
     });
     const sizes = els.map((li) => ({ w: li.offsetWidth, h: li.offsetHeight }));
+    // Real relationships among the shown labels: each label is placed beside the first related one before it.
+    const links: [number, number][] = [];
+    const partner = order.map((index, k) => {
+      const j = order.findIndex((other, m) => m < k && related(this.graph, other, index));
+      if (j < 0) return null;
+      links.push([j, k]);
+      return j;
+    });
     const spots = layoutLabels({
       width: box.width,
       height: box.height,
@@ -206,12 +217,14 @@ export class FloatingLabels {
       sizes,
       anchor,
       anchored: this.matches.length,
+      partner,
     });
-    const placed: Rect[] = [];
+    const placed: (Rect | null)[] = [];
     els.forEach((li, k) => {
       const p = spots[k];
       if (!p) {
         li.hidden = true;
+        placed.push(null);
         return;
       }
       placed.push({ l: p.x, t: p.y, r: p.x + sizes[k].w, b: p.y + sizes[k].h });
@@ -219,12 +232,12 @@ export class FloatingLabels {
       // First placement appears in place (fade only); later ones glide.
       if (li.classList.contains('is-new')) requestAnimationFrame(() => li.classList.remove('is-new'));
     });
-    this.drawNetwork(box.width, box.height, safe, avoid, placed);
+    this.drawNetwork(box.width, box.height, safe, avoid, placed, links);
   }
 
-  /** Redraw the decorative network for the current label positions. */
-  private drawNetwork(width: number, height: number, safe: Rect, avoid: Rect[], labels: Rect[]): void {
-    const { nodes, edges } = buildNetwork({ width, height, safe, avoid, labels, count: width < 700 ? 4 : width < 1100 ? 7 : 10 });
+  /** Redraw the relationship lines and depth dots for the current label positions. */
+  private drawNetwork(width: number, height: number, safe: Rect, avoid: Rect[], labels: (Rect | null)[], links: [number, number][]): void {
+    const { nodes, edges } = buildNetwork({ width, height, safe, avoid, labels, links, count: width < 700 ? 2 : width < 1100 ? 3 : 4 });
     const svg = this.net;
     svg.setAttribute('viewBox', `0 0 ${Math.round(width)} ${Math.round(height)}`);
     svg.replaceChildren();
@@ -257,5 +270,7 @@ export class FloatingLabels {
       }
     }
     svg.classList.toggle('is-quiet', this.matches.length > 0);
+    // The legend explains the lines only when there are lines to explain.
+    this.hero.classList.toggle('ku-has-links', edges.length > 0);
   }
 }

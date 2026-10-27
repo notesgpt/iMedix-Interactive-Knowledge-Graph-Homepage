@@ -3,6 +3,32 @@
 The Google Sheet is the source of the **entity inventory**; WordPress is the source of truth for
 **live publication status, titles and destinations**.
 
+## Current rules (2026-10-27) — these take precedence over older sections below
+
+* **What is published** is decided by the site's sitemaps (`drugs-sitemap.xml`,
+  `diseases-sitemap.xml`, `ingredients-sitemap.xml`), not by tracker statuses. A guide missing from
+  the sitemap is rejected as `not_in_sitemap`; tracker statuses only label entities. Without a
+  readable sitemap the build falls back to the tracker rules (Completed drugs, Completed + KEEP
+  diseases).
+* **Categories**: the fixed iMedix list (`Topics::CATEGORIES`). Drugs use the sheet column
+  `Disease Category` (Batch as fallback), diseases `Cluster`. "Other" and unknown labels give no
+  category and are never shown. One Health area per category, no merging.
+* **Unregistered products**: Drugs column `Registration` = `Unregistered` (gray-market generics,
+  look-alike brands). Searchable, never featured (hero, areas, suggestions), never related.
+* **Clinical relationships come only from the signed knowledge graph** in the theme's Disease
+  Registry (seeded from the iMedix KG packages), read by `WordPress\KgSource` through
+  `Imedix_DR_Repository::panelRows()` + `Imedix_DR_GraphPanel::view()` — the same gates as the
+  panel on each disease page. Nodes: Condition (MONDO, `described_on` its page), Substance
+  (`ingredient`), Brand (drug page), Source (FDA label, `kgSources`). Edges: `treats`, `prevents`,
+  `reduces_risk_of`, `relieves_symptoms_of` (with qualifier, verbatim claim, `supported_by`), and
+  `has_brand`. US/FDA only; an ANDA label is substance-level evidence and is never shown for a
+  brand. Shown with "from FDA labels, not a complete list". Article prose is never mined for
+  relationships.
+* **Article links** (`links_to`) are navigation only: kept between guides that share a category,
+  never drawn as a relationship.
+* **Active ingredients**: from the drug guide's `product_info_activeingredient`; shown next to the
+  brand, searchable as aliases, linked to the published `/ingredients/` page when one exists.
+
 ## Synchronisation
 
 ```

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildNetwork, labelCount, layoutLabels, pickLabels, readableName, segmentHitsRect, type Rect } from './label-layout';
+import { buildNetwork, labelCount, layoutLabels, pickLabels, readableName, related, type Rect } from './label-layout';
 import { realGraph } from '../test-fixture';
 
 const hit = (a: Rect, b: Rect) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
@@ -22,6 +22,23 @@ describe('pickLabels', () => {
     expect(readableName('Novolin 70 (30)')).toBe(false);
     expect(readableName('Gastroesophageal Reflux Disease (GERD)')).toBe(false);
     expect(pickLabels(g, 10).every((i) => readableName(g.nodes[i].name))).toBe(true);
+  });
+  it('pairs only really related guides, one pair per category', () => {
+    const picked = pickLabels(g, 8);
+    for (let k = 0; k + 1 < picked.length; k += 2) {
+      if (!related(g, picked[k], picked[k + 1])) break;
+      expect(g.nodes[picked[k]].type).toBe('disease');
+      expect(g.nodes[picked[k + 1]].type).toBe('drug');
+    }
+  });
+  it('never features unregistered products', () => {
+    const copy = { ...g, nodes: g.nodes.map((n) => ({ ...n, registered: n.type !== 'drug' })) };
+    expect(pickLabels(copy, 8).every((i) => copy.nodes[i].type !== 'drug')).toBe(true);
+  });
+  it('shows one label per category before repeating any', () => {
+    const picked = pickLabels(g, 8);
+    const cats = picked.map((i) => g.nodes[i].category);
+    expect(new Set(cats).size).toBe(cats.length);
   });
   it('is deterministic and scales with the screen', () => {
     expect(pickLabels(g, 10)).toEqual(pickLabels(g, 10));
@@ -66,36 +83,37 @@ describe('layoutLabels', () => {
 describe('buildNetwork', () => {
   const safe: Rect = { l: 340, t: 140, r: 1100, b: 720 };
   const legend: Rect = { l: 40, t: 820, r: 460, b: 876 };
-  const sizes = Array.from({ length: 10 }, () => ({ w: 140, h: 56 }));
-  const spots = layoutLabels({ width: 1440, height: 900, safe, avoid: [legend], sizes });
-  const labels = spots.flatMap((p, i) => (p ? [{ l: p.x, t: p.y, r: p.x + sizes[i].w, b: p.y + sizes[i].h }] : []));
-  const net = buildNetwork({ width: 1440, height: 900, safe, avoid: [legend], labels, count: 16 });
-  const centre = (r: Rect) => [(r.l + r.r) / 2, (r.t + r.b) / 2];
-  const atLabel = (x: number, y: number) => labels.findIndex((r) => centre(r)[0] === x && centre(r)[1] === y);
+  const labels: (Rect | null)[] = [
+    { l: 40, t: 60, r: 180, b: 116 },
+    { l: 60, t: 300, r: 200, b: 356 },
+    { l: 1200, t: 60, r: 1340, b: 116 },
+    null,
+    { l: 1180, t: 400, r: 1320, b: 456 },
+  ];
+  const links: [number, number][] = [
+    [0, 1],
+    [2, 4],
+    [1, 4], // would cross the text column
+    [1, 3], // label not shown
+  ];
+  const net = buildNetwork({ width: 1440, height: 900, safe, avoid: [legend], labels, links, count: 4 });
 
-  it('ties every label into the network', () => {
-    for (const r of labels) {
-      const [cx, cy] = centre(r);
-      expect(net.edges.some(([x1, y1]) => x1 === cx && y1 === cy)).toBe(true);
+  it('draws a line only for real relationships that can be drawn cleanly', () => {
+    expect(net.edges).toEqual([
+      [110, 88, 130, 328],
+      [1270, 88, 1250, 428],
+    ]);
+  });
+  it('without relationships there are no lines at all', () => {
+    expect(buildNetwork({ width: 1440, height: 900, safe, avoid: [legend], labels, links: [], count: 4 }).edges).toEqual([]);
+  });
+  it('places depth dots off the text and the labels', () => {
+    for (const n of net.nodes) {
+      expect(n.blur).toBe(true);
+      expect(n.x > safe.l && n.x < safe.r && n.y > safe.t && n.y < safe.b).toBe(false);
     }
-  });
-  it('never joins two labels directly (no implied medical relationship)', () => {
-    for (const [x1, y1, x2, y2] of net.edges) expect(atLabel(x1, y1) >= 0 && atLabel(x2, y2) >= 0).toBe(false);
-  });
-  it('keeps lines off the text column, the statistics and other labels', () => {
-    for (const [x1, y1, x2, y2] of net.edges) {
-      expect(segmentHitsRect(x1, y1, x2, y2, safe)).toBe(false);
-      expect(segmentHitsRect(x1, y1, x2, y2, legend)).toBe(false);
-      const own = atLabel(x1, y1);
-      labels.forEach((r, i) => {
-        if (i !== own) expect(segmentHitsRect(x1, y1, x2, y2, r)).toBe(false);
-      });
-    }
-  });
-  it('places no dot under the text', () => {
-    for (const n of net.nodes) expect(n.x > safe.l && n.x < safe.r && n.y > safe.t && n.y < safe.b).toBe(false);
   });
   it('is deterministic', () => {
-    expect(buildNetwork({ width: 1440, height: 900, safe, avoid: [legend], labels, count: 16 })).toEqual(net);
+    expect(buildNetwork({ width: 1440, height: 900, safe, avoid: [legend], labels, links, count: 4 })).toEqual(net);
   });
 });

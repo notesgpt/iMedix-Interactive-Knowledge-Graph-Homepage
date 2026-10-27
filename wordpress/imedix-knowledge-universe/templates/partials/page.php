@@ -81,6 +81,9 @@ $ku_types  = array(
 			<ul class="ku-legend" aria-label="<?php esc_attr_e( 'Guides on iMedix', 'imedix-ku' ); ?>">
 				<li class="ku-legend__item ku-legend__item--drug"><span class="ku-glyph ku-glyph--drug" aria-hidden="true"></span><?php esc_html_e( 'Drugs', 'imedix-ku' ); ?> <strong><?php echo esc_html( number_format_i18n( (int) $ku_counts['drug'] ) ); ?></strong></li>
 				<li class="ku-legend__item ku-legend__item--disease"><span class="ku-glyph ku-glyph--disease" aria-hidden="true"></span><?php esc_html_e( 'Diseases', 'imedix-ku' ); ?> <strong><?php echo esc_html( number_format_i18n( (int) $ku_counts['disease'] ) ); ?></strong></li>
+				<?php if ( ! empty( $ku_counts['condition'] ) ) : ?>
+					<li class="ku-legend__item ku-legend__item--note"><span class="ku-legend__line" aria-hidden="true"></span><?php esc_html_e( 'FDA-approved uses · from FDA labels, not a complete list', 'imedix-ku' ); ?></li>
+				<?php endif; ?>
 			</ul>
 		</div>
 	</section>
@@ -167,7 +170,7 @@ $ku_types  = array(
 			<?php if ( $vm['areas'] ) : ?>
 				<div class="ku-areas-head" id="ku-areas">
 					<p class="ku-areas-head__title"><?php esc_html_e( 'Health areas', 'imedix-ku' ); ?></p>
-					<p class="ku-areas-head__desc"><?php esc_html_e( 'Conditions and medicines grouped by our editors, with the guides that link to each other.', 'imedix-ku' ); ?></p>
+					<p class="ku-areas-head__desc"><?php esc_html_e( 'Conditions grouped by our editors. Medicines under a condition are FDA-approved for it — from FDA labels, not a complete list.', 'imedix-ku' ); ?></p>
 					<nav class="ku-area-index" aria-label="<?php esc_attr_e( 'Jump to a health area', 'imedix-ku' ); ?>">
 						<ul>
 							<?php foreach ( $vm['areas'] as $ku_a ) : ?>
@@ -212,7 +215,34 @@ $ku_types  = array(
 										<p class="ku-area__label"><span class="ku-glyph ku-glyph--<?php echo esc_attr( $ku_type ); ?>" aria-hidden="true"></span><?php echo esc_html( $ku_col[0] ); ?></p>
 										<ul class="ku-area__list">
 											<?php foreach ( $ku_col[1]['items'] as $ku_m ) : ?>
-												<li><a href="<?php echo esc_url( home_url( $ku_m['path'] ) ); ?>"><?php echo esc_html( $ku_m['name'] ); ?></a></li>
+												<li>
+													<a href="<?php echo esc_url( home_url( $ku_m['path'] ) ); ?>"><?php echo esc_html( $ku_m['name'] ); ?></a>
+													<?php if ( ! empty( $ku_m['active'] ) && 0 !== strcasecmp( $ku_m['active'], $ku_m['name'] ) ) : ?>
+														<span class="ku-area__active"><span class="ku-visually-hidden"><?php esc_html_e( 'Active ingredient:', 'imedix-ku' ); ?> </span>
+															<?php foreach ( $ku_m['actives'] as $ku_i => $ku_g ) : ?>
+																<?php echo $ku_i ? ' + ' : ''; ?>
+																<?php if ( '' !== $ku_g['path'] ) : ?>
+																	<a class="ku-area__ing" href="<?php echo esc_url( home_url( $ku_g['path'] ) ); ?>"><?php echo esc_html( $ku_g['label'] ); ?></a>
+																<?php else : ?>
+																	<?php echo esc_html( $ku_g['label'] ); ?>
+																<?php endif; ?>
+															<?php endforeach; ?>
+														</span>
+													<?php endif; ?>
+													<?php if ( ! empty( $ku_m['claim'] ) ) : ?>
+														<span class="ku-area__claim">
+															<svg class="ku-icon ku-area__check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+															<span><?php echo esc_html( $ku_m['claim'] ); ?></span>
+															<?php if ( ! empty( $ku_m['source'] ) && 0 === strpos( $ku_m['source'], 'https://dailymed.nlm.nih.gov/' ) ) : ?>
+																<a class="ku-area__src" href="<?php echo esc_url( $ku_m['source'] ); ?>" target="_blank" rel="noopener noreferrer nofollow" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: medicine name */ __( 'FDA label for %s on DailyMed (opens in a new tab)', 'imedix-ku' ), $ku_m['name'] ) ); ?>">
+																	<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>
+																	<?php esc_html_e( 'FDA label', 'imedix-ku' ); ?>
+																	<svg class="ku-icon ku-area__ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 5h5v5M19 5l-8 8M17 14v5H5V7h5"/></svg>
+																</a>
+															<?php endif; ?>
+														</span>
+													<?php endif; ?>
+												</li>
 											<?php endforeach; ?>
 										</ul>
 									</div>

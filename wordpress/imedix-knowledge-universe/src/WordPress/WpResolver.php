@@ -53,11 +53,13 @@ final class WpResolver {
 		}
 
 		return array(
-			'status'  => (string) $post->post_status,
-			'title'   => trim( $title ),
-			'excerpt' => $excerpt,
-			'links'   => $this->scan_links ? $this->links( (string) $post->post_content ) : array(),
-			'path'    => null === $permalink_path ? $path : $permalink_path,
+			'status'   => (string) $post->post_status,
+			'title'    => trim( $title ),
+			'excerpt'  => $excerpt,
+			'links'    => $this->scan_links ? $this->links( (string) $post->post_content ) : array(),
+			// Active ingredient(s) as written in the drug guide, e.g. "Amoxicillin + Clavulanate potassium".
+			'active'   => 'drug' === $type ? trim( wp_strip_all_tags( (string) get_post_meta( $post->ID, 'product_info_activeingredient', true ) ) ) : '',
+			'path'     => null === $permalink_path ? $path : $permalink_path,
 		);
 	}
 

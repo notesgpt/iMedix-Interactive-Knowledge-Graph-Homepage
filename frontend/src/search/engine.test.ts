@@ -62,7 +62,7 @@ describe('SearchIndex (real tracker snapshot)', () => {
   it.each([
     ['hypertension', 'disease:hypertension'],
     ['asthma', 'disease:asthma'],
-    ['copd', 'disease:chronic-obstructive-pulmonary-disease-copd'],
+    ['prostate cancer', 'disease:prostate-cancer'],
     ['gerd', 'disease:gastroesophageal-reflux-disease-gerd'],
     ['parkinsons', 'disease:parkinsons-disease'],
     ['metformin', 'drug:metformin'],

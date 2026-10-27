@@ -29,6 +29,8 @@ final class GraphBuilder {
 		'batch'        => 'Batch',
 		'note'         => 'Note',
 		'completed_on' => 'Completed on',
+		'category'     => 'Disease Category',
+		'registration' => 'Registration',
 	);
 
 	public const DISEASE_COLUMNS = array(
@@ -56,14 +58,14 @@ final class GraphBuilder {
 	 * unknown so that new workflow states are reviewed before they appear.
 	 *
 	 * - Completed: remediated to the current editorial standard.
-	 * - Pending:   legacy article that is live but not yet remediated. Pending
-	 *              is an editorial state, NOT "unpublished".
+	 * - Pending:   legacy article that is live but not yet remediated. Not shown
+	 *              on the homepage: only Completed drugs are included.
 	 * - Retired:   post set to draft and 301/410-redirected → never linked.
 	 * - Not needed / To create: no live page exists.
 	 */
 	private const DRUG_STATUS = array(
 		'completed'  => array( true, 'completed' ),
-		'pending'    => array( true, 'pending' ),
+		'pending'    => array( false, 'status_pending' ),
 		'retired'    => array( false, 'status_retired' ),
 		'not needed' => array( false, 'status_not_needed' ),
 		'to create'  => array( false, 'status_to_create' ),
@@ -90,6 +92,14 @@ final class GraphBuilder {
 	/** @var array<string, string[]> node id => linked paths (from resolver) */
 	private array $content_links = array();
 
+	/** @var array<string, array<string, mixed>> FDA label sources of the KG claims, by "setid_vN" */
+	private array $kg_sources = array();
+
+	/** @var array<string, array<int, array{label:string, base:string}>> drug id => active ingredients */
+	private array $actives = array();
+
+	private int $unrelated_links = 0;
+
 	private Redirects $redirects;
 
 	/**
@@ -115,12 +125,20 @@ final class GraphBuilder {
 					'disease' => '/diseases/',
 				),
 				'resolver'       => null,
+				// Paths listed in the site's XML sitemaps. When given, they alone decide what is
+				// published; tracker statuses then only label entities. null = tracker rules.
+				'published_paths' => null,
+				// Signed KG claims from the iMedix Disease Registry (KgSource::claims()); null = none.
+				'kg_claims'      => null,
 				'spreadsheet_id' => '',
 				'generated_at'   => gmdate( 'c' ),
 				'source_hash'    => '',
 			),
 			$options
 		);
+		if ( is_array( $this->options['published_paths'] ) ) {
+			$this->options['published_paths'] = array_fill_keys( $this->options['published_paths'], true );
+		}
 		$this->redirects = new Redirects();
 	}
 
@@ -173,7 +191,9 @@ final class GraphBuilder {
 		}
 
 		$this->add_aliases();
+		$this->add_ingredients();
 		$this->add_content_link_edges();
+		$this->add_kg();
 		$this->finalise_degrees();
 
 		return array(
@@ -215,37 +235,52 @@ final class GraphBuilder {
 	 */
 	private function add_drug( array $row ): void {
 		$status = strtolower( trim( $row['status'] ) );
-		if ( ! isset( self::DRUG_STATUS[ $status ] ) ) {
+		if ( $this->sitemap_mode() ) {
+			$code = 'completed' === $status ? 'completed' : 'pending'; // Label only: the sitemap decides.
+		} elseif ( ! isset( self::DRUG_STATUS[ $status ] ) ) {
 			$this->reject( 'Drugs', $row['_row'], $row['slug'], 'status_unknown', 'Status "' . $row['status'] . '"' );
 			return;
+		} else {
+			[ $eligible, $code ] = self::DRUG_STATUS[ $status ];
+			if ( ! $eligible ) {
+				$this->reject( 'Drugs', $row['_row'], $row['slug'], $code, $row['note'] );
+				return;
+			}
 		}
-		[ $eligible, $code ] = self::DRUG_STATUS[ $status ];
-		if ( ! $eligible ) {
-			$this->reject( 'Drugs', $row['_row'], $row['slug'], $code, $row['note'] );
-			return;
+		// Topics come from "Disease Category"; Batch is the fallback.
+		$topics = Topics::parse( $row['category'] );
+		$source = 'Drugs.Category';
+		if ( ! $topics ) {
+			$topics = Topics::parse( $row['batch'] );
+			$source = 'Drugs.Batch';
 		}
-		$this->add_entity( 'drug', 'Drugs', $row, $code, $row['status'], Topics::parse( $row['batch'] ), 'Drugs.Batch', $row['completed_on'] );
+		$this->add_entity( 'drug', 'Drugs', $row, $code, $row['status'], $topics, $source, $row['completed_on'] );
+		// Products without FDA/EMA registration stay searchable but are never featured on the homepage.
+		$id = 'drug:' . strtolower( trim( $row['slug'] ) );
+		if ( isset( $this->nodes[ $id ] ) && 'unregistered' === strtolower( trim( $row['registration'] ) ) ) {
+			$this->nodes[ $id ]['registered'] = false;
+		}
 	}
 
 	/**
 	 * @param array<string, string> $row
 	 */
 	private function add_disease( array $row ): void {
-		$decision = strtolower( trim( $row['decision'] ) );
-		if ( 'keep' !== $decision ) {
-			$this->reject( 'Diseases', $row['_row'], $row['slug'], 'decision_not_keep', 'Decision "' . $row['decision'] . '"' );
-			return;
-		}
 		$raw_status = trim( $row['status'] );
 		$s          = strtolower( $raw_status );
-		if ( 0 === strpos( $s, 'completed' ) ) {
-			$editorial = 'completed';
-		} elseif ( 0 === strpos( $s, 'pending' ) ) {
-			$editorial = 'pending';
-		} else {
-			$editorial = '' === $s ? 'unknown' : Text::key( $s );
-			$this->warn( 'Diseases', $row['_row'], 'status_unrecognised', 'Status "' . $raw_status . '" kept because Decision is KEEP' );
+		if ( ! $this->sitemap_mode() ) {
+			$decision = strtolower( trim( $row['decision'] ) );
+			if ( 'keep' !== $decision ) {
+				$this->reject( 'Diseases', $row['_row'], $row['slug'], 'decision_not_keep', 'Decision "' . $row['decision'] . '"' );
+				return;
+			}
+			// Without a sitemap, only guides that passed editorial review are shown.
+			if ( 0 !== strpos( $s, 'completed' ) ) {
+				$this->reject( 'Diseases', $row['_row'], $row['slug'], 'status_not_completed', 'Status "' . $raw_status . '"' );
+				return;
+			}
 		}
+		$editorial = 0 === strpos( $s, 'completed' ) ? 'completed' : 'pending';
 		$this->add_entity( 'disease', 'Diseases', $row, $editorial, $raw_status, Topics::parse( $row['cluster'] ), 'Diseases.Cluster', $row['updated_on'] );
 	}
 
@@ -261,6 +296,10 @@ final class GraphBuilder {
 			return;
 		}
 		$expected = $this->entity_path( $type, $slug );
+		if ( $this->sitemap_mode() && ! isset( $this->options['published_paths'][ $expected ] ) ) {
+			$this->reject( $sheet, $row['_row'], $slug, 'not_in_sitemap', $expected );
+			return;
+		}
 
 		// URL column must agree with the slug; an empty URL falls back to the canonical pattern.
 		$url_derived = false;
@@ -320,6 +359,9 @@ final class GraphBuilder {
 			}
 			if ( ! empty( $live['links'] ) && is_array( $live['links'] ) ) {
 				$this->content_links[ $id ] = $live['links'];
+			}
+			if ( ! empty( $live['active'] ) && is_string( $live['active'] ) ) {
+				$this->actives[ $id ] = self::split_actives( $live['active'] );
 			}
 		}
 
@@ -418,15 +460,208 @@ final class GraphBuilder {
 		}
 	}
 
+	/**
+	 * Active ingredients from the drug guides. Each drug carries its ingredient
+	 * names (shown next to the brand, and searchable); an ingredient with its own
+	 * published iMedix page (in the sitemap) becomes a node the drug `contains`.
+	 * Unregistered products carry the names but are never connected.
+	 */
+	private function add_ingredients(): void {
+		$base  = '/' . trim( (string) ( $this->options['base_paths']['ingredient'] ?? '/ingredients/' ), '/' ) . '/';
+		$pages = array();
+		foreach ( array_keys( (array) $this->options['published_paths'] ) as $path ) {
+			if ( preg_match( '#^' . preg_quote( $base, '#' ) . '([a-z0-9-]+)/$#', (string) $path, $m ) ) {
+				$pages[ $m[1] ] = $path;
+			}
+		}
+		foreach ( $this->actives as $drug => $list ) {
+			if ( ! isset( $this->nodes[ $drug ] ) ) {
+				continue;
+			}
+			$this->nodes[ $drug ]['actives'] = array_column( $list, 'label' );
+			// Each ingredient with its published iMedix page (from the ingredients sitemap), or '' when it has none.
+			$this->nodes[ $drug ]['active_paths'] = array_map( static fn( $a ) => $pages[ Text::key( $a['base'] ) ] ?? '', $list );
+			$aliases                         = (array) $this->nodes[ $drug ]['aliases'];
+			foreach ( $list as $active ) {
+				// "Sertraline" finds Zoloft.
+				if ( Text::fold( $active['base'] ) !== Text::fold( $this->nodes[ $drug ]['name'] ) ) {
+					$aliases[] = ucfirst( $active['base'] );
+				}
+				$slug = Text::key( $active['base'] );
+				if ( ! isset( $pages[ $slug ] ) || false === ( $this->nodes[ $drug ]['registered'] ?? true ) ) {
+					continue;
+				}
+				$id = 'ingredient:' . $slug;
+				if ( ! isset( $this->nodes[ $id ] ) ) {
+					$this->nodes[ $id ] = array(
+						'_row'     => '',
+						'id'       => $id,
+						'type'     => 'ingredient',
+						'name'     => ucfirst( $active['base'] ),
+						'slug'     => $slug,
+						'url'      => rtrim( $this->options['site_url'], '/' ) . $pages[ $slug ],
+						'status'   => null,
+						'category' => 'ingredient',
+						'degree'   => 0,
+						'aliases'  => array(),
+					);
+				}
+				$this->add_edge( $drug, $id, 'contains', 'Active ingredient in the iMedix drug guide' );
+			}
+			$aliases = array_values( array_unique( $aliases ) );
+			sort( $aliases );
+			$this->nodes[ $drug ]['aliases'] = $aliases;
+		}
+	}
+
+	/**
+	 * "Amoxicillin + Clavulanate potassium" → [{label: "Amoxicillin", base: "amoxicillin"},
+	 * {label: "Clavulanate potassium", base: "clavulanate"}].
+	 *
+	 * @return array<int, array{label:string, base:string}>
+	 */
+	private static function split_actives( string $raw ): array {
+		$out = array();
+		foreach ( preg_split( '/\s*(?:\+|\/|,|;|\band\b|&)\s*/i', $raw ) as $part ) {
+			$label = trim( (string) preg_replace( '/\s+/', ' ', $part ) );
+			$base  = trim( (string) preg_replace( '/\b(hydrochloride|dihydrochloride|hcl|hyclate|sodium|potassium|calcium|magnesium|besylate|maleate|tartrate|succinate|citrate|phosphate|sulfate|sulphate|mesylate|medoxomil|monohydrate|dihydrate|anhydrous|acetate|fumarate|bromide|disodium)\b/i', '', strtolower( $label ) ) );
+			$base  = trim( (string) preg_replace( '/\s+/', ' ', $base ) );
+			if ( strlen( $base ) >= 4 ) {
+				$out[ $base ] = array(
+					'label' => ucfirst( $label ),
+					'base'  => $base,
+				);
+			}
+		}
+		return array_values( $out );
+	}
+
+	/**
+	 * Signed knowledge-graph claims (iMedix Disease Registry, US FDA labels only):
+	 * Condition (MONDO) described on a disease page; Substance or product →
+	 * Condition as treats / prevents / reduces_risk_of / relieves_symptoms_of,
+	 * each with its qualifier, verbatim claim and the labels that support it;
+	 * Substance → Brand (has_brand). Only what the registry signed — nothing is
+	 * inferred. An ANDA label never supports a product-level (brand) claim: it is
+	 * evidence for the substance only.
+	 */
+	private function add_kg(): void {
+		$claims = $this->options['kg_claims'];
+		if ( ! is_array( $claims ) ) {
+			return;
+		}
+		$site = rtrim( (string) $this->options['site_url'], '/' );
+		foreach ( $claims as $c ) {
+			$page = $this->by_path[ (string) ( $c['page'] ?? '' ) ] ?? null;
+			if ( null === $page || 'disease' !== $this->nodes[ $page ]['type'] ) {
+				continue; // The disease page is not published (not in the sitemap).
+			}
+			$is_substance = 'substance' === ( $c['subject']['kind'] ?? '' );
+			$sources      = array_values(
+				array_filter(
+					(array) ( $c['sources'] ?? array() ),
+					static fn( $s ) => $is_substance || 0 !== stripos( (string) ( $s['application'] ?? '' ), 'ANDA' )
+				)
+			);
+			if ( ! $sources ) {
+				continue;
+			}
+
+			$condition = 'condition:' . (int) $c['condition']['id'];
+			if ( ! isset( $this->nodes[ $condition ] ) ) {
+				$this->nodes[ $condition ] = array(
+					'_row'     => '',
+					'id'       => $condition,
+					'type'     => 'condition',
+					'name'     => (string) $c['condition']['name'],
+					'slug'     => (string) (int) $c['condition']['id'],
+					'url'      => $this->nodes[ $page ]['url'],
+					'status'   => null,
+					'category' => 'condition',
+					'degree'   => 0,
+					'aliases'  => array(),
+				);
+			}
+			$this->add_edge( $condition, $page, 'described_on', 'iMedix disease registry' );
+
+			$path = (string) ( $c['subject']['path'] ?? '' );
+			if ( $is_substance ) {
+				$slug    = preg_match( '#^/ingredients/([a-z0-9-]+)/$#', $path, $m ) ? $m[1] : '';
+				$subject = '' !== $slug ? 'ingredient:' . $slug : 'substance:' . (int) $c['subject']['id'];
+				if ( ! isset( $this->nodes[ $subject ] ) ) {
+					$this->nodes[ $subject ] = array(
+						'_row'     => '',
+						'id'       => $subject,
+						'type'     => 'ingredient',
+						'name'     => (string) $c['subject']['name'],
+						'slug'     => '' !== $slug ? $slug : (string) (int) $c['subject']['id'],
+						'url'      => '' !== $slug ? $site . $path : null,
+						'status'   => null,
+						'category' => 'ingredient',
+						'degree'   => 0,
+						'aliases'  => array(),
+					);
+				}
+			} else {
+				$subject = $this->by_path[ $path ] ?? null;
+				if ( null === $subject || 'drug' !== $this->nodes[ $subject ]['type'] || false === ( $this->nodes[ $subject ]['registered'] ?? true ) ) {
+					continue;
+				}
+			}
+
+			$key = (string) $c['predicate'] . '|' . $subject . '|' . $condition;
+			$this->add_edge( $subject, $condition, (string) $c['predicate'], 'FDA label (iMedix disease registry)' );
+			foreach ( $sources as $s ) {
+				$this->kg_sources[ $s['setid'] . '_v' . (int) $s['version'] ] = $s;
+			}
+			$this->edges[ $key ]['claims'][] = array(
+				'claim'        => (string) $c['claim'],
+				'qualifier'    => (string) ( $c['qualifier'] ?? '' ),
+				'supported_by' => array_map( static fn( $s ) => $s['setid'] . '_v' . (int) $s['version'], $sources ),
+			);
+
+			if ( $is_substance ) {
+				foreach ( (array) ( $c['brands'] ?? array() ) as $brand ) {
+					$drug = $this->by_path[ (string) ( $brand['path'] ?? '' ) ] ?? null;
+					if ( null !== $drug && 'drug' === $this->nodes[ $drug ]['type'] && false !== ( $this->nodes[ $drug ]['registered'] ?? true ) ) {
+						$this->add_edge( $subject, $drug, 'has_brand', 'iMedix disease registry (products verified against the label)' );
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * An article link becomes a relationship only when both guides share an
+	 * iMedix category: "related reading" and navigation links between unrelated
+	 * guides are not medical relationships and are left out.
+	 */
 	private function add_content_link_edges(): void {
+		$topics = array();
+		foreach ( $this->edges as $edge ) {
+			if ( 'in_topic' === $edge['type'] ) {
+				$topics[ $edge['source'] ][ $edge['target'] ] = true;
+			}
+		}
 		foreach ( $this->content_links as $source => $paths ) {
 			foreach ( $paths as $path ) {
 				$resolved = $this->redirects->resolve( (string) $path );
 				$path     = 'ok' === $resolved['status'] ? $resolved['path'] : $path;
-				if ( isset( $this->by_path[ $path ] ) && $this->by_path[ $path ] !== $source ) {
-					$this->add_edge( $source, $this->by_path[ $path ], 'links_to', 'WordPress post_content' );
+				if ( ! isset( $this->by_path[ $path ] ) || $this->by_path[ $path ] === $source ) {
+					continue;
 				}
+				$target = $this->by_path[ $path ];
+				// Unregistered products relate to nothing: mentions of them (e.g. interaction warnings) are not relationships.
+				if ( false === ( $this->nodes[ $source ]['registered'] ?? true ) || false === ( $this->nodes[ $target ]['registered'] ?? true )
+					|| ! array_intersect_key( $topics[ $source ] ?? array(), $topics[ $target ] ?? array() ) ) {
+					++$this->unrelated_links;
+					continue;
+				}
+				$this->add_edge( $source, $target, 'links_to', 'WordPress post_content' );
 			}
+		}
+		if ( $this->unrelated_links ) {
+			$this->warn( 'Graph', '', 'links_without_shared_category', $this->unrelated_links . ' article links skipped (no shared category)' );
 		}
 	}
 
@@ -435,9 +670,10 @@ final class GraphBuilder {
 			++$this->nodes[ $edge['source'] ]['degree'];
 			++$this->nodes[ $edge['target'] ]['degree'];
 		}
-		// Topics that ended up with a single member are not useful groupings.
+		// Topics that ended up with a single member are not useful groupings —
+		// except iMedix categories, which are always shown.
 		foreach ( $this->nodes as $id => $node ) {
-			if ( 'topic' === $node['type'] && $node['degree'] < 2 ) {
+			if ( 'topic' === $node['type'] && $node['degree'] < 2 && ! in_array( $node['name'], Topics::CATEGORIES, true ) ) {
 				$this->warn( 'Graph', '', 'topic_dropped_single_member', $node['name'] );
 				foreach ( $this->edges as $k => $edge ) {
 					if ( $edge['target'] === $id ) {
@@ -480,9 +716,11 @@ final class GraphBuilder {
 		usort( $edges, static fn( $a, $b ) => strcmp( $a['type'] . $a['source'] . $a['target'], $b['type'] . $b['source'] . $b['target'] ) );
 
 		$counts = array(
-			'drug'    => 0,
-			'disease' => 0,
-			'topic'   => 0,
+			'drug'       => 0,
+			'disease'    => 0,
+			'topic'      => 0,
+			'ingredient' => 0,
+			'condition'  => 0,
 		);
 		foreach ( $nodes as $node ) {
 			++$counts[ $node['type'] ];
@@ -509,22 +747,68 @@ final class GraphBuilder {
 					'label'  => 'Editorial topic',
 					'plural' => 'Editorial topics',
 				),
+				'ingredient' => array(
+					'label'  => 'Active ingredient',
+					'plural' => 'Active ingredients',
+				),
+				'condition'  => array(
+					'label'  => 'Condition',
+					'plural' => 'Conditions',
+				),
 			),
 			'edgeTypes'   => array(
 				'in_topic' => array(
 					'label'      => 'Grouped under editorial topic',
 					'clinical'   => false,
-					'provenance' => 'Google Sheet "iMedix Drug Remediation — Master Tracker": Drugs.Batch and Diseases.Cluster columns (editorial work groupings).',
+					'provenance' => 'Google Sheet "iMedix Drug Remediation — Master Tracker": Drugs."Disease Category" (Batch as fallback) and Diseases.Cluster, resolved to the iMedix category list.',
 				),
 				'links_to' => array(
 					'label'      => 'Linked from the iMedix article',
 					'clinical'   => false,
-					'provenance' => 'Internal links found in the published WordPress article body.',
+					'provenance' => 'Internal links in the published WordPress article body, kept only between guides that share an iMedix category.',
+				),
+				'treats'               => array(
+					'label'      => 'FDA-approved to treat',
+					'clinical'   => true,
+					'provenance' => 'FDA label (US), signed in the iMedix Disease Registry; from FDA labels, not a complete list.',
+				),
+				'prevents'             => array(
+					'label'      => 'FDA-approved to prevent',
+					'clinical'   => true,
+					'provenance' => 'FDA label (US), signed in the iMedix Disease Registry; from FDA labels, not a complete list.',
+				),
+				'reduces_risk_of'      => array(
+					'label'      => 'FDA-approved to reduce the risk of',
+					'clinical'   => true,
+					'provenance' => 'FDA label (US), signed in the iMedix Disease Registry; from FDA labels, not a complete list.',
+				),
+				'relieves_symptoms_of' => array(
+					'label'      => 'FDA-approved to relieve symptoms of',
+					'clinical'   => true,
+					'provenance' => 'FDA label (US), signed in the iMedix Disease Registry; from FDA labels, not a complete list.',
+				),
+				'has_brand'            => array(
+					'label'      => 'Brand on iMedix',
+					'clinical'   => false,
+					'provenance' => 'Products verified against the label in the iMedix Disease Registry.',
+				),
+				'described_on'         => array(
+					'label'      => 'Covered by the iMedix guide',
+					'clinical'   => false,
+					'provenance' => 'iMedix Disease Registry: condition (MONDO) ↔ disease page.',
+				),
+				'contains' => array(
+					'label'      => 'Contains the active ingredient',
+					'clinical'   => false,
+					'provenance' => 'Active ingredient field of the iMedix drug guide, linked to the published iMedix ingredient page.',
 				),
 			),
 			'counts'      => $counts,
 			'nodes'       => $nodes,
 			'edges'       => $edges,
+			// supported_by targets: FDA labels (US) behind the KG claims, keyed "setid_vN".
+			'kgSources'   => (object) $this->kg_sources,
+			'kgNote'      => 'From FDA labels, not a complete list.',
 		);
 	}
 
@@ -548,6 +832,10 @@ final class GraphBuilder {
 			'rejected'    => $this->rejected,
 			'warnings'    => $this->warnings,
 		);
+	}
+
+	private function sitemap_mode(): bool {
+		return is_array( $this->options['published_paths'] );
 	}
 
 	private function reject( string $sheet, string $row, string $slug, string $reason, string $detail ): void {

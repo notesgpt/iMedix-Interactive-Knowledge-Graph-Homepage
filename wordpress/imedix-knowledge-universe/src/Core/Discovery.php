@@ -53,17 +53,16 @@ final class Discovery {
 	}
 
 	/**
-	 * Health areas for the library: the tracker's editorial groupings (drug
-	 * "Batch", disease "Cluster") merged into reader-facing areas, then enriched
-	 * with the real links between published articles — a disease guide that links
-	 * to a drug guide (or the reverse) brings that guide into the area. Nothing is
-	 * inferred: every member comes from the tracker or from WordPress content.
-	 * Areas with fewer than three guides are left out.
+	 * Health areas for the library: the iMedix categories from the tracker, then
+	 * each condition in an area brings the medicines FDA-approved for it according
+	 * to the signed iMedix knowledge graph (`kg`, from FDA labels — not a complete
+	 * list). Nothing is inferred.
+	 * Every area with at least one guide is shown.
 	 *
 	 * @param array<string, mixed> $graph Client graph (ClientPayload::from_graph format).
 	 * @return array<int, array{key:string, icon:string, name:string, total:int, drugs: array{count:int, items: array<int, array{name:string, path:string}>}, diseases: array{count:int, items: array<int, array{name:string, path:string}>}}>
 	 */
-	public static function areas( array $graph, int $per_type = 4, int $min_total = 3 ): array {
+	public static function areas( array $graph, int $per_type = 4, int $min_total = 1 ): array {
 		$nodes = self::index( $graph );
 		$topic_area = array();
 		foreach ( self::AREAS as $key => $area ) {
@@ -73,30 +72,35 @@ final class Discovery {
 		}
 
 		$members = array();
-		$labels  = array();
 		foreach ( $graph['edges'] ?? array() as $edge ) {
 			if ( 'in_topic' !== ( $edge[2] ?? '' ) || ! isset( $nodes[ $edge[0] ], $nodes[ $edge[1] ] ) ) {
 				continue;
 			}
 			$key = $topic_area[ $edge[1] ] ?? substr( (string) $edge[1], strlen( 'topic:' ) );
 			if ( ! isset( self::AREAS[ $key ] ) ) {
-				$labels[ $key ] = (string) $nodes[ $edge[1] ]['n']; // A new tracker grouping: shown as is.
+				continue; // Only the fixed iMedix categories are shown.
 			}
 			$members[ $key ][ $edge[0] ] = true;
 		}
 
-		// Real article links between drugs and diseases (WordPress post_content).
-		$links = array();
+		// One direction only: a condition in the area brings the medicines approved
+		// for it (signed KG). A medicine never pulls other conditions in, so
+		// a drug with two categories cannot drag a condition into the wrong area.
+		$approved = array();
 		foreach ( $graph['edges'] ?? array() as $edge ) {
-			if ( 'links_to' === ( $edge[2] ?? '' ) && isset( $nodes[ $edge[0] ], $nodes[ $edge[1] ] ) && $nodes[ $edge[0] ]['t'] !== $nodes[ $edge[1] ]['t'] ) {
-				$links[ $edge[0] ][ $edge[1] ] = true;
-				$links[ $edge[1] ][ $edge[0] ] = true;
+			if ( 'kg' === ( $edge[2] ?? '' ) && isset( $nodes[ $edge[0] ], $nodes[ $edge[1] ] ) ) {
+				$approved[ $edge[1] ][ $edge[0] ] = array( (string) ( $edge[3] ?? '' ), (string) ( $edge[4] ?? '' ) );
 			}
 		}
+		// The claim and FDA label that put a medicine in an area (first condition wins).
+		$evidence = array();
 		foreach ( $members as $key => $set ) {
 			foreach ( array_keys( $set ) as $id ) {
-				foreach ( array_keys( $links[ $id ] ?? array() ) as $linked ) {
-					$members[ $key ][ $linked ] = true;
+				if ( 'disease' === $nodes[ $id ]['t'] ) {
+					foreach ( $approved[ $id ] ?? array() as $drug => $claim ) {
+						$members[ $key ][ $drug ]   = true;
+						$evidence[ $key ][ $drug ] ??= $claim;
+					}
 				}
 			}
 		}
@@ -119,14 +123,26 @@ final class Discovery {
 			}
 			// One type only: the card gets all its rows.
 			$take = ( $by_type['drug'] && $by_type['disease'] ) ? $per_type : $per_type * 2;
-			$list = static function ( array $items ) use ( $take ): array {
-				usort( $items, array( self::class, 'rank' ) );
+			$ev   = $evidence[ $key ] ?? array();
+			$list = static function ( array $items ) use ( $take, $ev ): array {
+				// Medicines with an FDA label behind them first.
+				usort( $items, static fn( $a, $b ) => ( isset( $ev[ $b['id'] ] ) <=> isset( $ev[ $a['id'] ] ) ) ?: self::rank( $a, $b ) );
 				return array(
 					'count' => count( $items ),
 					'items' => array_map(
 						static fn( $n ) => array(
-							'name' => (string) $n['n'],
-							'path' => (string) $n['p'],
+							'name'    => (string) $n['n'],
+							'path'    => (string) $n['p'],
+							'active'  => (string) ( $n['g'] ?? '' ),
+							'actives' => array_map(
+								static fn( $a ) => array(
+									'label' => (string) $a[0],
+									'path'  => (string) ( $a[1] ?? '' ),
+								),
+								(array) ( $n['gl'] ?? ( empty( $n['g'] ) ? array() : array( array( $n['g'], '' ) ) ) )
+							),
+							'claim'   => (string) ( $ev[ $n['id'] ][0] ?? '' ),
+							'source'  => (string) ( $ev[ $n['id'] ][1] ?? '' ),
 						),
 						array_slice( $items, 0, $take )
 					),
@@ -135,7 +151,7 @@ final class Discovery {
 			$areas[] = array(
 				'key'      => $key,
 				'icon'     => self::AREAS[ $key ][1] ?? $key,
-				'name'     => self::AREAS[ $key ][0] ?? $labels[ $key ],
+				'name'     => self::AREAS[ $key ][0],
 				'total'    => $total,
 				'drugs'    => $list( $by_type['drug'] ),
 				'diseases' => $list( $by_type['disease'] ),
@@ -151,16 +167,31 @@ final class Discovery {
 	 * nothing about which medicine treats which condition.
 	 */
 	private const AREAS = array(
-		'heart'       => array( 'Heart & Blood Pressure', 'cardiovascular', array( 'cardiovascular', 'blood-pressure', 'heart-disease' ) ),
-		'pain'        => array( 'Pain & Arthritis', 'analgesics', array( 'analgesics', 'pain-relief', 'arthritis' ) ),
-		'diabetes'    => array( 'Diabetes', 'diabetes', array( 'diabetes' ) ),
-		'infections'  => array( 'Infections', 'antibiotics', array( 'antibiotics' ) ),
-		'mental'      => array( 'Mental Health', 'depression', array( 'depression' ) ),
-		'womens'      => array( "Women's Health", 'womens-health', array( 'womens-health' ) ),
-		'mens'        => array( "Men's & Sexual Health", 'mens-health', array( 'mens-health', 'erectile-dysfunction' ) ),
-		'digestive'   => array( 'Digestive Health', 'gastrointestinal', array( 'gastrointestinal' ) ),
-		'skin'        => array( 'Skin', 'skincare', array( 'skincare' ) ),
-		'respiratory' => array( 'Respiratory', 'asthma', array( 'asthma' ) ),
+		'erectile-dysfunction' => array( 'Erectile Dysfunction', 'erectile-dysfunction', array( 'erectile-dysfunction' ) ),
+		'allergies'            => array( 'Allergies', 'asthma', array( 'allergies' ) ),
+		'anti-fungal'          => array( 'Anti Fungal', 'antibiotics', array( 'anti-fungal' ) ),
+		'anti-viral'           => array( 'Anti Viral', 'antibiotics', array( 'anti-viral' ) ),
+		'antibiotics'          => array( 'Antibiotics', 'antibiotics', array( 'antibiotics' ) ),
+		'anxiety'              => array( 'Anxiety', 'depression', array( 'anxiety' ) ),
+		'arthritis'            => array( 'Arthritis', 'arthritis', array( 'arthritis' ) ),
+		'asthma'               => array( 'Asthma', 'asthma', array( 'asthma' ) ),
+		'birth-control'        => array( 'Birth Control', 'womens-health', array( 'birth-control' ) ),
+		'blood-pressure'       => array( 'Blood Pressure', 'blood-pressure', array( 'blood-pressure' ) ),
+		'cholesterol-lowering' => array( 'Cholesterol Lowering', 'cardio', array( 'cholesterol-lowering' ) ),
+		'depression'           => array( 'Depression', 'depression', array( 'depression' ) ),
+		'diabetes'             => array( 'Diabetes', 'diabetes', array( 'diabetes' ) ),
+		'gastrointestinal'     => array( 'Gastrointestinal', 'gastrointestinal', array( 'gastrointestinal' ) ),
+		'hair-loss'            => array( 'Hair Loss', 'skincare', array( 'hair-loss' ) ),
+		'heart-disease'        => array( 'Heart Disease', 'heart-disease', array( 'heart-disease' ) ),
+		'herbals'              => array( 'Herbals', 'skincare', array( 'herbals' ) ),
+		'mens-health'          => array( "Men's Health", 'mens-health', array( 'mens-health' ) ),
+		'muscle-relaxant'      => array( 'Muscle Relaxant', 'arthritis', array( 'muscle-relaxant' ) ),
+		'pain-relief'          => array( 'Pain Relief', 'pain-relief', array( 'pain-relief' ) ),
+		'skincare'             => array( 'Skincare', 'skincare', array( 'skincare' ) ),
+		'sleep-aid'            => array( 'Sleep Aid', 'depression', array( 'sleep-aid' ) ),
+		'quit-smoking'         => array( 'Quit Smoking', 'cardio', array( 'quit-smoking' ) ),
+		'weight-loss'          => array( 'Weight Loss', 'diabetes', array( 'weight-loss' ) ),
+		'womans-health'        => array( "Woman's Health", 'womens-health', array( 'womans-health' ) ),
 	);
 
 	/**
@@ -205,7 +236,8 @@ final class Discovery {
 	private static function index( array $graph ): array {
 		$nodes = array();
 		foreach ( $graph['nodes'] ?? array() as $n ) {
-			if ( isset( $n['id'], $n['t'], $n['n'] ) ) {
+			// Unregistered products are reachable through search only, never featured.
+			if ( isset( $n['id'], $n['t'], $n['n'] ) && 0 !== ( $n['r'] ?? 1 ) ) {
 				$nodes[ (string) $n['id'] ] = $n;
 			}
 		}

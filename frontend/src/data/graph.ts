@@ -23,6 +23,8 @@ export function decodeGraph(raw: ClientGraph, siteOrigin: string): KGraph {
       status: n.s ?? null,
       aliases: Array.isArray(n.a) ? n.a.filter((a) => typeof a === 'string') : [],
       description: typeof n.x === 'string' ? n.x : null,
+      registered: n.r !== 0,
+      actives: typeof n.g === 'string' && n.g ? n.g : null,
     });
   }
   const incident: number[][] = nodes.map(() => []);

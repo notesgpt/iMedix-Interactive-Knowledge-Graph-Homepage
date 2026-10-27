@@ -44,5 +44,12 @@ if ( $imedix_ku_block_theme ) :
 </html>
 	<?php
 else :
+	// Themes that print their visible footer from a template part in each template
+	// (iMedix "himer" child theme: includes/parts/new-footer.php) get it here too.
+	// The homepage deliberately has no visible site header.
+	$imedix_ku_footer = locate_template( (string) apply_filters( 'imedix_ku_footer_part', 'includes/parts/new-footer.php' ) );
+	if ( $imedix_ku_footer ) {
+		include $imedix_ku_footer;
+	}
 	get_footer();
 endif;

@@ -175,7 +175,8 @@ export class SearchCombobox {
     appendHighlighted(name, hit.node.name, hit.via ? '' : query);
     const sub = document.createElement('span');
     sub.className = 'ku-opt__sub';
-    sub.textContent = (hit.via ? `Matches “${hit.via}” · ` : '') + displayPath(url);
+    const active = hit.node.actives && hit.node.actives.toLowerCase() !== hit.node.name.toLowerCase() ? `${hit.node.actives} · ` : '';
+    sub.textContent = (hit.via ? `Matches “${hit.via}” · ` : '') + active + displayPath(url);
     body.append(name, sub);
 
     const type = document.createElement('span');

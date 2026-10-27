@@ -30,6 +30,10 @@ export interface ClientNode {
   a?: string[];
   /** optional description */
   x?: string;
+  /** 0 = product without FDA/EMA registration: searchable, never featured */
+  r?: number;
+  /** active ingredient(s) of a drug, e.g. "Amoxicillin + Clavulanate potassium" */
+  g?: string;
 }
 
 export interface KNode {
@@ -43,6 +47,10 @@ export interface KNode {
   status: string | null;
   aliases: string[];
   description: string | null;
+  /** false for unregistered products (search only) */
+  registered: boolean;
+  /** active ingredient(s) of a drug, or null */
+  actives: string | null;
 }
 
 export interface KEdge {
