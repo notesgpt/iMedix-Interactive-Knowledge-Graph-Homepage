@@ -88,7 +88,6 @@ $config = json_encode(
 		'newsRefresh'  => 600,
 		'searchUrl'    => $site . '/',
 		'siteOrigin'   => $site,
-		'budget'       => 640,
 		'locale'       => 'en-US',
 	),
 	JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES
@@ -117,26 +116,32 @@ $html = <<<HTML
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>iMedix Knowledge Universe — preview</title>
+<title>iMedix: Independent Drug &amp; Health Platform</title>
+<meta name="description" content="iMedix provides independent, evidence-based information on medicines and health, featuring medically reviewed content, traceable sources, and strict standards.">
 <meta name="robots" content="noindex">
+<!-- Preview only. In WordPress the SEO plugin owns title/description and the Site Icon owns the favicon; the plugin outputs neither. -->
+<link rel="icon" href="$site/wp-content/uploads/2024/08/cropped-iMedix-icon-150x150.png" sizes="150x150">
 <style>
   /* Stand-in for the active WordPress theme (not part of the plugin). It deliberately uses
      the system font: the real iMedix font is inherited from the theme in WordPress.
      Override with ?font= or by defining --imedix-* tokens to preview brand values. */
   body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #fff; color: #112236; }
-  .preview-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(16px, 4vw, 40px); background: #112236; border-bottom: 1px solid rgb(163 186 210 / 0.18); }
+  /* Header stand-in modelled on the live iMedix header: dark bar, white logo, text nav. */
+  .preview-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px clamp(16px, 4vw, 40px); background: #262b31; }
   .preview-header a { color: #fff; text-decoration: none; font-size: 15px; }
-  .preview-logo { font-weight: 800; font-size: 22px !important; letter-spacing: -0.02em; }
+  .preview-logo { display: inline-flex; align-items: center; min-height: 40px; color: #fff; font-weight: 800; font-size: 24px; }
+  .preview-logo img { display: block; height: 40px; width: auto; }
   .preview-header nav { display: flex; gap: 20px; flex-wrap: wrap; }
-  .preview-header nav a { color: #dbe4ed; }
+  .preview-header nav a { color: #dfe3e8; }
+  @media (max-width: 480px) { .preview-logo img { height: 32px; } .preview-header nav { gap: 14px; } }
   .preview-footer { padding: 32px clamp(16px, 4vw, 40px); background: #112236; color: #a3bad2; font-size: 14px; }
 </style>
 $assets
 </head>
 <body class="page-template imedix-ku-page">
 <header class="preview-header" role="banner">
-  <a class="preview-logo" href="$site/">iMedix</a>
-  <nav aria-label="Primary (theme stand-in)"><a href="$site/drugs/">Drugs</a><a href="$site/diseases/">Diseases</a><a href="$site/news/">News</a></nav>
+  <a class="preview-logo" href="$site/" rel="home"><img src="$site/wp-content/uploads/2024/09/iMedix-logo-1.png" alt="iMedix" height="40" decoding="async" fetchpriority="high"></a>
+  <nav aria-label="Primary (theme stand-in)"><a href="$site/news/">News</a><a href="$site/drugs/">Drugs</a><a href="$site/diseases/">Diseases</a></nav>
 </header>
 <main id="primary" class="imedix-ku-main">
 $body

@@ -162,8 +162,6 @@ final class Admin {
 							<label><?php esc_html_e( 'Browser refresh (s)', 'imedix-ku' ); ?> <input type="number" min="120" max="3600" class="small-text" name="<?php echo esc_attr( $opt ); ?>[news_refresh_secs]" value="<?php echo esc_attr( (string) $s['news_refresh_secs'] ); ?>"></label>
 							<p class="description"><?php echo post_type_exists( $s['news_post_type'] ) ? esc_html__( 'Post type found.', 'imedix-ku' ) : esc_html__( 'Post type not registered — the ticker stays hidden.', 'imedix-ku' ); ?></p>
 						</td></tr>
-					<tr><th scope="row"><label for="ku-budget"><?php esc_html_e( 'Graph node budget (desktop)', 'imedix-ku' ); ?></label></th>
-						<td><input id="ku-budget" type="number" min="100" max="1500" class="small-text" name="<?php echo esc_attr( $opt ); ?>[graph_budget]" value="<?php echo esc_attr( (string) $s['graph_budget'] ); ?>"> <span class="description"><?php esc_html_e( 'Mobile and low-power devices automatically use a smaller sample.', 'imedix-ku' ); ?></span></td></tr>
 				</table>
 				<?php submit_button(); ?>
 			</form>

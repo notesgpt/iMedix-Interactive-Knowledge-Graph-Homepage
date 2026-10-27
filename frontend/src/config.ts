@@ -9,7 +9,6 @@ const DEFAULTS: KUConfig = {
   newsRefresh: 600,
   searchUrl: '/',
   siteOrigin: window.location.origin,
-  budget: 640,
   locale: document.documentElement.lang || 'en-US',
 };
 

@@ -61,7 +61,7 @@
   stroke-linejoin: round;
 }
 
-/* Entity glyphs: dot = drug, ring = disease, diamond = topic (never colour alone). */
+/* Entity glyphs: dot = drug, ring = disease (never colour alone). */
 .ku-glyph {
   display: inline-block;
   flex: none;
@@ -77,23 +77,13 @@
   border-radius: 50%;
   border: 2px solid var(--ku-disease);
 }
-.ku-glyph--topic {
-  width: 9px;
-  height: 9px;
-  transform: rotate(45deg);
-  border: 2px solid var(--ku-topic);
-}
+
 .ku-glyph--lg {
   width: 16px;
   height: 16px;
 }
 .ku-glyph--lg.ku-glyph--disease {
   border-width: 3px;
-}
-.ku-glyph--lg.ku-glyph--topic {
-  width: 14px;
-  height: 14px;
-  border-width: 2px;
 }
 
 /* ------------------------------------------------------------------ Hero */
@@ -118,22 +108,6 @@
   z-index: var(--ku-z-stage);
   touch-action: pan-y;
 }
-.ku-hero__stage canvas,
-.ku-hero__stage svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.ku-hero__stage canvas {
-  opacity: 0;
-  transition: opacity 900ms var(--ku-ease);
-}
-.ku-hero__stage.is-ready canvas {
-  opacity: 1;
-}
-.ku-hero.is-exploring .ku-hero__stage {
-  touch-action: none;
-}
 
 .ku-hero__veil {
   position: absolute;
@@ -144,9 +118,6 @@
     radial-gradient(58% 46% at 50% 47%, rgb(var(--ku-navy-deep-rgb) / 0.86) 0%, rgb(var(--ku-navy-deep-rgb) / 0.55) 55%, rgb(var(--ku-navy-deep-rgb) / 0) 100%),
     linear-gradient(180deg, rgb(var(--ku-navy-deep-rgb) / 0.5) 0%, rgb(var(--ku-navy-deep-rgb) / 0) 22%, rgb(var(--ku-navy-deep-rgb) / 0) 78%, rgb(var(--ku-navy-deep-rgb) / 0.75) 100%);
   transition: opacity var(--ku-dur-3) var(--ku-ease);
-}
-.ku-hero.is-exploring .ku-hero__veil {
-  opacity: 0.35;
 }
 
 .ku-hero__inner {
@@ -164,11 +135,6 @@
 .ku-hero__inner > * {
   pointer-events: auto;
 }
-.ku-hero.is-exploring .ku-hero__inner {
-  opacity: 0;
-  transform: translateY(-12px);
-  visibility: hidden;
-}
 
 .ku-eyebrow {
   display: inline-flex;
@@ -182,6 +148,7 @@
   font-size: 14px;
   font-weight: var(--ku-weight-semibold);
   color: var(--ku-ink);
+  text-wrap: balance;
 }
 .ku-eyebrow__sig {
   display: inline-flex;
@@ -477,7 +444,7 @@
   color: var(--ku-ink);
 }
 
-/* ------------------------------------------------------------ HUD & card */
+/* ------------------------------------------------------- Statistics panel */
 
 .ku-hud {
   position: absolute;
@@ -526,320 +493,13 @@
 .ku-legend__item--disease strong {
   color: var(--ku-cat-disease-strong);
 }
-.ku-legend__item--topic strong {
-  color: var(--ku-cat-topic-strong);
-}
-.ku-controls[hidden] {
-  display: none !important;
-}
-.ku-controls {
-  display: flex;
-  gap: 6px;
-  padding: 4px;
-  background: var(--ku-panel);
-  border: 1px solid var(--ku-hairline);
-  border-radius: 999px;
-}
-.ku-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-width: 44px;
-  min-height: 44px;
-  padding: 0 14px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ku-ink-2);
-  font: inherit;
-  font-size: 14px;
-  font-weight: var(--ku-weight-semibold);
-  line-height: 1;
-  cursor: pointer;
-  touch-action: manipulation;
-  transition: background var(--ku-dur-1) var(--ku-ease), color var(--ku-dur-1) var(--ku-ease);
-}
-.ku-btn--icon {
-  padding: 0;
-}
-.ku-btn:hover,
-.ku-btn[aria-pressed='true'] {
-  background: var(--ku-hover-on-dark);
-  color: var(--ku-ink);
-}
-.ku-btn--explore {
-  display: none;
-}
+
 .ku-icon--play,
 [aria-pressed='true'] > .ku-icon--pause {
   display: none;
 }
 [aria-pressed='true'] > .ku-icon--play {
   display: block;
-}
-
-.ku-tooltip {
-  position: absolute;
-  z-index: var(--ku-z-hud);
-  top: 0;
-  left: 0;
-  max-width: 280px;
-  padding: 9px 13px;
-  border-radius: 10px;
-  background: var(--ku-glass-strong);
-  border: 1px solid var(--ku-hairline-strong);
-  border-left: 3px solid var(--ku-tip-accent, var(--ku-steel));
-  box-shadow: 0 12px 30px -12px rgb(var(--ku-shadow-rgb) / 0.8);
-  font-size: 14px;
-  font-weight: var(--ku-weight-semibold);
-  color: var(--ku-ink);
-  pointer-events: none;
-  white-space: nowrap;
-  transform: translate(-50%, calc(-100% - 14px));
-  will-change: transform;
-}
-.ku-tooltip small {
-  display: block;
-  margin-top: 1px;
-  font-size: 12.5px;
-  font-weight: var(--ku-weight-medium);
-  color: var(--ku-ink-2);
-}
-.ku-tooltip[data-type='drug'] {
-  --ku-tip-accent: var(--ku-cat-drug-strong);
-}
-.ku-tooltip[data-type='disease'] {
-  --ku-tip-accent: var(--ku-cat-disease-strong);
-}
-.ku-tooltip[data-type='topic'] {
-  --ku-tip-accent: var(--ku-cat-topic-strong);
-}
-
-.ku-labels {
-  position: absolute;
-  inset: 0;
-  z-index: var(--ku-z-veil);
-  pointer-events: none;
-  overflow: hidden;
-}
-.ku-label {
-  /* Topic names on the map: solid pill, full-opacity text (≥ 10 : 1), sentence case. */
-  position: absolute;
-  top: 0;
-  left: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 4px 10px 4px 8px;
-  border-radius: 999px;
-  background: var(--ku-panel-strong);
-  border: 1px solid rgb(var(--ku-cat-topic-rgb) / 0.45);
-  font-size: 13px;
-  font-weight: var(--ku-weight-semibold);
-  line-height: 1.2;
-  color: var(--ku-ink);
-  white-space: nowrap;
-  transform: translate(-50%, -50%);
-  transition: opacity var(--ku-dur-2) var(--ku-ease);
-  will-change: transform;
-}
-.ku-label::before {
-  content: '';
-  width: 7px;
-  height: 7px;
-  transform: rotate(45deg);
-  border: 1.5px solid var(--ku-cat-topic-strong);
-}
-.ku-label--match::before {
-  border: 0;
-  border-radius: 50%;
-  background: var(--ku-match-accent, var(--ku-steel));
-  transform: none;
-}
-.ku-label--match[data-type='drug'] {
-  --ku-match-accent: var(--ku-cat-drug-strong);
-}
-.ku-label--match[data-type='disease'] {
-  --ku-match-accent: var(--ku-cat-disease-strong);
-}
-.ku-label--match {
-  border-color: var(--ku-match-accent, var(--ku-hairline-strong));
-  font-size: 14px;
-  box-shadow: 0 6px 18px -8px rgb(var(--ku-shadow-rgb) / 0.35);
-}
-
-.ku-card {
-  position: absolute;
-  z-index: var(--ku-z-panel);
-  top: 50%;
-  right: var(--ku-gutter);
-  width: min(360px, calc(100% - 2 * var(--ku-gutter)));
-  max-height: calc(100% - 140px);
-  overflow-y: auto;
-  padding: 22px 22px 20px;
-  background: var(--ku-glass-strong);
-  border: 1px solid var(--ku-hairline-strong);
-  border-radius: var(--ku-radius-l);
-  box-shadow: 0 30px 90px -30px rgb(var(--ku-shadow-rgb) / 0.85);
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
-  transform: translateY(-50%);
-  animation: ku-card-in var(--ku-dur-2) var(--ku-ease);
-}
-.ku-card[hidden] {
-  display: none;
-}
-@keyframes ku-card-in {
-  from {
-    opacity: 0;
-    transform: translateY(calc(-50% + 8px));
-  }
-}
-.ku-card__close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--ku-ink-3);
-  cursor: pointer;
-}
-.ku-card__close:hover {
-  background: var(--ku-hover-on-dark);
-  color: var(--ku-ink);
-}
-.ku-card__type {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 48px 12px 0;
-  padding: 5px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--ku-badge-line, var(--ku-hairline-strong));
-  background: var(--ku-badge-bg, transparent);
-  font-size: 13px;
-  font-weight: var(--ku-weight-semibold);
-  color: var(--ku-badge-ink, var(--ku-ink));
-}
-.ku-card[data-type='drug'] {
-  --ku-card-accent: var(--ku-cat-drug-strong);
-  --ku-badge-ink: var(--ku-cat-drug-strong);
-  --ku-badge-line: rgb(var(--ku-cat-drug-rgb) / 0.45);
-  --ku-badge-bg: rgb(var(--ku-cat-drug-rgb) / 0.1);
-}
-.ku-card[data-type='disease'] {
-  --ku-card-accent: var(--ku-cat-disease-strong);
-  --ku-badge-ink: var(--ku-cat-disease-strong);
-  --ku-badge-line: rgb(var(--ku-cat-disease-rgb) / 0.45);
-  --ku-badge-bg: rgb(var(--ku-cat-disease-rgb) / 0.1);
-}
-.ku-card[data-type='topic'] {
-  --ku-card-accent: var(--ku-cat-topic-strong);
-  --ku-badge-ink: var(--ku-cat-topic-strong);
-  --ku-badge-line: rgb(var(--ku-cat-topic-rgb) / 0.45);
-  --ku-badge-bg: rgb(var(--ku-cat-topic-rgb) / 0.1);
-}
-.ku-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 22px;
-  right: 22px;
-  height: 3px;
-  border-radius: 0 0 3px 3px;
-  background: var(--ku-card-accent, var(--ku-steel));
-}
-.ku-card__title {
-  margin: 0 40px 0 0;
-  font-family: var(--ku-font-heading);
-  font-size: 1.75rem;
-  font-weight: var(--ku-weight-regular);
-  line-height: 1.12;
-  letter-spacing: -0.01em;
-  color: var(--ku-ink);
-  overflow-wrap: anywhere;
-}
-.ku-card__meta {
-  margin: 8px 0 0;
-  font-size: 14px;
-  color: var(--ku-ink-2);
-}
-.ku-card__desc {
-  margin: 12px 0 0;
-  font-size: 14px;
-  color: var(--ku-ink-2);
-}
-.ku-card__links {
-  margin-top: 16px;
-}
-.ku-card__group + .ku-card__group {
-  margin-top: 14px;
-}
-.ku-card__group-title {
-  margin: 0 0 8px;
-  font-size: 14px;
-  font-weight: var(--ku-weight-bold);
-  color: var(--ku-ink);
-}
-.ku-card__group-note {
-  margin: 8px 0 0;
-  font-size: 12px;
-  color: var(--ku-ink-3);
-}
-.ku-card__list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.ku-card__item {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 32px;
-  padding: 4px 11px;
-  border: 1px solid var(--ku-hairline);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--ku-ink-2);
-  font: inherit;
-  font-size: 13px;
-  font-weight: var(--ku-weight-medium);
-  line-height: 1.25;
-  text-align: left;
-  text-decoration: none;
-  cursor: pointer;
-}
-.ku-card__item:hover {
-  border-color: var(--ku-hairline-strong);
-  color: var(--ku-ink);
-}
-.ku-card__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  min-height: 46px;
-  padding: 0 18px;
-  border-radius: 11px;
-  background: var(--ku-action);
-  color: var(--ku-action-ink) !important;
-  font-weight: var(--ku-weight-bold);
-  text-decoration: none;
-}
-.ku-card__cta:hover {
-  background: var(--ku-action-hover);
-}
-.ku-card__cta[hidden] {
-  display: none;
 }
 
 /* --------------------------------------------------------------- Ticker */
@@ -1016,26 +676,9 @@
     justify-content: center;
     border-radius: var(--ku-radius-m);
   }
-  .ku-controls {
-    justify-content: center;
-    border-radius: var(--ku-radius-m);
-  }
-  .ku-card {
-    top: auto;
-    bottom: 12px;
-    right: 12px;
-    left: 12px;
-    width: auto;
-    max-height: 62%;
-    transform: none;
-    animation-name: ku-sheet-in;
-  }
-  @keyframes ku-sheet-in {
-    from {
-      opacity: 0;
-      transform: translateY(16px);
-    }
-  }
+  
+  
+  
   .ku-news__inner {
     flex-wrap: wrap;
     gap: 6px 12px;
@@ -1051,12 +694,6 @@
   .ku-news__viewport {
     order: 3;
     flex-basis: 100%;
-  }
-}
-
-@media (pointer: coarse) {
-  .ku-btn--explore {
-    display: inline-flex;
   }
 }
 
@@ -1077,16 +714,13 @@
 @media (forced-colors: active) {
   .ku-search__field,
   .ku-search__panel,
-  .ku-card,
-  .ku-legend,
-  .ku-controls {
+  .ku-legend {
     border: 1px solid CanvasText;
   }
   .ku-glyph--drug {
     background: CanvasText;
   }
-  .ku-glyph--disease,
-  .ku-glyph--topic {
+  .ku-glyph--disease {
     border-color: CanvasText;
   }
 }
@@ -1113,64 +747,20 @@
 .ku-hint[hidden] {
   display: none;
 }
-.ku-fallback {
-  opacity: 0.9;
-}
-.ku-fallback * {
-  transition: opacity var(--ku-dur-2) var(--ku-ease);
-}
 
-.ku-connector {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  opacity: 0;
-  transition: opacity var(--ku-dur-2) var(--ku-ease);
-}
-.ku-connector.is-on {
-  opacity: 1;
-}
-.ku-connector path {
-  fill: none;
-  stroke: rgb(var(--ku-steel-rgb) / 0.6);
-  stroke-width: 1;
-  stroke-dasharray: 3 5;
-}
-.ku-connector circle {
-  fill: none;
-  stroke: var(--ku-accent-on-dark);
-  stroke-width: 1.5;
-}
-.ku-labels {
-  z-index: 2;
-}
-
-.ku-btn--explore {
-  white-space: nowrap;
-}
-/* A details card that cannot fit beside the text column dims it until closed. */
-@media (max-width: 1500px) {
-  .ku-hero.has-card .ku-hero__inner {
-    opacity: 0.14;
-  }
-}
 @media (max-width: 760px) {
   .ku-search__input {
     font-size: 16px;
   }
 }
 
-.ku-btn,
 .ku-chip,
 .ku-search__submit {
   -webkit-tap-highlight-color: transparent;
 }
 
-
 /* ================================================================ Library */
-/* One colour per content category (teal drugs, coral diseases, amber topics),
+/* One colour per content category (blue drugs, coral diseases; health areas neutral),
    always paired with its glyph and a text label. Text uses the "strong" shades
    (≥ 5.4 : 1 on white/tint); bars and icons use them too (non-text ≥ 3 : 1). */
 
@@ -1180,8 +770,7 @@
   background-color: var(--ku-paper);
   background-image:
     radial-gradient(48% 38% at 6% 0%, rgb(var(--ku-cat-drug-rgb) / 0.12) 0%, transparent 70%),
-    radial-gradient(40% 34% at 52% 0%, rgb(var(--ku-cat-disease-rgb) / 0.1) 0%, transparent 70%),
-    radial-gradient(44% 36% at 96% 0%, rgb(var(--ku-cat-topic-rgb) / 0.14) 0%, transparent 70%);
+    radial-gradient(44% 36% at 96% 0%, rgb(var(--ku-cat-disease-rgb) / 0.1) 0%, transparent 70%);
   color: var(--ku-text);
 }
 .ku-discover :focus-visible {
@@ -1196,9 +785,6 @@
 }
 .ku-discover .ku-glyph--disease {
   border-color: var(--ku-disease-on-light);
-}
-.ku-discover .ku-glyph--topic {
-  border-color: var(--ku-topic-on-light);
 }
 
 .ku-discover__head {
@@ -1238,11 +824,7 @@
   --cat-tint: var(--ku-cat-disease-tint);
   --cat-rgb: var(--ku-cat-disease-rgb);
 }
-.ku-cat--topic {
-  --cat-strong: var(--ku-cat-topic-strong);
-  --cat-tint: var(--ku-cat-topic-tint);
-  --cat-rgb: var(--ku-cat-topic-rgb);
-}
+
 .ku-cat__link {
   position: relative;
   display: flex;
@@ -1295,11 +877,7 @@
 .ku-discover .ku-cat__emblem .ku-glyph--disease {
   border: 3px solid var(--ku-white);
 }
-.ku-discover .ku-cat__emblem .ku-glyph--topic {
-  width: 14px;
-  height: 14px;
-  border: 2.5px solid var(--ku-white);
-}
+
 .ku-cat__count {
   font-family: var(--ku-font-heading);
   font-size: clamp(2.2rem, 1.8rem + 1.2vw, 2.8rem);
@@ -1397,11 +975,11 @@
 .ku-topic-index a .ku-icon {
   width: 17px;
   height: 17px;
-  color: var(--ku-cat-topic-strong);
+  color: var(--ku-area-strong);
 }
 .ku-topic-index a:hover {
-  border-color: var(--ku-cat-topic-strong);
-  background: var(--ku-cat-topic-tint);
+  border-color: var(--ku-area-strong);
+  background: var(--ku-area-tint);
 }
 .ku-topic-index__n {
   min-width: 26px;
@@ -1444,8 +1022,8 @@
   box-shadow: 0 24px 48px -32px rgb(var(--ku-navy-rgb) / 0.5);
 }
 .ku-topic:target {
-  border-color: var(--ku-cat-topic-strong);
-  box-shadow: 0 0 0 3px rgb(var(--ku-cat-topic-rgb) / 0.45);
+  border-color: var(--ku-area-strong);
+  box-shadow: 0 0 0 3px rgb(var(--ku-area-rgb) / 0.45);
 }
 .ku-topic--wide {
   grid-column: span 2;
@@ -1462,8 +1040,8 @@
   width: 46px;
   height: 46px;
   border-radius: 14px;
-  background: var(--ku-cat-topic-tint);
-  color: var(--ku-cat-topic-strong);
+  background: var(--ku-area-tint);
+  color: var(--ku-area-strong);
 }
 .ku-topic__icon .ku-icon {
   width: 24px;
@@ -1595,39 +1173,6 @@
   font-size: 14px;
   color: var(--ku-text-2);
 }
-.ku-topic__map {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  align-self: flex-start;
-  min-height: 42px;
-  margin-top: auto;
-  padding: 0 16px 0 12px;
-  border: 1px solid var(--ku-rule);
-  border-radius: 999px;
-  background: var(--ku-white);
-  font: inherit;
-  font-size: 14.5px;
-  font-weight: var(--ku-weight-bold);
-  color: var(--ku-link);
-  cursor: pointer;
-  transition: background var(--ku-dur-1) var(--ku-ease), border-color var(--ku-dur-1) var(--ku-ease);
-}
-.ku-topic__more + .ku-topic__map,
-.ku-topic__list + .ku-topic__map {
-  margin-top: 16px;
-}
-.ku-topic__map[hidden] {
-  display: none;
-}
-.ku-topic__map:hover {
-  border-color: var(--ku-blue);
-  background: rgb(var(--ku-blue-rgb) / 0.07);
-}
-.ku-topic__map .ku-icon {
-  width: 18px;
-  height: 18px;
-}
 
 .ku-note {
   display: flex;
@@ -1684,8 +1229,8 @@
   white-space: nowrap;
 }
 
-/* While the search is in use its suggestion panel must sit above the map HUD
-   (WCAG 2.4.11 focus not obscured); the details card stays above both. */
+/* While the search is in use its suggestion panel must sit above the
+   statistics panel and the floating labels (WCAG 2.4.11 focus not obscured). */
 .ku-hero__inner:focus-within {
   z-index: 30;
 }
@@ -1765,14 +1310,9 @@
     margin-top: 48px;
   }
 }
-@media (max-width: 680px) {
-  .ku-js .ku-topic__expand:not([hidden]) + .ku-topic__map {
-    margin-top: 10px;
-  }
-}
 
-/* Portrait tablets: size the hero to its content (the orbit frames it) instead of
-   the full screen height, which left long empty bands above and below. */
+/* Portrait tablets: size the hero to its content (the floating labels frame it)
+   instead of the full screen height. */
 @media (min-width: 681px) and (max-width: 1100px) and (orientation: portrait) {
   .ku-hero {
     min-height: auto;
@@ -1782,9 +1322,9 @@
 }
 
 /* ============================================================ Light hero */
-/* The hero is a light "specimen gallery": the semantic tokens used by every hero
-   component are re-pointed here, so search, chips, HUD, labels and the details
-   card all switch together. Ticker and library keep their own surfaces. */
+/* The semantic tokens used by every hero component are re-pointed here, so
+   search, chips, statistics and labels switch together. Ticker and library keep
+   their own surfaces. */
 .ku-hero {
   --ku-ink: var(--ku-hero-ink);
   --ku-ink-2: var(--ku-hero-ink-2);
@@ -1812,7 +1352,7 @@
     var(--ku-hero-bg);
 }
 .ku-hero__veil {
-  /* Soft porcelain halo behind the text column; spheres are laid out around it. */
+  /* Soft halo behind the text column: the grid fades out under the headline. */
   background: radial-gradient(42% 40% at 50% 48%, rgb(var(--ku-hero-bg-rgb) / 0.75) 0%, rgb(var(--ku-hero-bg-rgb) / 0) 100%);
 }
 .ku-search__field {
@@ -1838,146 +1378,150 @@
 .ku-chip {
   background: rgb(var(--ku-white-rgb) / 0.8);
 }
-.ku-connector path {
-  stroke: rgb(var(--ku-navy-rgb) / 0.45);
-}
-.ku-connector circle {
-  stroke: var(--ku-navy);
-}
-.ku-card {
-  box-shadow: 0 30px 80px -30px rgb(var(--ku-navy-rgb) / 0.45);
-}
-.ku-label {
-  border-color: var(--ku-hairline-strong);
-  box-shadow: 0 6px 18px -8px rgb(var(--ku-navy-rgb) / 0.3);
-}
-.ku-label::before {
-  border-color: var(--ku-cat-topic-strong);
-}
-.ku-label__type {
-  font-weight: var(--ku-weight-medium);
-  color: var(--ku-ink-3);
-}
 
-/* ======================================================== Sphere labels */
-/* Contextual only (selected, hovered, search matches, a few featured hubs);
-   solid white cards with navy text — 14.6 : 1 — never faded. */
-.ku-labels .ku-label {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-  padding: 6px 12px 7px 26px;
-  border-radius: 12px;
-  border: 1px solid var(--ku-hero-line);
-  background: var(--ku-white);
-  box-shadow: 0 10px 24px -14px rgb(var(--ku-navy-rgb) / 0.45);
-  color: var(--ku-hero-ink);
-  letter-spacing: normal;
-  text-transform: none;
-  text-shadow: none;
-}
-.ku-labels .ku-label::before {
-  content: '';
-  position: absolute;
-  left: 11px;
-  top: 50%;
-  width: 9px;
-  height: 9px;
-  border: 0;
-  border-radius: 50%;
-  background: var(--ku-label-cat, var(--ku-blue));
-  transform: translateY(-50%);
-}
-.ku-labels .ku-label[data-type='drug'] {
-  --ku-label-cat: var(--ku-cat-drug-strong);
-}
-.ku-labels .ku-label[data-type='disease'] {
-  --ku-label-cat: var(--ku-cat-disease-strong);
-}
-.ku-labels .ku-label[data-type='disease']::before {
-  background: transparent;
-  border: 2.5px solid var(--ku-label-cat);
-}
-.ku-labels .ku-label[data-type='topic'] {
-  --ku-label-cat: var(--ku-cat-topic-strong);
-}
-.ku-labels .ku-label[data-type='topic']::before {
-  width: 8px;
-  height: 8px;
-  border-radius: 1px;
-  transform: translateY(-50%) rotate(45deg);
-}
-.ku-label__name {
-  font-size: 14px;
-  font-weight: var(--ku-weight-bold);
-  line-height: 1.25;
-  white-space: nowrap;
-}
-.ku-label__type {
-  font-size: 12px;
-  font-weight: var(--ku-weight-semibold);
-  line-height: 1.2;
-  color: var(--ku-label-cat, var(--ku-hero-ink-3));
-}
-.ku-labels .ku-label[data-kind='best'] {
-  border: 2px solid var(--ku-label-cat);
-  box-shadow: 0 0 0 4px rgb(var(--ku-white-rgb) / 0.7), 0 14px 28px -14px rgb(var(--ku-navy-rgb) / 0.5);
-}
-.ku-labels .ku-label[data-kind='best'] .ku-label__type::after {
-  content: ' · best match';
-  color: var(--ku-hero-ink-3);
-}
-.ku-labels .ku-label[data-kind='selected'] {
-  border-color: var(--ku-navy);
-  background: var(--ku-navy);
-  color: var(--ku-white);
-}
-.ku-labels .ku-label[data-kind='selected'] .ku-label__type {
-  color: var(--ku-mist);
-}
-.ku-labels .ku-label[data-kind='selected']::before {
-  box-shadow: 0 0 0 2px var(--ku-white);
-}
-
-/* ===================================================== CSS sphere fallback */
-.ku-orbs {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-}
-.ku-orb {
-  position: absolute;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 34% 28%, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0) 22%),
-    radial-gradient(circle at 50% 50%, var(--orb) 0%, var(--orb) 58%, color-mix(in srgb, var(--orb) 65%, #0b1726) 100%);
-  box-shadow: 0 22px 34px -22px rgb(var(--ku-navy-rgb) / 0.55);
-  transition: opacity var(--ku-dur-2) var(--ku-ease), filter var(--ku-dur-2) var(--ku-ease);
-}
-.ku-orb--drug {
-  background:
-    radial-gradient(circle at 34% 28%, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0) 22%),
-    repeating-linear-gradient(90deg, rgb(255 255 255 / 0) 0 9%, rgb(255 255 255 / 0.16) 9% 13%),
-    radial-gradient(circle at 50% 50%, var(--orb) 0%, var(--orb) 58%, color-mix(in srgb, var(--orb) 65%, #0b1726) 100%);
-}
-.ku-orb--topic {
-  background:
-    radial-gradient(circle at 34% 28%, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0) 24%),
-    conic-gradient(from 200deg at 60% 60%, color-mix(in srgb, var(--orb) 80%, #7fd3ff), var(--orb), color-mix(in srgb, var(--orb) 75%, #ffb3e1), var(--orb)),
-    var(--orb);
-  background-blend-mode: normal, soft-light, normal;
-}
-.ku-orb.is-dim {
-  opacity: 0.25;
-  filter: grayscale(0.6);
-}
-
-/* Phones: a band above the headline and one above the stacked HUD give the
-   spheres room to frame the text instead of hiding behind it. */
+/* Phones: a band above the headline and one above the statistics give the
+   floating labels room to frame the text. The official platform title in the
+   badge stays on one line down to ~360 px. */
 @media (max-width: 760px) {
   .ku-hero {
     padding-top: 104px;
     padding-bottom: 236px;
   }
+  .ku-eyebrow {
+    gap: 8px;
+    padding: 6px 12px;
+    font-size: 12.5px;
+    letter-spacing: -0.005em;
+  }
+  .ku-eyebrow__sig {
+    display: none;
+  }
 }
+
+/* Background: a barely-there measurement grid (structure, not decoration). */
+.ku-hero__stage {
+  background-image:
+    linear-gradient(rgb(var(--ku-navy-rgb) / 0.04) 1.5px, transparent 1.5px),
+    linear-gradient(90deg, rgb(var(--ku-navy-rgb) / 0.04) 1.5px, transparent 1.5px),
+    linear-gradient(rgb(var(--ku-navy-rgb) / 0.016) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(var(--ku-navy-rgb) / 0.016) 1px, transparent 1px);
+  background-size: 60px 60px, 60px 60px, 30px 30px, 30px 30px;
+  background-position: center;
+}
+
+/* ======================================================== Floating labels */
+/* Real drug and disease guides around the text column. Solid white pills with
+   navy text (≥ 12 : 1), a category glyph and a type word — colour is never the
+   only cue. Muted labels step back with a lighter edge, never with faded text. */
+.ku-floats {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+.ku-float-item {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  transition: transform 700ms var(--ku-ease), opacity 260ms var(--ku-ease);
+}
+.ku-float-item.is-new {
+  transition: opacity 500ms var(--ku-ease);
+}
+.ku-float-item.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+.ku-float-item[hidden] {
+  display: none;
+}
+.ku-float {
+  --ku-float-accent: var(--ku-cat-drug-strong);
+  --ku-float-rgb: var(--ku-cat-drug-rgb);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 14px 7px 12px;
+  border: 1px solid var(--ku-hero-line);
+  border-radius: 999px;
+  background: var(--ku-white);
+  box-shadow: 0 1px 2px rgb(var(--ku-navy-rgb) / 0.05), 0 10px 24px -18px rgb(var(--ku-navy-rgb) / 0.4);
+  color: var(--ku-hero-ink);
+  font-size: 14px;
+  font-weight: var(--ku-weight-medium);
+  line-height: 1.3;
+  text-decoration: none;
+  white-space: nowrap;
+  animation: ku-drift var(--ku-drift-t, 13s) ease-in-out var(--ku-drift-d, 0s) infinite alternate;
+  transition: border-color var(--ku-dur-1) var(--ku-ease), box-shadow var(--ku-dur-1) var(--ku-ease), scale var(--ku-dur-2) var(--ku-ease);
+}
+.ku-float-item[data-type='disease'] .ku-float {
+  --ku-float-accent: var(--ku-cat-disease-strong);
+  --ku-float-rgb: var(--ku-cat-disease-rgb);
+}
+.ku-float__type {
+  padding-left: 8px;
+  border-left: 1px solid var(--ku-hero-line);
+  color: var(--ku-hero-ink-3);
+  font-size: 12px;
+  font-weight: var(--ku-weight-regular, 400);
+}
+.ku-float:hover,
+.ku-float-item.is-active .ku-float {
+  border-color: var(--ku-float-accent);
+  box-shadow: 0 1px 2px rgb(var(--ku-navy-rgb) / 0.06), 0 14px 30px -18px rgb(var(--ku-float-rgb) / 0.6);
+  animation-play-state: paused;
+}
+.ku-float:hover .ku-float__name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ku-float:focus-visible {
+  outline: 2px solid var(--ku-focus);
+  outline-offset: 3px;
+  animation-play-state: paused;
+}
+.ku-float-item.is-match .ku-float {
+  border-color: rgb(var(--ku-float-rgb) / 0.55);
+}
+.ku-float-item.is-best .ku-float {
+  border: 1.5px solid var(--ku-float-accent);
+  box-shadow: 0 0 0 4px rgb(var(--ku-float-rgb) / 0.12), 0 16px 34px -20px rgb(var(--ku-float-rgb) / 0.7);
+  scale: 1.04;
+}
+.ku-float-item.is-muted .ku-float {
+  background: rgb(var(--ku-white-rgb) / 0.94);
+  box-shadow: none;
+  color: var(--ku-hero-ink-2);
+}
+@keyframes ku-drift {
+  from {
+    translate: 0 0;
+  }
+  to {
+    translate: var(--ku-drift-x, 4px) var(--ku-drift-y, -4px);
+  }
+}
+@media (max-width: 760px) {
+  .ku-float {
+    gap: 6px;
+    padding: 6px 11px 6px 10px;
+    font-size: 13px;
+  }
+  .ku-float__type {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ku-float {
+    animation: none;
+  }
+  .ku-float-item {
+    transition: opacity 200ms linear;
+  }
+}
+

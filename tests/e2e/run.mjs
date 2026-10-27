@@ -14,7 +14,6 @@ const AXE = readFileSync(require.resolve('axe-core/axe.min.js', { paths: [ROOT +
 const SHOTS = process.argv[2] ?? ROOT + 'build/screenshots';
 mkdirSync(SHOTS, { recursive: true });
 
-const GL_ARGS = ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'];
 let pass = 0;
 const failures = [];
 async function test(name, fn) {
@@ -47,17 +46,44 @@ async function open(browser, opts = {}, setup) {
   return { context, page, errors };
 }
 
-const browser = await chromium.launch({ args: GL_ARGS });
+const browser = await chromium.launch();
 
 console.log('Desktop');
 {
   const { page, errors, context } = await open(browser);
-  await page.waitForSelector('[data-ku-stage].is-ready canvas', { timeout: 15000 });
-  await page.waitForTimeout(2500);
+  await page.waitForSelector('.ku-float-item:not([hidden])', { timeout: 15000 });
+  await page.waitForTimeout(1200);
   await page.screenshot({ path: SHOTS + '/desktop.png' });
 
-  await test('WebGL graph mounts and HUD becomes visible', async () => {
-    assert(await page.locator('[data-ku-hud]').isVisible(), 'HUD hidden');
+  await test('floating labels are real drug and disease guides linking to WordPress', async () => {
+    const labels = await page.$$eval('.ku-float-item:not([hidden])', (els) =>
+      els.map((li) => ({ type: li.dataset.type, href: li.querySelector('a').href, name: li.querySelector('.ku-float__name').textContent })),
+    );
+    assert(labels.length >= 8, 'only ' + labels.length + ' labels');
+    for (const l of labels) {
+      assert(l.type === 'drug' || l.type === 'disease', 'type ' + l.type);
+      assert(new RegExp(`^https://www\\.imedix\\.com/${l.type}s/[a-z0-9-]+/$`).test(l.href), l.href);
+    }
+    const chips = await page.$$eval('.ku-chip', (els) => els.map((e) => e.textContent.trim()));
+    assert(!labels.some((l) => chips.some((c) => c.startsWith(l.name))), 'a label repeats a "Recently updated" chip');
+  });
+  await test('no 3D renderer: no canvas, no WebGL bundle, statistics visible', async () => {
+    assert((await page.locator('canvas').count()) === 0, 'canvas present');
+    const chunks = await page.evaluate(() => performance.getEntriesByType('resource').filter((r) => /\.js$/.test(r.name)).map((r) => r.name));
+    assert(chunks.length === 1 && /main-/.test(chunks[0]), chunks.join());
+    assert(await page.locator('.ku-legend').isVisible(), 'statistics hidden');
+    assert((await page.locator('.ku-legend li').count()) === 2, 'legend items');
+  });
+  await test('badge shows the official platform title on one line', async () => {
+    const t = (await page.locator('.ku-eyebrow').textContent()).trim();
+    assert(t === 'iMedix: Independent Drug & Health Platform', t);
+    const h = await page.evaluate(() => Math.round(document.querySelector('.ku-eyebrow').getBoundingClientRect().height));
+    assert(h < 48, 'badge wraps: ' + h + 'px');
+  });
+  await test('no editorial-topic UI is visible in the hero', async () => {
+    const hero = await page.locator('.ku-hero').innerText();
+    assert(!/editorial topic/i.test(hero) && !/knowledge universe/i.test(hero), 'topic/KU wording in hero');
+    assert((await page.locator('.ku-glyph--topic, .ku-float-item[data-type="topic"]').count()) === 0, 'topic glyph or label');
   });
   await test('no console errors', async () => assert(errors.length === 0, errors.join(' | ')));
 
@@ -106,23 +132,22 @@ console.log('Desktop');
     assert(/Accupril/.test(sub) && /quinapril/.test(sub), sub);
   });
 
-  await test('search brings the best match beside the search block, labelled, with a connector', async () => {
+  await test('search highlights the best match beside the search field', async () => {
     await page.locator('#ku-q').fill('hypertension');
-    await page.waitForTimeout(2600);
+    await page.waitForTimeout(1400);
     await page.screenshot({ path: SHOTS + '/search.png' });
     const r = await page.evaluate(() => {
-      const best = [...document.querySelectorAll('.ku-label[data-kind="best"]')].find((l) => l.style.opacity === '1');
+      const best = document.querySelector('.ku-float-item.is-best:not([hidden])');
       if (!best) return null;
-      const field = document.querySelector('.ku-search__field').getBoundingClientRect();
-      const stage = document.querySelector('[data-ku-stage]').getBoundingClientRect();
-      const [x, y] = best.dataset.anchor.split(' ').map(Number);
-      return { name: best.querySelector('.ku-label__name').textContent, x: stage.left + x, y: stage.top + y, field: [field.left, field.right, field.top, field.bottom] };
+      const a = best.getBoundingClientRect();
+      const f = document.querySelector('.ku-search__field').getBoundingClientRect();
+      return { name: best.querySelector('.ku-float__name').textContent, x: a.left + a.width / 2, y: a.top + a.height / 2, f: [f.left, f.right, f.top, f.bottom], muted: document.querySelectorAll('.ku-float-item.is-muted:not([hidden])').length };
     });
     assert(r, 'no best-match label');
     assert(r.name === 'Hypertension', 'best match ' + r.name);
-    assert(r.x > r.field[1] || r.x < r.field[0], 'best match is not beside the search field');
-    assert(Math.abs(r.y - (r.field[2] + r.field[3]) / 2) < 260, 'best match is far from the search field');
-    assert(await page.locator('.ku-connector.is-on').count() === 1, 'connector not drawn');
+    assert(r.x > r.f[1] || r.x < r.f[0], 'best match is not beside the search field');
+    assert(Math.abs(r.y - (r.f[2] + r.f[3]) / 2) < 220, 'best match is far from the search field');
+    assert(r.muted > 0, 'other labels did not step back');
   });
 
   await test('Enter on an option navigates to the WordPress guide', async () => {
@@ -134,7 +159,7 @@ console.log('Desktop');
   });
 
   await test('last option falls back to native WordPress search', async () => {
-    await page.waitForSelector('[data-ku-stage].is-ready canvas');
+    await page.waitForSelector('.ku-float-item:not([hidden])');
     await page.locator('#ku-q').fill('zzzz unknown');
     await page.waitForTimeout(200);
     const msg = await page.locator('.ku-search__message').textContent();
@@ -144,31 +169,31 @@ console.log('Desktop');
     await page.goBack();
   });
 
-  await test('clicking a topic sphere opens its details card', async () => {
-    await page.waitForSelector('[data-ku-stage].is-ready canvas');
+  await test('clicking a floating label opens its WordPress guide', async () => {
     await page.locator('#ku-q').fill('');
     await page.keyboard.press('Escape');
-    await page.locator('[data-ku-action="motion"]').click(); // stop the drift for a stable click
-    await page.waitForTimeout(1500);
-    const target = await page.evaluate(() => {
-      const stage = document.querySelector('[data-ku-stage]').getBoundingClientRect();
-      for (const el of document.querySelectorAll('.ku-label[data-kind="featured"]')) {
-        if (el.style.opacity !== '1' || !el.dataset.anchor) continue;
-        const [x, y, r] = el.dataset.anchor.split(' ').map(Number);
-        if (r < 12) continue;
-        return { x: stage.left + x, y: stage.top + y, name: el.querySelector('.ku-label__name').textContent };
-      }
-      return null;
-    });
-    assert(target, 'no labelled topic sphere');
-    await page.mouse.click(target.x, target.y);
-    await page.waitForSelector('[data-ku-card]:not([hidden])', { timeout: 3000 });
-    const title = await page.locator('[data-ku-card-title]').textContent();
-    assert(title === target.name, `card "${title}" ≠ "${target.name}"`);
-    assert(await page.locator('[data-ku-card] .ku-card__item').count() > 0, 'no member links');
-    await page.screenshot({ path: SHOTS + '/card.png' });
+    await page.waitForTimeout(900);
+    const label = page.locator('.ku-float-item:not([hidden]) .ku-float').first();
+    const href = await label.getAttribute('href');
+    // The label drifts slowly (never "stable" for Playwright); click it like a person would.
+    const box = await label.boundingBox();
+    const [req] = await Promise.all([page.waitForRequest(/imedix\.com/), page.mouse.click(box.x + box.width / 2, box.y + box.height / 2)]);
+    assert(req.url() === href, req.url() + ' ≠ ' + href);
+    await page.waitForLoadState();
+    await page.goto(BASE, { waitUntil: 'load' });
+    await page.waitForSelector('.ku-float-item:not([hidden])', { timeout: 10000 });
+    await page.waitForTimeout(800);
+  });
+
+  await test('the highlighted suggestion highlights its floating label', async () => {
+    const name = await page.locator('.ku-float-item:not([hidden]) .ku-float__name').first().textContent();
+    await page.locator('#ku-q').fill(name);
+    await page.waitForTimeout(600);
+    await page.locator('#ku-q').press('ArrowDown');
+    const active = await page.locator('.ku-float-item.is-active .ku-float__name').allTextContents();
+    assert(active.includes(name), 'active: ' + active.join());
+    await page.locator('#ku-q').fill('');
     await page.keyboard.press('Escape');
-    assert(await page.locator('[data-ku-card]').isHidden(), 'Escape did not close the card');
   });
 
   await test('ticker animates, pauses via button, clones hidden from AT', async () => {
@@ -190,22 +215,12 @@ console.log('Desktop');
     assert(state === 'paused', state);
   });
 
-  await test('"Show on map" selects the topic in the graph', async () => {
-    const btn = page.locator('[data-ku-show-node="topic:diabetes"]');
-    assert(await btn.isVisible(), 'button hidden after WebGL mount');
-    await btn.click();
-    await page.waitForSelector('[data-ku-card]:not([hidden])', { timeout: 4000 });
-    const title = await page.locator('[data-ku-card-title]').textContent();
-    assert(title === 'Diabetes', title);
-    await page.keyboard.press('Escape');
-  });
-
-  await test('graph colours come from the design tokens', async () => {
+  await test('category colours come from the design tokens', async () => {
     const t = await page.evaluate(() => {
-      const s = getComputedStyle(document.querySelector('[data-ku-stage]'));
-      return ['--ku-drug', '--ku-disease', '--ku-topic'].map((v) => s.getPropertyValue(v).trim());
+      const s = getComputedStyle(document.querySelector('.imedix-ku'));
+      return ['--ku-drug', '--ku-disease'].map((v) => s.getPropertyValue(v).trim());
     });
-    assert(t.every(Boolean) && new Set(t).size === 3, t.join());
+    assert(t.every(Boolean) && new Set(t).size === 2, t.join());
   });
 
   await test('no web fonts are bundled (theme fonts are inherited)', async () => {
@@ -213,7 +228,7 @@ console.log('Desktop');
     assert(fonts === 0, fonts + ' font files');
   });
 
-  await test('readability: every visible text element meets WCAG AA contrast (incl. text over the map)', async () => {
+  await test('readability: every visible text element meets WCAG AA contrast (incl. floating labels)', async () => {
     await page.locator('#ku-q').fill('hyper');
     await page.waitForTimeout(1200);
     const withPanel = await auditContrast(page);
@@ -226,13 +241,12 @@ console.log('Desktop');
     console.log(`      (${page1.checked} text elements, lowest ratio ${Math.min(page1.worst, withPanel.worst)}:1)`);
   });
 
-  await test('map labels are fully opaque or hidden (never faded) and do not overlap', async () => {
-    await page.locator('[data-ku-action="reset"]').click();
-    await page.waitForTimeout(1600);
+  await test('floating labels are fully opaque and never overlap each other', async () => {
+    await page.waitForTimeout(1000);
     const r = await page.evaluate(() => {
-      const shown = [...document.querySelectorAll('.ku-label')].filter((l) => l.style.opacity === '1');
-      const odd = [...document.querySelectorAll('.ku-label')].filter((l) => !['0', '1', ''].includes(l.style.opacity));
-      const rects = shown.map((l) => l.getBoundingClientRect());
+      const shown = [...document.querySelectorAll('.ku-float-item:not([hidden])')];
+      const odd = shown.filter((l) => getComputedStyle(l).opacity !== '1');
+      const rects = shown.map((l) => l.querySelector('.ku-float').getBoundingClientRect());
       let overlaps = 0;
       for (let i = 0; i < rects.length; i++)
         for (let j = i + 1; j < rects.length; j++) {
@@ -241,16 +255,15 @@ console.log('Desktop');
         }
       return { shown: shown.length, odd: odd.length, overlaps };
     });
-    assert(r.shown >= 3, 'only ' + r.shown + ' labels visible');
+    assert(r.shown >= 8, 'only ' + r.shown + ' labels visible');
     assert(r.odd === 0, r.odd + ' half-faded labels');
     assert(r.overlaps === 0, r.overlaps + ' overlapping labels');
   });
 
-  await test('labels never cover the search block or the HUD', async () => {
+  await test('labels never cover the headline, search block or statistics', async () => {
     const hits = await page.evaluate(() => {
-      const boxes = ['.ku-search', '.ku-legend', '.ku-controls'].map((s) => document.querySelector(s).getBoundingClientRect());
-      return [...document.querySelectorAll('.ku-label')]
-        .filter((l) => l.style.opacity === '1' && l.dataset.kind !== 'selected' && l.dataset.kind !== 'hover')
+      const boxes = ['.ku-title', '.ku-eyebrow', '.ku-lede', '.ku-search', '.ku-try', '.ku-legend'].map((s) => document.querySelector(s).getBoundingClientRect());
+      return [...document.querySelectorAll('.ku-float-item:not([hidden]) .ku-float')]
         .filter((l) => {
           const a = l.getBoundingClientRect();
           return boxes.some((b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom);
@@ -260,12 +273,12 @@ console.log('Desktop');
     assert(hits.length === 0, hits.join(', '));
   });
 
-  await test('categories are colour-distinct: sphere colours and text colours', async () => {
+  await test('categories are colour-distinct: marks and text colours', async () => {
     const c = await page.evaluate(() => {
       const s = getComputedStyle(document.querySelector('.imedix-ku'));
-      return ['drug', 'disease', 'topic'].flatMap((k) => [s.getPropertyValue(`--ku-cat-${k}-sphere-1`).trim(), s.getPropertyValue(`--ku-cat-${k}-strong`).trim()]);
+      return ['drug', 'disease'].flatMap((k) => [s.getPropertyValue(`--ku-cat-${k}-mark`).trim(), s.getPropertyValue(`--ku-cat-${k}-strong`).trim()]);
     });
-    assert(new Set(c).size === 6 && c.every(Boolean), c.join());
+    assert(new Set(c).size === 4 && c.every(Boolean), c.join());
   });
 
   await test('axe-core: no serious or critical violations', async () => {
@@ -297,40 +310,19 @@ console.log('Graph data unavailable');
   await context.close();
 }
 
-console.log('No WebGL');
-{
-  const noGl = await chromium.launch({ args: ['--disable-webgl', '--disable-3d-apis'] });
-  const { page, errors, context } = await open(noGl);
-  await test('CSS sphere fallback replaces the WebGL scene; statistics stay', async () => {
-    await page.waitForSelector('.ku-orbs .ku-orb', { timeout: 10000 });
-    assert((await page.locator('canvas').count()) === 0, 'canvas present');
-    assert((await page.locator('.ku-orb').count()) >= 12, 'too few orbs');
-    assert(await page.locator('.ku-legend').isVisible(), 'statistics hidden');
-    assert(await page.locator('.ku-controls').isHidden(), 'map controls shown without a map to drive');
-  });
-  await test('search works without WebGL', async () => {
-    await page.locator('#ku-q').fill('psoriasis');
-    await page.waitForSelector('#ku-opt-0');
-    assert((await page.locator('#ku-opt-0 .ku-opt__name').textContent()) === 'Psoriasis', 'no result');
-  });
-  await test('no console errors without WebGL', async () => assert(errors.length === 0, errors.join(' | ')));
-  await page.screenshot({ path: SHOTS + '/no-webgl.png' });
-  await context.close();
-  await noGl.close();
-}
-
 console.log('Reduced motion');
 {
   const { page, context } = await open(browser, { reducedMotion: 'reduce' });
-  await page.waitForSelector('[data-ku-stage].is-ready canvas', { timeout: 15000 });
+  await page.waitForSelector('.ku-float-item:not([hidden])', { timeout: 15000 });
   await test('ticker is static and scrollable; no pause button needed', async () => {
     assert(!(await page.locator('[data-ku-news]').getAttribute('class')).includes('is-animated'), 'animated');
     assert(await page.locator('[data-ku-ticker-toggle]').isHidden(), 'toggle visible');
     const overflow = await page.evaluate(() => getComputedStyle(document.querySelector('.ku-news__viewport')).overflowX);
     assert(overflow === 'auto', overflow);
   });
-  await test('map rotation starts paused', async () => {
-    assert((await page.locator('[data-ku-action="motion"]').getAttribute('aria-pressed')) === 'true', 'rotating');
+  await test('floating labels do not drift', async () => {
+    const anim = await page.evaluate(() => getComputedStyle(document.querySelector('.ku-float')).animationName);
+    assert(anim === 'none', anim);
   });
   await context.close();
 }
@@ -338,7 +330,7 @@ console.log('Reduced motion');
 console.log('Tablet');
 {
   const { page, errors, context } = await open(browser, { viewport: { width: 820, height: 1180 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
-  await page.waitForSelector('[data-ku-stage].is-ready', { timeout: 15000 });
+  await page.waitForSelector('.ku-float-item:not([hidden])', { timeout: 15000 });
   await page.waitForTimeout(1500);
   await page.screenshot({ path: SHOTS + '/tablet.png' });
   await test('tablet: no horizontal overflow, no console errors', async () => {
@@ -353,7 +345,7 @@ console.log('Tablet');
 console.log('Mobile');
 {
   const { page, errors, context } = await open(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
-  await page.waitForSelector('[data-ku-stage].is-ready', { timeout: 15000 });
+  await page.waitForSelector('.ku-float-item:not([hidden])', { timeout: 15000 });
   await page.waitForTimeout(2000);
   await page.screenshot({ path: SHOTS + '/mobile.png' });
   await test('no horizontal overflow at 390px (incl. content clipped by overflow-x)', async () => {
@@ -366,7 +358,7 @@ console.log('Mobile');
     );
     assert(wide.length === 0, wide.slice(0, 5).join(', '));
   });
-  await test('topic cards collapse to three guides and expand on demand', async () => {
+  await test('health-area cards collapse to three guides and expand on demand', async () => {
     const card = page.locator('.ku-topic').first();
     const visible = () => card.locator('.ku-topic__list li:visible').count();
     assert((await visible()) === 3, 'collapsed shows ' + (await visible()));
@@ -382,16 +374,16 @@ console.log('Mobile');
     const h = await page.evaluate(() => [document.querySelector('.ku-search__input').getBoundingClientRect().height, document.querySelector('.ku-search__submit').getBoundingClientRect().height]);
     assert(h.every((x) => x >= 44), h.join());
   });
-  await test('mobile search: best match surfaces outside the text column, labelled', async () => {
+  await test('mobile search: best match surfaces above the text, highlighted', async () => {
     await page.locator('#ku-q').fill('asthma');
-    await page.waitForTimeout(2600);
+    await page.waitForTimeout(1400);
     await page.screenshot({ path: SHOTS + '/mobile-search.png' });
     const r = await page.evaluate(() => {
-      const best = [...document.querySelectorAll('.ku-label[data-kind="best"]')].find((l) => l.style.opacity === '1');
+      const best = document.querySelector('.ku-float-item.is-best:not([hidden])');
       if (!best) return null;
       const inner = document.querySelector('.ku-hero__inner').getBoundingClientRect();
-      const a = best.getBoundingClientRect();
-      return { name: best.querySelector('.ku-label__name').textContent, overlaps: a.top < inner.bottom && inner.top < a.bottom && a.left < inner.right && inner.left < a.right };
+      const a = best.querySelector('.ku-float').getBoundingClientRect();
+      return { name: best.querySelector('.ku-float__name').textContent, overlaps: a.top < inner.bottom && inner.top < a.bottom && a.left < inner.right && inner.left < a.right };
     });
     assert(r, 'no best-match label');
     assert(r.name === 'Asthma', r.name);
@@ -428,7 +420,7 @@ console.log('JavaScript disabled');
 console.log('Performance budget');
 {
   const { page, context } = await open(browser);
-  await page.waitForSelector('[data-ku-stage].is-ready canvas', { timeout: 15000 });
+  await page.waitForSelector('.ku-float-item:not([hidden])', { timeout: 15000 });
   const m = await page.evaluate(() => {
     const res = performance.getEntriesByType('resource');
     const size = (re) => res.filter((r) => re.test(r.name)).reduce((s, r) => s + (r.encodedBodySize || r.transferSize || 0), 0);

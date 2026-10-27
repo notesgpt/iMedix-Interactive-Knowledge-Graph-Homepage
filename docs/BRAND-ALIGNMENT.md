@@ -1,5 +1,9 @@
 # Brand alignment with the iMedix WordPress site
 
+> **Update:** the 3D graph described below has since been removed (see DESIGN.md, "Current
+> hero"). Categories are now Drugs (`--ku-cat-drug-*`) and Diseases (`--ku-cat-disease-*`);
+> editorial groupings use the neutral `--ku-area-*` tokens (brand steel `#436280`).
+
 Status: 2026-10-27. Scope: typography and colour only; layout, graph, search, ticker,
 data pipeline, WordPress integration and SEO are unchanged.
 

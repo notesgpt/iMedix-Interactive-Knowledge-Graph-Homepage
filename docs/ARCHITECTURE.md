@@ -21,11 +21,11 @@ No separate front-end hosting is needed: the bundle ships inside the plugin zip.
                           │                                                                           │
  Visitor ──GET /──────────▶ Page template "iMedix Knowledge Universe"                                 │
                           │  theme header → server-rendered hero, search form, news, topic links → footer
-                          │  <script type=module> main.js (8.5 kB gz)                                  │
+                          │  <script type=module> main.js (7.8 kB gz) — the only script                │
                           │       ├─ fetch graph-<v>.json (21 kB gz, immutable)  or  /wp-json/imedix-ku/v1/graph
-                          │       ├─ search autocomplete (in-memory index, no WebGL needed)           │
-                          │       ├─ news ticker  ←── /wp-json/imedix-ku/v1/news (WP_Query, cached)   │
-                          │       └─ import('view') → three.js scene (142 kB gz, after first paint)   │
+                          │       ├─ search autocomplete (in-memory index)                            │
+                          │       ├─ floating guide labels (DOM links, layout around the text)        │
+                          │       └─ news ticker  ←── /wp-json/imedix-ku/v1/news (WP_Query, cached)   │
                           └───────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -51,12 +51,11 @@ docs/                                  This documentation
 ## Front-end stack
 
 * **TypeScript + Vite**, no UI framework. The page is server-rendered by PHP; the client adds
-  three independent "islands" (search, ticker, graph). React/React Three Fiber would add ~45 kB
-  of runtime and hydration complexity on top of PHP markup without a benefit for three widgets.
-* **Three.js (r186) directly**, not 3d-force-graph. 3d-force-graph bundles three + d3-force-3d +
-  a generic renderer (≈ 2× the bytes), runs a physics simulation on every visit, and offers less
-  control over the aesthetic (shape-coded nodes, depth fade, connector, safe zone). The layout here
-  is deterministic and computed in < 5 ms, so physics brings no value.
+  three independent "islands" (search, ticker, floating labels). A UI framework would add runtime
+  and hydration complexity on top of PHP markup without a benefit for three widgets.
+* **No 3D renderer.** Earlier iterations used a three.js scene (a constellation, then glass
+  spheres). Design review found it cluttered the hero, so it was removed with its dependency
+  (−143 kB gzip, no GPU work); the hero is typography, a CSS grid background and DOM labels.
 * No web fonts are bundled: the page inherits the iMedix theme's body and heading fonts, so it
   adds zero font requests (see [BRAND-ALIGNMENT.md](BRAND-ALIGNMENT.md)). Colours come from
   `frontend/src/styles/tokens.css`, overridable by the theme through `--imedix-*` hooks.
@@ -66,29 +65,24 @@ docs/                                  This documentation
 1. HTML contains the H1, lede, search form, recent-news links and topic links — the LCP element
    is text, painted without JavaScript (measured LCP in the test harness: ~60 ms locally).
 2. `main.js` (8.5 kB gz) + CSS (5.7 kB gz) load as a deferred module.
-3. The graph JSON loads on idle; search suggestions become available as soon as it arrives.
-4. Only when the hero is visible and the device can run WebGL is `view.js` (three.js) imported.
-5. The canvas fades in; nothing above it moves (CLS 0.005 measured).
+3. The graph JSON loads; search suggestions and the floating labels appear as soon as it arrives.
+4. Labels are absolutely positioned in a layer that takes no layout space (CLS 0.005 measured).
 
-### Graph rendering
+### Floating guide labels (`frontend/src/hero/`)
 
-* One `THREE.Points` draw call (custom shader) + one `THREE.LineSegments` draw call.
-* Node type is encoded by **shape** (drug = dot, disease = ring, topic = diamond) *and* hue.
-* Deterministic "orbit" layout: topics on an ellipse framing the text column; members cluster
-  around their topic; unclustered entities form a sparse field. Portrait screens stand the orbit
-  upright.
-* **Sampling**: topics → diseases → drugs in a topic → other completed drugs → the rest; budget
-  640 (desktop) / 340 (mobile, small or ≤ 4 GB devices) / 180 (software GL, ≤ 2 cores or 2 GB).
-  Search results outside the sample are injected on demand.
-* **Progressive loading**: the first 45 % renders immediately, the rest fades in 40 nodes at a time.
-* **Adaptive quality**: sustained frames > 26 ms lower the pixel ratio (2 → 0.75), then shed the
-  lowest-priority 25 % of nodes.
-* **Render on demand**: the loop sleeps when nothing moves, when the hero is off-screen or the tab
-  is hidden; ambient drift renders at 30 fps.
-* **Fallbacks**: no WebGL / `Save-Data` / lost GPU context → static inline-SVG constellation.
-  `prefers-reduced-motion` → no drift, instant camera moves, static ticker.
-* **Scroll safety**: the wheel never zooms unless Ctrl/⌘ is held (a hint explains it); touch
-  devices must tap "Explore the map" before gestures go to the canvas.
+* `label-layout.ts` (pure, unit-tested): picks real, linkable **drugs and diseases only**
+  (completed guides, short recognisable names and well-connected entities first, alternating
+  types; topics are never labels) — 10 on desktop, 8 on tablets, 5 on phones — and places them by
+  best-candidate sampling so they never touch the text column, the statistics panel, the edges or
+  each other.
+* `floats.ts`: renders each label as a real `<a href>` to the WordPress guide inside a labelled
+  list placed after the search in the DOM (keyboard users reach the search first). Search results
+  move the top matches beside the search field (above the headline on narrow screens), mark the
+  best one and let the others step back with a lighter edge — text is never faded. The active
+  autocomplete option and hovered "Recently updated" chips highlight their label. Entities already
+  shown as chips are not repeated.
+* Motion: a slow CSS drift per label, paused on hover/focus, removed for `prefers-reduced-motion`.
+* No data → no labels; the server-rendered hero is complete without them.
 
 ## Search architecture
 
@@ -135,13 +129,16 @@ docs/                                  This documentation
   Manual sync requires `manage_options`, a nonce, and is throttled to once per minute; a lock
   prevents concurrent syncs.
 * Admin settings are sanitised field by field (allow-lists, regex, clamps).
-* Front-end dependencies: three, two Fontsource packages; dev-only: vite, vitest, typescript,
-  jsdom, axe-core. `npm audit`: 0 vulnerabilities at build time.
+* Front-end runtime dependencies: none; dev-only: vite, vitest, typescript, jsdom, axe-core. `npm audit`: 0 vulnerabilities at build time.
 
 ## SEO
 
 * The template keeps the theme's `<head>` (canonical, SEO-plugin title/meta, hreflang) untouched
-  and adds **no** structured data and no meta tags.
+  and adds **no** structured data and no meta tags. The official title and description
+  ("iMedix: Independent Drug & Health Platform" / "iMedix provides independent, evidence-based
+  information on medicines and health, …") are used only in the standalone preview HTML; in
+  WordPress the SEO plugin keeps authority over them, and the Site Icon setting over the favicon
+  (the integration suite asserts the plugin adds no description and no second `<title>`).
 * Exactly one H1; heading order H1 → H2 (news, browse) → H3 (topics).
 * Crawlable links: up to 6 guides per editorial topic (≈ 85 links), entry cards, news links.
 * Essential content is in the HTML; the canvas is `aria-hidden` decoration.

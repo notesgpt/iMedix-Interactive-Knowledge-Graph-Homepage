@@ -1,9 +1,6 @@
 export const prefersReducedMotion = (): boolean =>
   typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-export const coarsePointer = (): boolean =>
-  typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
-
 /** Stable 32-bit FNV-1a hash (layout seeding, sampling tie-breaks). */
 export function hash32(text: string): number {
   let h = 0x811c9dc5;

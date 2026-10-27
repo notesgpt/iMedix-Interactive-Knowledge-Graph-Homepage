@@ -1,15 +1,12 @@
 /**
- * Tiny typed event bus. Search, ticker and graph never import each other:
- * search keeps working when the graph (WebGL) is unavailable.
+ * Tiny typed event bus. Search, ticker and the floating labels never import
+ * each other: each keeps working when another fails.
  */
 export interface BusEvents {
   'search:results': { query: string; ids: string[] };
   'search:active': { id: string | null };
   'search:clear': Record<string, never>;
-  'graph:ready': { mode: 'webgl' | 'fallback' };
-  'graph:select': { id: string | null };
   'chip:hover': { id: string | null };
-  'map:show': { id: string };
 }
 
 type Handler<K extends keyof BusEvents> = (detail: BusEvents[K]) => void;

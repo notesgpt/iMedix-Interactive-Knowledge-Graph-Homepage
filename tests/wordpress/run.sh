@@ -117,7 +117,11 @@ run_frontend_checks() {
   check "[$theme] homepage renders the Knowledge Universe" contains "$html" 'data-ku-root'
   check "[$theme] exactly one <h1>" equals "$(grep -o '<h1' <<<"$html" | wc -l | tr -d ' ')" "1"
   check "[$theme] search form works without JS (GET ?s=)" contains "$html" 'name="s"'
-  check "[$theme] counts rendered server-side" contains "$html" 'Search 795 drug guides and 95 disease guides'
+  check "[$theme] counts rendered server-side" contains "$html" 'guides to 795 medicines and 95 health conditions'
+  check "[$theme] official platform title in the hero badge" contains "$html" 'iMedix: Independent Drug &amp; Health Platform'
+  check "[$theme] plugin adds no meta description (SEO plugin owns it)" not_contains "$html" 'name="description"'
+  check "[$theme] at most one <title> (plugin adds no SEO title)" equals "$(( $(grep -o '<title' <<<"$html" | wc -l) <= 1 ))" "1"
+  check "[$theme] no 3D renderer markup" not_contains "$html" 'data-ku-card'
   check "[$theme] crawlable topic links" contains "$html" "href=\"$URL/diseases/hypertension/\""
   check "[$theme] news titles escaped, tags stripped" contains "$html" 'Integration test news item 14: A&amp;B trial'
   check "[$theme] no raw script injection" not_contains "$html" '<script>alert(1)'

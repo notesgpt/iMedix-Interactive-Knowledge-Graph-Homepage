@@ -150,7 +150,6 @@ final class Frontend {
 			'newsRefresh'  => (int) Settings::get( 'news_refresh_secs' ),
 			'searchUrl'    => home_url( '/' ),
 			'siteOrigin'   => $origin,
-			'budget'       => (int) Settings::get( 'graph_budget' ),
 			'locale'       => str_replace( '_', '-', get_locale() ),
 		);
 		return (string) wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_SLASHES );

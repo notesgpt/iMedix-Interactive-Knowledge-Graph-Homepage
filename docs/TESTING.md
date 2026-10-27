@@ -30,11 +30,16 @@ unsafe URLs excluded, < 5 ms per query on the full index; in the browser: ARIA c
 `aria-activedescendant`/`aria-selected`, live-region count, Escape twice, Enter navigates to the
 guide, "search all" goes to `/?s=`, graph unavailable → full-text search still works.
 
-**Graph** — budget per tier (640 / 340 / 180), priority order, deterministic sampling and layout,
-progressive stages, members near their topic; in the browser: WebGL mount with HUD, search
-highlight + connector, clicking a topic in the canvas opens the details card, Escape closes it,
-WebGL disabled → SVG fallback with working search, reduced motion → rotation paused, touch →
-explicit "Explore the map" mode.
+**Hero and floating labels** — Vitest: only linkable drugs and diseases (never topics), mixed
+types, short readable names preferred, deterministic, fewer on small screens; the layout never
+overlaps the text column, the statistics or another label and stays on screen; search matches
+are pulled towards the search field. Browser: labels link to `/drugs/…` or `/diseases/…`,
+no label repeats a "Recently updated" chip, no canvas and no second JS chunk, two-item
+statistics, the official title in the badge on one line, no editorial-topic or "Knowledge
+Universe" wording in the hero, the best match for "hypertension" sits beside the search field
+while the rest step back, clicking a label opens its guide, the active suggestion highlights its
+label, labels fully opaque and non-overlapping, never covering the headline/search/statistics,
+no drift under reduced motion, mobile best match above the text.
 
 **News** — validation, de-duplication by ID and URL, newest-first sort, limit; in the browser:
 marquee only when overflowing, clones `aria-hidden` and unfocusable, pause button (`aria-pressed`),
@@ -54,9 +59,9 @@ capability check, no PHP notices or warnings, uninstall removes only plugin data
 order; 44 px touch targets; no horizontal overflow at 390 px; keyboard paths above; contrast
 values verified by calculation (see DESIGN.md).
 
-**Performance (test harness, local server)** — main JS 23.9 kB (8.6 kB gzip), CSS 24 kB
-(5.8 kB gzip), lazy three.js chunk 573 kB (142 kB gzip), graph JSON 133 kB (21 kB gzip);
-CLS 0.005; text LCP ≈ 70 ms locally. Real-network Lighthouse numbers must be taken on staging.
+**Performance (test harness, local server)** — main JS 22.6 kB (7.8 kB gzip, the only script),
+CSS 32 kB (7.2 kB gzip), graph JSON 133 kB (21 kB gzip); no WebGL, no GPU work; CLS below 0.01;
+text LCP ≈ 60 ms locally. Real-network Lighthouse numbers must be taken on staging.
 
 ## Not verifiable from the build sandbox
 
@@ -65,7 +70,8 @@ CLS 0.005; text LCP ≈ 70 ms locally. Real-network Lighthouse numbers must be t
   types instead; run the staging pre-flight in WORDPRESS-INTEGRATION.md.
 * A live request to `docs.google.com` (blocked); the CSV path is exercised with the real tracker
   content through WordPress' HTTP API (`pre_http_request` serves the snapshot).
-* Real mobile GPUs; WebGL runs on SwiftShader in tests.
+* The official logo and favicon (imedix.com is unreachable from the sandbox, so the preview
+  shows the logo's alt text locally; on staging the real asset loads).
 
 ## Running locally
 
@@ -83,5 +89,5 @@ The same suites run in GitHub Actions (`.github/workflows/ci.yml`).
 
 ## Screenshots
 
-`docs/screenshots/` (from the browser suite): `desktop.jpg`, `search.jpg`, `card.jpg`,
-`mobile.jpg`, `mobile-explore.jpg`, `no-webgl.jpg`, `tablet.jpg`, `library.jpg`.
+`docs/screenshots/` (from the browser suite): `desktop.jpg`, `search.jpg`, `mobile.jpg`,
+`mobile-search.jpg`, `tablet.jpg`, `library.jpg`.

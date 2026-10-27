@@ -2,7 +2,8 @@
 /**
  * Knowledge Universe markup. Everything essential is server-rendered:
  * heading, working search form, latest news links and crawlable discovery
- * links. JavaScript only enhances it (graph, autocomplete, ticker motion).
+ * links. JavaScript only enhances it (floating guide labels, autocomplete,
+ * ticker motion).
  *
  * Expects:
  *   $vm     array  View model (ViewModel::build()).
@@ -26,7 +27,7 @@ $ku_types  = array(
 		<div class="ku-hero__veil" aria-hidden="true"></div>
 
 		<div class="ku-hero__inner">
-			<p class="ku-eyebrow"><span class="ku-eyebrow__sig" aria-hidden="true"><span class="ku-glyph ku-glyph--drug"></span><span class="ku-glyph ku-glyph--disease"></span><span class="ku-glyph ku-glyph--topic"></span></span><?php esc_html_e( 'iMedix Knowledge Universe', 'imedix-ku' ); ?></p>
+			<p class="ku-eyebrow"><span class="ku-eyebrow__sig" aria-hidden="true"><span class="ku-glyph ku-glyph--drug"></span><span class="ku-glyph ku-glyph--disease"></span></span><?php esc_html_e( 'iMedix: Independent Drug & Health Platform', 'imedix-ku' ); ?></p>
 			<h1 id="ku-title" class="ku-title">
 				<?php
 				/* translators: Emphasised part of the homepage heading is wrapped in <em>. */
@@ -38,13 +39,13 @@ $ku_types  = array(
 					<?php
 					printf(
 						/* translators: 1: number of drug guides, 2: number of disease guides. */
-						esc_html__( 'Search %1$s drug guides and %2$s disease guides, or explore how the iMedix library connects.', 'imedix-ku' ),
+						esc_html__( 'Independent, evidence-based guides to %1$s medicines and %2$s health conditions, with traceable sources.', 'imedix-ku' ),
 						esc_html( number_format_i18n( (int) $ku_counts['drug'] ) ),
 						esc_html( number_format_i18n( (int) $ku_counts['disease'] ) )
 					);
 					?>
 				<?php else : ?>
-					<?php esc_html_e( 'Search iMedix drug and disease guides, or explore how the library connects.', 'imedix-ku' ); ?>
+					<?php esc_html_e( 'Independent, evidence-based guides to medicines and health conditions, with traceable sources.', 'imedix-ku' ); ?>
 				<?php endif; ?>
 			</p>
 
@@ -85,40 +86,12 @@ $ku_types  = array(
 			<?php endif; ?>
 		</div>
 
-		<div class="ku-hud" data-ku-hud hidden>
-			<ul class="ku-legend" aria-label="<?php esc_attr_e( 'Map legend', 'imedix-ku' ); ?>">
+		<div class="ku-hud" data-ku-hud>
+			<ul class="ku-legend" aria-label="<?php esc_attr_e( 'Guides on iMedix', 'imedix-ku' ); ?>">
 				<li class="ku-legend__item ku-legend__item--drug"><span class="ku-glyph ku-glyph--drug" aria-hidden="true"></span><?php esc_html_e( 'Drugs', 'imedix-ku' ); ?> <strong><?php echo esc_html( number_format_i18n( (int) $ku_counts['drug'] ) ); ?></strong></li>
 				<li class="ku-legend__item ku-legend__item--disease"><span class="ku-glyph ku-glyph--disease" aria-hidden="true"></span><?php esc_html_e( 'Diseases', 'imedix-ku' ); ?> <strong><?php echo esc_html( number_format_i18n( (int) $ku_counts['disease'] ) ); ?></strong></li>
-				<li class="ku-legend__item ku-legend__item--topic"><span class="ku-glyph ku-glyph--topic" aria-hidden="true"></span><?php esc_html_e( 'Editorial topics', 'imedix-ku' ); ?> <strong><?php echo esc_html( number_format_i18n( (int) $ku_counts['topic'] ) ); ?></strong></li>
 			</ul>
-			<div class="ku-controls" role="group" aria-label="<?php esc_attr_e( 'Map controls', 'imedix-ku' ); ?>">
-				<button type="button" class="ku-btn ku-btn--icon" data-ku-action="zoom-in" aria-label="<?php esc_attr_e( 'Zoom in', 'imedix-ku' ); ?>">
-					<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
-				</button>
-				<button type="button" class="ku-btn ku-btn--icon" data-ku-action="zoom-out" aria-label="<?php esc_attr_e( 'Zoom out', 'imedix-ku' ); ?>">
-					<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14"/></svg>
-				</button>
-				<button type="button" class="ku-btn ku-btn--icon" data-ku-action="reset" aria-label="<?php esc_attr_e( 'Reset view', 'imedix-ku' ); ?>">
-					<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4h4"/></svg>
-				</button>
-				<button type="button" class="ku-btn ku-btn--icon" data-ku-action="motion" aria-pressed="false" aria-label="<?php esc_attr_e( 'Pause map motion', 'imedix-ku' ); ?>">
-					<svg class="ku-icon ku-icon--pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 6v12M15 6v12"/></svg>
-					<svg class="ku-icon ku-icon--play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10-6.5z"/></svg>
-				</button>
-			</div>
 		</div>
-
-		<aside class="ku-card" data-ku-card hidden aria-labelledby="ku-card-title">
-			<button type="button" class="ku-card__close" data-ku-card-close aria-label="<?php esc_attr_e( 'Close details', 'imedix-ku' ); ?>">
-				<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>
-			</button>
-			<p class="ku-card__type" data-ku-card-type></p>
-			<p class="ku-card__title" id="ku-card-title" data-ku-card-title></p>
-			<p class="ku-card__meta" data-ku-card-meta></p>
-			<p class="ku-card__desc" data-ku-card-desc hidden></p>
-			<div class="ku-card__links" data-ku-card-links></div>
-			<a class="ku-card__cta" data-ku-card-cta href="#"><?php esc_html_e( 'Read the guide', 'imedix-ku' ); ?><svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-		</aside>
 	</section>
 
 	<section class="ku-news" aria-labelledby="ku-news-title" data-ku-news<?php echo $vm['news'] ? '' : ' hidden'; ?>>
@@ -151,7 +124,7 @@ $ku_types  = array(
 		<div class="ku-wrap">
 			<div class="ku-discover__head">
 				<h2 class="ku-discover__title" id="ku-discover-title"><?php esc_html_e( 'Browse the library', 'imedix-ku' ); ?></h2>
-				<p class="ku-discover__intro"><?php esc_html_e( 'Every guide on the map is listed here too. Start with a type of guide, or open one of the editorial topics our team uses to group related drugs and conditions.', 'imedix-ku' ); ?></p>
+				<p class="ku-discover__intro"><?php esc_html_e( 'Every drug and disease guide on iMedix, by type of guide and by health area.', 'imedix-ku' ); ?></p>
 			</div>
 
 			<?php
@@ -173,15 +146,6 @@ $ku_types  = array(
 					'action' => $vm['diseaseArchive'] ? __( 'Browse all diseases', 'imedix-ku' ) : __( 'Search diseases', 'imedix-ku' ),
 					'href'   => $vm['diseaseArchive'] ? $vm['diseaseArchive'] : '#ku-q',
 					'focus'  => 'disease',
-				),
-				array(
-					'type'   => 'topic',
-					'count'  => count( $vm['topics'] ),
-					'name'   => __( 'Editorial topics', 'imedix-ku' ),
-					'desc'   => __( 'Related drugs and conditions, grouped by our editors.', 'imedix-ku' ),
-					'action' => __( 'See the topics', 'imedix-ku' ),
-					'href'   => '#ku-topics',
-					'focus'  => '',
 				),
 			);
 			?>
@@ -209,10 +173,10 @@ $ku_types  = array(
 			<?php if ( $vm['topics'] ) : ?>
 				<div class="ku-topics-intro" id="ku-topics">
 					<div class="ku-topics-intro__text">
-						<p class="ku-topics-intro__title"><?php esc_html_e( 'Editorial topics', 'imedix-ku' ); ?></p>
-						<p class="ku-topics-intro__desc"><?php esc_html_e( 'Each topic shows its mix of drug and disease guides. Open a guide, or show the topic on the map.', 'imedix-ku' ); ?></p>
+						<p class="ku-topics-intro__title"><?php esc_html_e( 'Health areas', 'imedix-ku' ); ?></p>
+						<p class="ku-topics-intro__desc"><?php esc_html_e( 'Related drug and disease guides, grouped by area of health.', 'imedix-ku' ); ?></p>
 					</div>
-					<nav class="ku-topic-index" aria-label="<?php esc_attr_e( 'Jump to a topic', 'imedix-ku' ); ?>">
+					<nav class="ku-topic-index" aria-label="<?php esc_attr_e( 'Jump to a health area', 'imedix-ku' ); ?>">
 						<ul>
 							<?php foreach ( $vm['topics'] as $ku_t ) : ?>
 								<li><a href="#<?php echo esc_attr( 'ku-topic-' . $ku_t['key'] ); ?>"><?php echo \Imedix\KnowledgeUniverse\View\Icons::topic( $ku_t['key'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?><?php echo esc_html( $ku_t['name'] ); ?><span class="ku-topic-index__n"><?php echo esc_html( number_format_i18n( (int) $ku_t['total'] ) ); ?></span></a></li>
@@ -282,7 +246,7 @@ $ku_types  = array(
 								<p class="ku-topic__more">
 									<?php
 									/* translators: %s: number of further guides. */
-									printf( esc_html( _n( '%s more guide in this topic', '%s more guides in this topic', (int) $ku_t['total'] - count( $ku_shown ), 'imedix-ku' ) ), esc_html( number_format_i18n( (int) $ku_t['total'] - count( $ku_shown ) ) ) );
+									printf( esc_html( _n( '%s more guide in this area', '%s more guides in this area', (int) $ku_t['total'] - count( $ku_shown ), 'imedix-ku' ) ), esc_html( number_format_i18n( (int) $ku_t['total'] - count( $ku_shown ) ) ) );
 									?>
 								</p>
 							<?php endif; ?>
@@ -294,18 +258,12 @@ $ku_types  = array(
 									?>
 								</button>
 							<?php endif; ?>
-							<button type="button" class="ku-topic__map" data-ku-show-node="<?php echo esc_attr( $ku_t['id'] ); ?>" hidden>
-								<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></svg>
-								<?php
-								printf( '<span>%s</span><span class="ku-visually-hidden"> %s</span>', esc_html__( 'Show on the map', 'imedix-ku' ), esc_html( $ku_t['name'] ) );
-								?>
-							</button>
 						</section>
 					<?php endforeach; ?>
 				</div>
-				<aside class="ku-note" aria-label="<?php esc_attr_e( 'About topics and connections', 'imedix-ku' ); ?>">
+				<aside class="ku-note" aria-label="<?php esc_attr_e( 'About health areas', 'imedix-ku' ); ?>">
 					<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
-					<p><?php esc_html_e( 'Topics and map connections show how iMedix organises and cross-links its guides. They are not medical advice and do not mean that a medicine treats a condition. Always read the full guide and talk to a healthcare professional.', 'imedix-ku' ); ?></p>
+					<p><?php esc_html_e( 'Health areas show how iMedix organises related guides. They are not medical advice and do not mean that a medicine treats a condition. Always read the full guide and talk to a healthcare professional.', 'imedix-ku' ); ?></p>
 				</aside>
 			<?php endif; ?>
 		</div>

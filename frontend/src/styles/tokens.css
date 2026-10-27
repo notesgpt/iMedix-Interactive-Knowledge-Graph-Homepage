@@ -6,10 +6,10 @@
  *      (--imedix-*) first, so the live theme can supply its exact values without a
  *      plugin change; the fallback is the iMedix reference palette (#112236 #436280
  *      #A3BAD2 #DBE4ED #FFFFFF) plus a few shades derived from it (marked "derived").
- *   2. Semantic tokens   — what components use (surfaces, text, borders, states, graph).
+ *   2. Semantic tokens   — what components use (surfaces, text, borders, states, categories).
  *   3. Component tokens  — kept next to the components in index.css.
  *
- * Typography is NOT defined here on purpose: Knowledge Universe inherits the theme's
+ * Typography is NOT defined here on purpose: the homepage inherits the theme's
  * fonts (body font via inheritance, heading font from the theme's own h1–h3 rules).
  * See docs/DESIGN.md § "Typography" and docs/WORDPRESS-INTEGRATION.md § "Brand tokens".
  *
@@ -34,7 +34,7 @@
   --ku-cloud: var(--imedix-color-background, #f3f6f9); /* derived: mist +50 % toward white */
   --ku-white: #ffffff;
   --ku-white-rgb: 255 255 255;
-  --ku-sky: #8fbfea; /* derived: primary hue, lightened for luminous graph points */
+  --ku-sky: #8fbfea; /* derived: primary hue, lightened */
   --ku-slate: #6c8aa8; /* derived: primary hue, mid tone (≥ 3:1 on white for glyphs) */
 
   /* 2. Semantic tokens --------------------------------------------------- */
@@ -75,42 +75,30 @@
   --ku-option-active-ring: rgb(var(--ku-steel-rgb) / 0.42);
   --ku-focus: var(--ku-steel); /* 8.0 : 1 on navy */
   --ku-focus-on-light: var(--ku-blue); /* 6.4 : 1 on white */
-  /* Content categories — one hue family per category, used identically by the 3D
-     spheres, legend, search, cards and library, always paired with shape and text.
-       sphere-*: material colours (variations inside the family)
-       strong:   text/icons on white or tint (≥ 5.0 : 1)    tint: light surfaces */
-  --ku-cat-drug-sphere-1: #2f80ed; /* blue */
-  --ku-cat-drug-sphere-2: #22b5d6; /* cyan */
-  --ku-cat-drug-sphere-3: #4f6ff0; /* cornflower */
+  /* Content categories — one hue per category, used identically by the legend,
+     glyphs, search, floating labels and library, always paired with shape and text.
+       mark:   dots and rings (non-text, ≥ 3 : 1)
+       strong: text/icons on white or tint (≥ 5.0 : 1)    tint: light surfaces
+     Health areas (editorial groupings) are not a category on the homepage: they
+     use the neutral brand steel, never a hue of their own. */
+  --ku-cat-drug-mark: #2f80ed;
   --ku-cat-drug-strong: var(--imedix-cat-drug-strong, #1c5dbf); /* 6.2 : 1 on white */
   --ku-cat-drug-tint: #e5effc;
   --ku-cat-drug-rgb: 47 128 237;
-  --ku-cat-disease-sphere-1: #f2705d; /* coral */
-  --ku-cat-disease-sphere-2: #f59a4a; /* apricot */
-  --ku-cat-disease-sphere-3: #e2574c; /* warm red */
+  --ku-cat-disease-mark: #f2705d;
   --ku-cat-disease-strong: var(--imedix-cat-disease-strong, #b63a22); /* 5.8 : 1 */
   --ku-cat-disease-tint: #fdece6;
   --ku-cat-disease-rgb: 242 112 93;
-  --ku-cat-topic-sphere-1: #b3a4f0; /* lavender glass */
-  --ku-cat-topic-sphere-2: #c9aee9; /* lilac glass */
-  --ku-cat-topic-sphere-3: #9fb2f4; /* periwinkle glass */
-  --ku-cat-topic-strong: var(--imedix-cat-topic-strong, #6440c8); /* 6.8 : 1 */
-  --ku-cat-topic-tint: #efeafd;
-  --ku-cat-topic-rgb: 124 92 224;
-  --ku-cat-other-sphere-1: #2fa58f;
-  --ku-cat-other-strong: #1f6f60;
-  --ku-cat-other-tint: #e3f4f0;
+  --ku-area-strong: var(--ku-blue); /* #436280, 6.3 : 1 */
+  --ku-area-tint: #eef2f6;
+  --ku-area-rgb: var(--ku-blue-rgb);
 
-  /* Graph signals (read by graph/palette.ts) */
-  --ku-drug: var(--imedix-graph-drug, var(--ku-cat-drug-sphere-1));
-  --ku-disease: var(--imedix-graph-disease, var(--ku-cat-disease-sphere-1));
-  --ku-topic: var(--imedix-graph-topic, var(--ku-cat-topic-sphere-1));
-  --ku-edge: var(--imedix-graph-edge, #8ea3ba);
+  --ku-drug: var(--imedix-graph-drug, var(--ku-cat-drug-mark));
+  --ku-disease: var(--imedix-graph-disease, var(--ku-cat-disease-mark));
   --ku-drug-on-light: var(--ku-cat-drug-strong);
   --ku-disease-on-light: var(--ku-cat-disease-strong);
-  --ku-topic-on-light: var(--ku-cat-topic-strong);
 
-  /* Hero (light "specimen gallery") */
+  /* Hero */
   --ku-hero-bg: #f2f4f7; /* porcelain, a cool tint of iMedix #DBE4ED */
   --ku-hero-bg-rgb: 242 244 247;
   --ku-hero-ink: var(--ku-navy); /* 14.6 : 1 */

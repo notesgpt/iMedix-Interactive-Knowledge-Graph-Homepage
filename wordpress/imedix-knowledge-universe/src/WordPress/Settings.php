@@ -39,7 +39,6 @@ final class Settings {
 			'news_post_type'    => 'news',
 			'news_count'        => 12,
 			'news_refresh_secs' => 600,
-			'graph_budget'      => 640,
 		);
 	}
 
@@ -97,7 +96,6 @@ final class Settings {
 		$out['news_post_type']    = '' !== $pt ? $pt : $d['news_post_type'];
 		$out['news_count']        = isset( $in['news_count'] ) ? max( 4, min( 20, (int) $in['news_count'] ) ) : $d['news_count'];
 		$out['news_refresh_secs'] = isset( $in['news_refresh_secs'] ) ? max( 120, min( 3600, (int) $in['news_refresh_secs'] ) ) : $d['news_refresh_secs'];
-		$out['graph_budget']      = isset( $in['graph_budget'] ) ? max( 100, min( 1500, (int) $in['graph_budget'] ) ) : $d['graph_budget'];
 
 		return $out;
 	}

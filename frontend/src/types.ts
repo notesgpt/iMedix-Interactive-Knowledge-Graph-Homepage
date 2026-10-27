@@ -71,6 +71,5 @@ export interface KUConfig {
   newsRefresh: number;
   searchUrl: string;
   siteOrigin: string;
-  budget: number;
   locale: string;
 }

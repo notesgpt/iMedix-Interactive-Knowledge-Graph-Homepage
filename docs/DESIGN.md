@@ -1,5 +1,27 @@
 # Design — research, three directions, decision
 
+> **Current hero (supersedes the 3D sections below, which are kept as the design history).**
+> The hero went from a WebGL constellation (dark "Observatory") to a light hero with 3D spheres
+> (three material studies — porcelain "specimen gallery", optical glass with an analytic
+> ball-lens shader, matte clay — were built and reviewed), and finally, after design review, to
+> **no 3D at all**: the spheres competed with the headline and search and cluttered the page.
+>
+> * **Background**: near-white hero (`--ku-hero-bg #F2F4F7`) with a barely-there measurement grid
+>   (navy at 4 % / 1.6 %, 60 px / 30 px) and a soft halo that fades the grid under the text.
+> * **Identity**: badge "iMedix: Independent Drug & Health Platform" (official title, one line
+>   down to ~360 px); lede aligned with the official description — independent, evidence-based,
+>   traceable sources — without claims beyond it.
+> * **Floating guide labels**: real drugs and diseases only, white pills with a 1 px hairline, a
+>   category glyph (dot / ring) and a type word, navy text ≥ 12 : 1; never over the headline,
+>   search, chips or statistics; slow drift (off for reduced motion). Search moves the best match
+>   beside the field with a category-coloured edge; other labels step back with a lighter edge,
+>   never faded text.
+> * **Two visible categories**: Drugs and Diseases (statistics, labels, filters, library entry
+>   cards). Editorial topics stay in the data and appear in the library only as neutral "Health
+>   areas" (brand steel `#436280`), never as a purple category, badge or counter in the hero.
+> * **Removed**: three.js and every WebGL object, map controls (zoom, reset, pause), the details
+>   card, "Show on the map" buttons, the purple topic hue.
+
 > **Update 2026-10-27 — brand alignment.** Typography and colours were aligned with the iMedix
 > site: theme fonts are now inherited (Newsreader/Figtree removed) and the palette is iMedix navy/blue.
 > The token values in the table below are historical; the current ones are in
