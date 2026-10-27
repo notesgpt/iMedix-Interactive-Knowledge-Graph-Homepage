@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Front-end bundle for the iMedix Knowledge Universe WordPress plugin.",
   "scripts": {
-    "fixture": "php ../bin/build-graph.php --drugs=../tests/fixtures/sheets/drugs.csv --diseases=../tests/fixtures/sheets/diseases.csv --redirects=../tests/fixtures/sheets/redirects.csv --out=public/dev/graph.full.json --report=public/dev/report.json --generated-at=2026-10-27T00:00:00Z && php ../bin/render-preview.php",
+    "fixture": "php ../bin/build-graph.php --drugs=../tests/fixtures/sheets/drugs.csv --diseases=../tests/fixtures/sheets/diseases.csv --redirects=../tests/fixtures/sheets/redirects.csv --out=public/dev/graph.full.json --report=public/dev/report.json --generated-at=2026-10-27T00:00:00Z && php ../bin/render-preview.php --news-live",
     "dev": "npm run fixture && vite",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",

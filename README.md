@@ -23,8 +23,10 @@ header, footer and SEO setup.
 * **Search** that works without JavaScript (native `/?s=`), and with it: instant suggestions with
   typo tolerance and redirect aliases, keyboard and screen-reader support; the best match's label
   moves beside the search field.
-* **News ticker** from the existing `news` custom post type (no new news system), cached and
-  refreshed, pausable, reduced-motion aware.
+* **News ticker** under the hero, from the existing `news` custom post type (no new news
+  system), cached and refreshed, pausable, reduced-motion aware. The local preview
+  (`npm run dev`) shows the live headlines from `www.imedix.com/news/feed/`, or no ticker if the
+  feed is unreachable — never invented headlines.
 * **Library** of every drug and disease guide, by type and by health area (editorial groupings,
   shown neutrally and labelled as non-clinical).
 * **Honest data**: the tracker holds no clinical relationships, so none are shown or implied.

@@ -27,30 +27,21 @@ $ku_types  = array(
 		<div class="ku-hero__veil" aria-hidden="true"></div>
 
 		<div class="ku-hero__inner">
-			<p class="ku-eyebrow"><span class="ku-eyebrow__sig" aria-hidden="true"><span class="ku-glyph ku-glyph--drug"></span><span class="ku-glyph ku-glyph--disease"></span></span><?php esc_html_e( 'iMedix: Independent Drug & Health Platform', 'imedix-ku' ); ?></p>
+			<p class="ku-pillars">
+				<span><?php esc_html_e( 'Independent', 'imedix-ku' ); ?></span>
+				<span><?php esc_html_e( 'Evidence-based', 'imedix-ku' ); ?></span>
+				<span><?php esc_html_e( 'Transparent', 'imedix-ku' ); ?></span>
+			</p>
 			<h1 id="ku-title" class="ku-title">
 				<?php
-				/* translators: Emphasised part of the homepage heading is wrapped in <em>. */
-				echo wp_kses( __( 'Find your way through <em>medical knowledge</em>', 'imedix-ku' ), array( 'em' => array() ) );
+				/* translators: Homepage heading (the official site title). The brand name is wrapped in <span>. */
+				echo wp_kses( __( '<span>iMedix:</span> Independent Drug &amp; Health Platform', 'imedix-ku' ), array( 'span' => array() ) );
 				?>
 			</h1>
-			<p class="ku-lede">
-				<?php if ( $ku_counts['drug'] && $ku_counts['disease'] ) : ?>
-					<?php
-					printf(
-						/* translators: 1: number of drug guides, 2: number of disease guides. */
-						esc_html__( 'Independent, evidence-based guides to %1$s medicines and %2$s health conditions, with traceable sources.', 'imedix-ku' ),
-						esc_html( number_format_i18n( (int) $ku_counts['drug'] ) ),
-						esc_html( number_format_i18n( (int) $ku_counts['disease'] ) )
-					);
-					?>
-				<?php else : ?>
-					<?php esc_html_e( 'Independent, evidence-based guides to medicines and health conditions, with traceable sources.', 'imedix-ku' ); ?>
-				<?php endif; ?>
-			</p>
+			<p class="ku-lede"><?php esc_html_e( 'Evidence-based information on medicines and health, with traceable sources and strict standards.', 'imedix-ku' ); ?></p>
 
 			<form class="ku-search" role="search" method="get" action="<?php echo esc_url( $vm['searchUrl'] ); ?>" data-ku-search>
-				<label class="ku-search__label" for="ku-q"><?php esc_html_e( 'Search drugs and diseases', 'imedix-ku' ); ?></label>
+				<label class="ku-search__label ku-visually-hidden" for="ku-q"><?php esc_html_e( 'Search drugs and diseases', 'imedix-ku' ); ?></label>
 				<div class="ku-search__field">
 					<svg class="ku-icon ku-search__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
 					<input id="ku-q" class="ku-search__input" name="s" type="search" inputmode="search" enterkeyhint="search"
@@ -95,27 +86,33 @@ $ku_types  = array(
 	</section>
 
 	<section class="ku-news" aria-labelledby="ku-news-title" data-ku-news<?php echo $vm['news'] ? '' : ' hidden'; ?>>
-		<div class="ku-news__inner">
-			<h2 class="ku-news__label" id="ku-news-title"><span class="ku-news__pulse" aria-hidden="true"></span><?php esc_html_e( 'Latest medical news', 'imedix-ku' ); ?></h2>
+		<div class="ku-news__bar">
+			<p class="ku-news__label" id="ku-news-title">
+				<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2"/><path d="M8.5 8.5a5 5 0 0 0 0 7M15.5 8.5a5 5 0 0 1 0 7M5.6 5.6a9 9 0 0 0 0 12.8M18.4 5.6a9 9 0 0 1 0 12.8"/></svg>
+				<span><?php esc_html_e( 'Latest news', 'imedix-ku' ); ?></span>
+			</p>
 			<div class="ku-news__viewport" data-ku-ticker>
 				<ul class="ku-news__track" data-ku-ticker-track>
 					<?php foreach ( $vm['news'] as $ku_n ) : ?>
 						<li class="ku-news__item" data-ku-news-id="<?php echo esc_attr( (string) $ku_n['id'] ); ?>">
 							<a href="<?php echo esc_url( $ku_n['url'] ); ?>">
-								<time datetime="<?php echo esc_attr( $ku_n['date'] ); ?>"><?php echo esc_html( date_i18n( 'M j', (int) strtotime( $ku_n['date'] ) ) ); ?></time>
 								<span><?php echo esc_html( $ku_n['title'] ); ?></span>
+								<time datetime="<?php echo esc_attr( $ku_n['date'] ); ?>"><?php echo esc_html( date_i18n( 'M j, Y', (int) strtotime( $ku_n['date'] ) ) ); ?></time>
 							</a>
 						</li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
-			<button type="button" class="ku-news__toggle" data-ku-ticker-toggle aria-pressed="false" hidden>
+			<button type="button" class="ku-news__btn ku-news__toggle" data-ku-ticker-toggle aria-pressed="false" hidden>
 				<svg class="ku-icon ku-icon--pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 6v12M15 6v12"/></svg>
 				<svg class="ku-icon ku-icon--play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8 5.5v13l10-6.5z"/></svg>
 				<span class="ku-visually-hidden"><?php esc_html_e( 'Pause news ticker', 'imedix-ku' ); ?></span>
 			</button>
 			<?php if ( $vm['newsArchive'] ) : ?>
-				<a class="ku-news__all" href="<?php echo esc_url( $vm['newsArchive'] ); ?>"><?php esc_html_e( 'All news', 'imedix-ku' ); ?></a>
+				<a class="ku-news__btn ku-news__all" href="<?php echo esc_url( $vm['newsArchive'] ); ?>">
+					<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 6 6 6-6 6"/></svg>
+					<span class="ku-visually-hidden"><?php esc_html_e( 'All news', 'imedix-ku' ); ?></span>
+				</a>
 			<?php endif; ?>
 		</div>
 	</section>

@@ -59,7 +59,7 @@ console.log('Desktop');
     const labels = await page.$$eval('.ku-float-item:not([hidden])', (els) =>
       els.map((li) => ({ type: li.dataset.type, href: li.querySelector('a').href, name: li.querySelector('.ku-float__name').textContent })),
     );
-    assert(labels.length >= 8, 'only ' + labels.length + ' labels');
+    assert(labels.length >= 6, 'only ' + labels.length + ' labels');
     for (const l of labels) {
       assert(l.type === 'drug' || l.type === 'disease', 'type ' + l.type);
       assert(new RegExp(`^https://www\\.imedix\\.com/${l.type}s/[a-z0-9-]+/$`).test(l.href), l.href);
@@ -74,11 +74,17 @@ console.log('Desktop');
     assert(await page.locator('.ku-legend').isVisible(), 'statistics hidden');
     assert((await page.locator('.ku-legend li').count()) === 2, 'legend items');
   });
-  await test('badge shows the official platform title on one line', async () => {
-    const t = (await page.locator('.ku-eyebrow').textContent()).trim();
-    assert(t === 'iMedix: Independent Drug & Health Platform', t);
-    const h = await page.evaluate(() => Math.round(document.querySelector('.ku-eyebrow').getBoundingClientRect().height));
-    assert(h < 48, 'badge wraps: ' + h + 'px');
+  await test('hero: official title as the H1 in two lines, principles above, search below', async () => {
+    const h1 = (await page.locator('h1').innerText()).replace(/\s+/g, ' ').trim();
+    assert(h1 === 'iMedix: Independent Drug & Health Platform', h1);
+    const lines = await page.evaluate(() => {
+      const h = document.querySelector('.ku-title');
+      return Math.round(h.getBoundingClientRect().height / parseFloat(getComputedStyle(h).lineHeight));
+    });
+    assert(lines === 2, lines + ' lines');
+    const pillars = await page.locator('.ku-pillars span').allTextContents();
+    assert(pillars.join('|') === 'Independent|Evidence-based|Transparent', pillars.join());
+    assert(await page.locator('label[for="ku-q"]').count() === 1, 'search keeps its (visually hidden) label');
   });
   await test('no editorial-topic UI is visible in the hero', async () => {
     const hero = await page.locator('.ku-hero').innerText();
@@ -114,6 +120,7 @@ console.log('Desktop');
   });
 
   await test('type filter restricts suggestions', async () => {
+    await page.locator('#ku-q').focus();
     await page.locator('.ku-filter label', { hasText: 'Drugs' }).click();
     await page.locator('#ku-q').fill('diabetes');
     await page.waitForTimeout(200);
@@ -196,6 +203,23 @@ console.log('Desktop');
     await page.keyboard.press('Escape');
   });
 
+  await test('news ticker sits under the hero: title then date, round all-news link', async () => {
+    const order = await page.evaluate(() => [...document.querySelector('[data-ku-root]').children].map((e) => e.className.split(' ')[0]));
+    assert(order[0] === 'ku-hero' && order[1] === 'ku-news', order.join());
+    const first = await page.evaluate(() => [...document.querySelector('.ku-news__item a').children].map((e) => e.tagName));
+    assert(first.join() === 'SPAN,TIME', first.join());
+    assert((await page.locator('.ku-news__all').innerText()).trim() === 'All news', 'all-news link name');
+  });
+
+  await test('resting hero is quiet: type filter appears only while searching', async () => {
+    await page.locator('#ku-q').fill('');
+    await page.locator('h1').click();
+    assert(await page.locator('.ku-filter').isHidden(), 'filter visible at rest');
+    await page.locator('#ku-q').focus();
+    assert(await page.locator('.ku-filter').isVisible(), 'filter hidden while searching');
+    await page.locator('h1').click();
+  });
+
   await test('ticker animates, pauses via button, clones hidden from AT', async () => {
     const news = page.locator('[data-ku-news]');
     assert((await news.getAttribute('class')).includes('is-animated'), 'not animated');
@@ -255,14 +279,14 @@ console.log('Desktop');
         }
       return { shown: shown.length, odd: odd.length, overlaps };
     });
-    assert(r.shown >= 8, 'only ' + r.shown + ' labels visible');
+    assert(r.shown >= 6, 'only ' + r.shown + ' labels visible');
     assert(r.odd === 0, r.odd + ' half-faded labels');
     assert(r.overlaps === 0, r.overlaps + ' overlapping labels');
   });
 
   await test('labels never cover the headline, search block or statistics', async () => {
     const hits = await page.evaluate(() => {
-      const boxes = ['.ku-title', '.ku-eyebrow', '.ku-lede', '.ku-search', '.ku-try', '.ku-legend'].map((s) => document.querySelector(s).getBoundingClientRect());
+      const boxes = ['.ku-title', '.ku-pillars', '.ku-lede', '.ku-search', '.ku-try', '.ku-legend'].map((s) => document.querySelector(s).getBoundingClientRect());
       return [...document.querySelectorAll('.ku-float-item:not([hidden]) .ku-float')]
         .filter((l) => {
           const a = l.getBoundingClientRect();

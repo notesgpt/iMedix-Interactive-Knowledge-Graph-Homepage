@@ -49,7 +49,7 @@ export const LABEL_TYPES = ['drug', 'disease'] as const;
 
 /** How many floating labels each screen size gets. */
 export function labelCount(width: number): number {
-  return width < 700 ? 5 : width < 1100 ? 8 : 10;
+  return width < 700 ? 4 : width < 1100 ? 6 : 8;
 }
 
 /** Short, recognisable names read best as floating labels (no pack sizes, no codes). */
@@ -202,7 +202,7 @@ export function buildNetwork(input: NetworkInput): Network {
     nodes.push({ x, y, r: 2.5 + rand() * 2.5, tone: tones[nodes.length % tones.length], blur: false });
   }
   // Out-of-focus dots: a shallow depth of field, never under the text.
-  for (let k = 0, made = 0; k < 400 && made < Math.ceil(count / 2); k++) {
+  for (let k = 0, made = 0; k < 400 && made < Math.ceil(count / 3); k++) {
     const x = rand() * width;
     const y = rand() * height;
     if (blocked.some((r) => x > r.l - 30 && x < r.r + 30 && y > r.t - 30 && y < r.b + 30)) continue;

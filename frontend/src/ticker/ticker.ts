@@ -29,7 +29,7 @@ export class NewsTicker {
     this.viewport = section.querySelector<HTMLElement>('[data-ku-ticker]')!;
     this.track = section.querySelector<HTMLUListElement>('[data-ku-ticker-track]')!;
     this.toggle = section.querySelector<HTMLButtonElement>('[data-ku-ticker-toggle]');
-    this.dateFmt = new Intl.DateTimeFormat(config.locale || 'en-US', { month: 'short', day: 'numeric' });
+    this.dateFmt = new Intl.DateTimeFormat(config.locale || 'en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     this.items = this.readServerItems();
 
     this.toggle?.addEventListener('click', () => this.setPaused(!this.paused));
@@ -118,7 +118,7 @@ export class NewsTicker {
     time.textContent = this.dateFmt.format(new Date(item.date));
     const span = document.createElement('span');
     span.textContent = item.title;
-    a.append(time, span);
+    a.append(span, time);
     li.append(a);
     return li;
   }

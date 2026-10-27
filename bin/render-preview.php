@@ -8,7 +8,9 @@
  * Usage:
  *   php bin/render-preview.php                     → frontend/index.html (Vite dev)
  *   php bin/render-preview.php --mode=dist         → build/preview/index.html (built bundle)
- *   php bin/render-preview.php --news-fixture      → adds clearly-labelled synthetic news (dev/tests only)
+ *   php bin/render-preview.php --news-live         → real latest news from the site's RSS feed
+ *                                                   (/news/feed/); hidden if the feed is unreachable
+ *   php bin/render-preview.php --news-fixture      → adds clearly-labelled synthetic news (tests only)
  *
  * The preview header/footer are stand-ins: in WordPress the theme's own
  * header and footer are used. Synthetic news is never part of the plugin.
@@ -20,7 +22,7 @@ use Imedix\KnowledgeUniverse\Core\Discovery;
 define( 'ABSPATH', __DIR__ );
 require __DIR__ . '/../wordpress/imedix-knowledge-universe/src/autoload.php';
 
-$opts  = getopt( '', array( 'mode::', 'news-fixture', 'site::' ) );
+$opts  = getopt( '', array( 'mode::', 'news-fixture', 'news-live', 'news-feed:', 'site::' ) );
 $mode  = $opts['mode'] ?? 'dev';
 $site  = rtrim( $opts['site'] ?? 'https://www.imedix.com', '/' );
 $root  = dirname( __DIR__ );
@@ -47,15 +49,58 @@ if ( ! is_file( $full ) ) {
 $graph  = json_decode( (string) file_get_contents( $full ), true );
 $client = ClientPayload::from_graph( $graph );
 
+/**
+ * Latest items of the live news feed, in the same shape as News::latest().
+ * Only links on the site's own host are accepted; nothing is invented.
+ */
+function ku_live_news( string $site, int $limit, ?string $feed_override = null ): array {
+	$host = (string) parse_url( $site, PHP_URL_HOST );
+	$ctx  = stream_context_create( array( 'http' => array( 'timeout' => 8, 'user_agent' => 'iMedix-KU-preview/1.0' ) ) );
+	foreach ( $feed_override ? array( $feed_override ) : array( $site . '/news/feed/', $site . '/feed/?post_type=news' ) as $feed ) {
+		$xml = @file_get_contents( $feed, false, $ctx );
+		if ( ! $xml || false === strpos( $xml, '<rss' ) ) {
+			continue;
+		}
+		$rss = @simplexml_load_string( $xml );
+		if ( ! $rss || ! isset( $rss->channel->item ) ) {
+			continue;
+		}
+		$items = array();
+		foreach ( $rss->channel->item as $item ) {
+			$url = trim( (string) $item->link );
+			if ( parse_url( $url, PHP_URL_HOST ) !== $host || 'https' !== parse_url( $url, PHP_URL_SCHEME ) ) {
+				continue;
+			}
+			$items[] = array(
+				'id'      => crc32( $url ),
+				'title'   => trim( html_entity_decode( strip_tags( (string) $item->title ), ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ),
+				'url'     => $url,
+				'date'    => gmdate( 'c', (int) strtotime( (string) $item->pubDate ) ),
+			);
+			if ( count( $items ) >= $limit ) {
+				break;
+			}
+		}
+		if ( $items ) {
+			return $items;
+		}
+	}
+	fwrite( STDERR, "News feed unreachable at $site/news/feed/ — the ticker stays hidden.\n" );
+	return array();
+}
+
 $news = array();
-if ( isset( $opts['news-fixture'] ) ) {
-	// Synthetic, clearly labelled items for exercising the ticker in dev/tests.
+if ( isset( $opts['news-live'] ) || isset( $opts['news-feed'] ) ) {
+	// --news-feed=<file|url> reads a saved copy of the feed (offline checks).
+	$news = ku_live_news( $site, 10, $opts['news-feed'] ?? null );
+} elseif ( isset( $opts['news-fixture'] ) ) {
+	// Synthetic, clearly labelled items for exercising the news layout in tests.
 	for ( $i = 1; $i <= 10; $i++ ) {
 		$news[] = array(
-			'id'    => 9000 + $i,
-			'title' => sprintf( '[Dev fixture %d] Synthetic headline used only to test the ticker layout', $i ),
-			'url'   => $site . '/news/dev-fixture-' . $i . '/',
-			'date'  => gmdate( 'c', strtotime( '2026-10-27T09:00:00Z' ) - $i * 86400 ),
+			'id'      => 9000 + $i,
+			'title'   => sprintf( '[Dev fixture %d] Synthetic headline used only to test the ticker', $i ),
+			'url'     => $site . '/news/dev-fixture-' . $i . '/',
+			'date'    => gmdate( 'c', strtotime( '2026-10-27T09:00:00Z' ) - $i * 86400 ),
 		);
 	}
 }

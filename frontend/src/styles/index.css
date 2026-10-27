@@ -136,25 +136,6 @@
   pointer-events: auto;
 }
 
-.ku-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  margin: 0 0 22px;
-  padding: 7px 14px 7px 12px;
-  border: 1px solid var(--ku-hairline-strong);
-  border-radius: 999px;
-  background: var(--ku-panel);
-  font-size: 14px;
-  font-weight: var(--ku-weight-semibold);
-  color: var(--ku-ink);
-  text-wrap: balance;
-}
-.ku-eyebrow__sig {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-}
 
 .ku-title {
   overflow-wrap: break-word;
@@ -533,20 +514,6 @@
   line-height: 1.2;
   color: var(--ku-ink);
 }
-.ku-news__pulse {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--ku-drug);
-  box-shadow: 0 0 0 0 rgb(var(--ku-steel-rgb) / 0.6);
-  animation: ku-pulse 2.6s var(--ku-ease) infinite;
-}
-@keyframes ku-pulse {
-  70%,
-  100% {
-    box-shadow: 0 0 0 8px rgb(var(--ku-steel-rgb) / 0);
-  }
-}
 .ku-news__viewport {
   position: relative;
   flex: 1;
@@ -660,10 +627,6 @@
     padding-top: 56px;
     padding-bottom: 150px;
   }
-  .ku-eyebrow::before,
-  .ku-eyebrow::after {
-    width: 16px;
-  }
   .ku-search__submit {
     padding: 0 16px;
   }
@@ -675,25 +638,6 @@
   .ku-legend {
     justify-content: center;
     border-radius: var(--ku-radius-m);
-  }
-  
-  
-  
-  .ku-news__inner {
-    flex-wrap: wrap;
-    gap: 6px 12px;
-    padding-block: 12px;
-  }
-  .ku-news__label {
-    border-right: 0;
-    padding-right: 0;
-  }
-  .ku-news__all {
-    margin-left: auto;
-  }
-  .ku-news__viewport {
-    order: 3;
-    flex-basis: 100%;
   }
 }
 
@@ -1380,21 +1324,11 @@
 }
 
 /* Phones: a band above the headline and one above the statistics give the
-   floating labels room to frame the text. The official platform title in the
-   badge stays on one line down to ~360 px. */
+   floating labels room to frame the text. */
 @media (max-width: 760px) {
   .ku-hero {
     padding-top: 104px;
     padding-bottom: 236px;
-  }
-  .ku-eyebrow {
-    gap: 8px;
-    padding: 6px 12px;
-    font-size: 12.5px;
-    letter-spacing: -0.005em;
-  }
-  .ku-eyebrow__sig {
-    display: none;
   }
 }
 
@@ -1585,4 +1519,217 @@
   .ku-float-item {
     transition: opacity 200ms linear;
   }
+}
+
+/* ============================================================ Hero copy */
+/* The H1 is the official site title; the brand name carries the brand blue.
+   Above it, the three principles from the official description as a quiet
+   line of small tracked capitals; below it, one sentence on what iMedix offers. */
+.ku-pillars {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 6px 14px;
+  margin: 0 0 20px;
+  color: var(--ku-hero-ink-3);
+  font-size: 12.5px;
+  font-weight: var(--ku-weight-semibold);
+  letter-spacing: 0.2em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.ku-pillars span + span::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin: 0 14px 0 0;
+  border-radius: 50%;
+  background: #9db0c4;
+  vertical-align: middle;
+  transform: translateY(-1px);
+}
+.ku-title {
+  max-width: 19ch;
+  margin-inline: auto;
+  font-size: clamp(2.25rem, 1rem + 3.8vw, 4.1rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+.ku-title span {
+  color: var(--ku-cat-drug-strong);
+}
+.ku-lede {
+  max-width: 36em;
+  margin-top: 22px;
+  font-size: clamp(1.05rem, 0.95rem + 0.45vw, 1.3rem);
+  line-height: 1.55;
+}
+.ku-hero .ku-search {
+  margin-top: 34px;
+}
+@media (max-width: 760px) {
+  .ku-pillars {
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin-bottom: 14px;
+    font-size: 10.5px;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .ku-pillars span + span::before {
+    margin-right: 8px;
+  }
+  .ku-hero .ku-search {
+    margin-top: 26px;
+  }
+}
+
+/* ====================================================== News ticker */
+/* Under the hero: a light strip holding one white capsule —
+   a navy "Latest news" pill, the scrolling headlines (title, then a muted
+   date, dot separators), and round pause / all-news buttons. */
+.ku-news {
+  z-index: 6;
+  padding: 4px var(--ku-gutter) 28px;
+  border: 0;
+  background: var(--ku-hero-bg);
+}
+.ku-news__bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 60px;
+  padding: 6px;
+  border: 1px solid rgb(var(--ku-navy-rgb) / 0.07);
+  border-radius: 999px;
+  background: var(--ku-white);
+  box-shadow: 0 1px 2px rgb(var(--ku-navy-rgb) / 0.04), 0 14px 32px -24px rgb(var(--ku-navy-rgb) / 0.35);
+}
+.ku-news__label {
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 22px 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ku-navy);
+  color: var(--ku-white);
+  font-size: 15px;
+  font-weight: var(--ku-weight-semibold);
+}
+.ku-news__label .ku-icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.8;
+}
+.ku-news__viewport {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+}
+.ku-news__track {
+  padding: 0 16px;
+}
+.ku-news__item + .ku-news__item::before {
+  width: 5px;
+  height: 5px;
+  margin: 0 24px;
+  transform: none;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ku-cat-drug-mark);
+  opacity: 0.7;
+}
+.ku-news__item a {
+  gap: 14px;
+  padding: 12px 2px;
+  color: var(--ku-hero-ink);
+  font-size: 15px;
+  font-weight: var(--ku-weight-medium);
+}
+.ku-news__item time {
+  color: var(--ku-hero-ink-3);
+  font-size: 14px;
+  font-weight: var(--ku-weight-regular);
+}
+.ku-news__btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--ku-hero-line);
+  border-radius: 50%;
+  background: var(--ku-white);
+  color: var(--ku-hero-ink);
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color var(--ku-dur-1) var(--ku-ease), background var(--ku-dur-1) var(--ku-ease);
+}
+.ku-news__btn:hover {
+  border-color: var(--ku-hairline-strong, #b4c3d2);
+  background: var(--ku-cloud);
+}
+.ku-news__btn:focus-visible {
+  outline: 2px solid var(--ku-focus-on-light);
+  outline-offset: 2px;
+}
+.ku-news__btn .ku-icon {
+  width: 20px;
+  height: 20px;
+}
+.ku-news__toggle {
+  width: 40px;
+  height: 40px;
+  border-color: transparent;
+  color: var(--ku-hero-ink-3);
+}
+.ku-news__toggle[hidden] {
+  display: none;
+}
+.ku-news__all {
+  color: var(--ku-hero-ink) !important;
+  text-decoration: none;
+}
+@media (max-width: 760px) {
+  .ku-news {
+    padding-bottom: 20px;
+  }
+  .ku-news__bar {
+    gap: 6px;
+    min-height: 48px;
+    padding: 4px;
+  }
+  .ku-news__label {
+    min-height: 40px;
+    padding: 0 12px;
+  }
+  /* Icon-only pill on phones; the name stays available to assistive tech. */
+  .ku-news__label span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+  .ku-news__item a {
+    gap: 10px;
+    padding: 10px 2px;
+    font-size: 14px;
+  }
+  .ku-news__item time {
+    font-size: 12.5px;
+  }
+  .ku-news__btn {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Progressive disclosure: the type filter appears once the search is in use
+   (focused, typed into, or a type already chosen), keeping the resting hero to
+   the search field and one row of recently updated guides. */
+.ku-search:not(:focus-within):not(:has(.ku-search__input:not(:placeholder-shown))):not(:has(.ku-filter input:not([value='all']):checked)) .ku-filter {
+  display: none;
 }

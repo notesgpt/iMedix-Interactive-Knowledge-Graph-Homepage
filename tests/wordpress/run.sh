@@ -117,8 +117,9 @@ run_frontend_checks() {
   check "[$theme] homepage renders the Knowledge Universe" contains "$html" 'data-ku-root'
   check "[$theme] exactly one <h1>" equals "$(grep -o '<h1' <<<"$html" | wc -l | tr -d ' ')" "1"
   check "[$theme] search form works without JS (GET ?s=)" contains "$html" 'name="s"'
-  check "[$theme] counts rendered server-side" contains "$html" 'guides to 795 medicines and 95 health conditions'
-  check "[$theme] official platform title in the hero badge" contains "$html" 'iMedix: Independent Drug &amp; Health Platform'
+  check "[$theme] counts rendered server-side" contains "$html" 'Drugs <strong>795</strong>'
+  check "[$theme] official platform title as the H1" contains "$html" '<span>iMedix:</span> Independent Drug &amp; Health Platform'
+  check "[$theme] news ticker under the hero" equals "$(php -r '$h=stream_get_contents(STDIN); echo strpos($h,"class=\"ku-hero\"") < strpos($h,"class=\"ku-news\"") ? "ok" : "bad";' <<<"$html")" "ok"
   check "[$theme] plugin adds no meta description (SEO plugin owns it)" not_contains "$html" 'name="description"'
   check "[$theme] at most one <title> (plugin adds no SEO title)" equals "$(( $(grep -o '<title' <<<"$html" | wc -l) <= 1 ))" "1"
   check "[$theme] no 3D renderer markup" not_contains "$html" 'data-ku-card'

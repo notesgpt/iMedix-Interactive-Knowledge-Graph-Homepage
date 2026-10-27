@@ -8,9 +8,15 @@
 >
 > * **Background**: near-white hero (`--ku-hero-bg #F2F4F7`) with a barely-there measurement grid
 >   (navy at 4 % / 1.6 %, 60 px / 30 px) and a soft halo that fades the grid under the text.
-> * **Identity**: badge "iMedix: Independent Drug & Health Platform" (official title, one line
->   down to ~360 px); lede aligned with the official description — independent, evidence-based,
->   traceable sources — without claims beyond it.
+> * **Identity**: the H1 is the official title, "iMedix: Independent Drug & Health Platform",
+>   in two lines with the brand name in brand blue; above it a quiet line of the three
+>   principles from the official description (Independent · Evidence-based · Transparent);
+>   below it one sentence: "Evidence-based information on medicines and health, with traceable
+>   sources and strict standards." No claims beyond the official description.
+> * **Quiet resting state**: under the search only the "Recently updated" row; the Drugs /
+>   Diseases filter appears while the search is in use. 8 labels on desktop (6 tablet, 4 phone).
+> * **News**: a white capsule under the hero — navy "Latest news" pill, headline then muted
+>   date, dot separators, round pause and "All news" buttons.
 > * **Floating guide labels**: real drugs and diseases only, white two-line cards (14 px radius,
 >   soft shadow): a filled category dot, the name (semibold, navy ≥ 12 : 1) over its type word;
 >   a faint decorative network (hairlines, junction dots with halos, a few blurred depth dots)

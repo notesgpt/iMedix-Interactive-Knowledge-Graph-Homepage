@@ -224,7 +224,7 @@ export class FloatingLabels {
 
   /** Redraw the decorative network for the current label positions. */
   private drawNetwork(width: number, height: number, safe: Rect, avoid: Rect[], labels: Rect[]): void {
-    const { nodes, edges } = buildNetwork({ width, height, safe, avoid, labels, count: width < 700 ? 6 : width < 1100 ? 10 : 16 });
+    const { nodes, edges } = buildNetwork({ width, height, safe, avoid, labels, count: width < 700 ? 4 : width < 1100 ? 7 : 10 });
     const svg = this.net;
     svg.setAttribute('viewBox', `0 0 ${Math.round(width)} ${Math.round(height)}`);
     svg.replaceChildren();
