@@ -1,38 +1,45 @@
 /**
- * Graph colours come from the CSS design tokens (styles/tokens.css), so the
- * WebGL scene, the SVG fallback, the legend and the glyphs always match and a
- * theme can re-brand them through the --imedix-graph-* hooks.
+ * Graph colours come from the CSS design tokens (styles/tokens.css), so the 3D
+ * spheres, the CSS fallback, the legend and the glyphs always match, and a theme
+ * can re-brand them through the --imedix-* hooks.
  */
 export interface GraphPalette {
-  drug: string;
-  disease: string;
-  topic: string;
+  /** three material colours per category family */
+  drug: string[];
+  disease: string[];
+  topic: string[];
+  other: string[];
   edge: string;
-  /** colour for unknown future entity types */
-  other: string;
+  /** hero background (fog colour for depth) */
+  background: string;
 }
 
 /** Used only when tokens are unavailable (e.g. unit tests without CSS). */
 export const FALLBACK_PALETTE: GraphPalette = {
-  drug: '#4fd8c4',
-  disease: '#f59dbb',
-  topic: '#f7c55f',
-  edge: '#8fb0d0',
-  other: '#b8a6ff',
+  drug: ['#2f80ed', '#22b5d6', '#4f6ff0'],
+  disease: ['#f2705d', '#f59a4a', '#e2574c'],
+  topic: ['#b3a4f0', '#c9aee9', '#9fb2f4'],
+  other: ['#2fa58f', '#2fa58f', '#2fa58f'],
+  edge: '#8ea3ba',
+  background: '#f2f4f7',
 };
 
 export function readPalette(el: Element): GraphPalette {
   const style = getComputedStyle(el);
   const read = (name: string, fallback: string) => style.getPropertyValue(name).trim() || fallback;
+  const family = (cat: keyof Pick<GraphPalette, 'drug' | 'disease' | 'topic'>) =>
+    [1, 2, 3].map((k) => read(`--ku-cat-${cat}-sphere-${k}`, FALLBACK_PALETTE[cat][k - 1]));
   return {
-    drug: read('--ku-drug', FALLBACK_PALETTE.drug),
-    disease: read('--ku-disease', FALLBACK_PALETTE.disease),
-    topic: read('--ku-topic', FALLBACK_PALETTE.topic),
+    drug: family('drug'),
+    disease: family('disease'),
+    topic: family('topic'),
+    other: FALLBACK_PALETTE.other.map(() => read('--ku-cat-other-sphere-1', FALLBACK_PALETTE.other[0])),
     edge: read('--ku-edge', FALLBACK_PALETTE.edge),
-    other: read('--ku-cat-other-bright', FALLBACK_PALETTE.other),
+    background: read('--ku-hero-bg', FALLBACK_PALETTE.background),
   };
 }
 
-export function colourFor(palette: GraphPalette, type: string): string {
-  return type === 'drug' || type === 'disease' || type === 'topic' ? palette[type] : palette.other;
+export function colourFor(palette: GraphPalette, type: string, variant = 0): string {
+  const family = type === 'drug' || type === 'disease' || type === 'topic' ? palette[type] : palette.other;
+  return family[variant % family.length];
 }

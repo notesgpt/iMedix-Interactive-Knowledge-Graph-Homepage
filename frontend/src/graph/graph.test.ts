@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { budgetFor, sampleNodes, stages } from './sampling';
-import { computeLayout } from './layout';
+import { halfHeightAt, layoutSpheres, matchSlots, pickSpheres, sphereCount, toWorld, type SafeBox, type View } from './sphere-layout';
 import { neighbours } from '../data/graph';
 import { realGraph, tinyGraph } from '../test-fixture';
 
@@ -17,47 +16,85 @@ describe('decodeGraph', () => {
   });
 });
 
-describe('sampling', () => {
-  const g = realGraph();
-  it('respects the budget per tier', () => {
-    expect(sampleNodes(g, budgetFor('high', 640))).toHaveLength(640);
-    expect(sampleNodes(g, budgetFor('medium', 640))).toHaveLength(340);
-    expect(sampleNodes(g, budgetFor('low', 640))).toHaveLength(180);
-    expect(budgetFor('none', 640)).toBe(0);
-  });
-  it('prioritises topics, then diseases', () => {
-    const order = sampleNodes(g, 200);
-    const types = order.map((i) => g.nodes[i].type);
-    const topics = g.counts.topic;
-    expect(types.slice(0, topics).every((t) => t === 'topic')).toBe(true);
-    expect(types.slice(topics, topics + 96).every((t) => t === 'disease')).toBe(true);
-  });
-  it('is deterministic', () => {
-    expect(sampleNodes(g, 300)).toEqual(sampleNodes(g, 300));
-  });
-  it('splits into progressive stages covering every node once', () => {
-    const order = sampleNodes(g, 300);
-    const s = stages(order);
-    expect(s[0].length).toBeGreaterThan(100);
-    expect(s.flat()).toEqual(order);
+describe('sphereCount', () => {
+  it('shows fewer spheres on smaller screens and weaker GPUs', () => {
+    expect(sphereCount(1440, 'high')).toBe(40);
+    expect(sphereCount(820, 'high')).toBe(26);
+    expect(sphereCount(390, 'high')).toBe(16);
+    expect(sphereCount(1440, 'low')).toBe(26);
   });
 });
 
-describe('layout', () => {
+describe('pickSpheres', () => {
   const g = realGraph();
-  const pos = computeLayout(g);
-  it('produces finite, bounded, deterministic coordinates', () => {
-    expect(pos).toHaveLength(g.nodes.length * 3);
-    for (const v of pos) {
-      expect(Number.isFinite(v)).toBe(true);
-      expect(Math.abs(v)).toBeLessThan(160);
-    }
-    expect(computeLayout(g)).toEqual(pos);
+  const items = pickSpheres(g, 40);
+  it('returns the requested number of real, distinct entities', () => {
+    expect(items).toHaveLength(40);
+    expect(new Set(items.map((i) => i.index)).size).toBe(40);
+    for (const it of items) expect(g.nodes[it.index].type).toBe(it.type);
   });
-  it('places topic members near their topic', () => {
-    const t = g.byId.get('topic:blood-pressure')!;
-    const m = g.byId.get('disease:hypertension')!;
-    const d = Math.hypot(pos[t * 3] - pos[m * 3], pos[t * 3 + 1] - pos[m * 3 + 1], pos[t * 3 + 2] - pos[m * 3 + 2]);
-    expect(d).toBeLessThan(30);
+  it('mixes all three categories, with topics as the largest hubs', () => {
+    const by = (t: string) => items.filter((i) => i.type === t);
+    expect(by('topic').length).toBeGreaterThanOrEqual(4);
+    expect(by('disease').length).toBeGreaterThan(0);
+    expect(by('drug').length).toBeGreaterThan(0);
+    const minTopic = Math.min(...by('topic').map((i) => i.radius));
+    const avgOther = [...by('disease'), ...by('drug')].reduce((s, i) => s + i.radius, 0) / (items.length - by('topic').length);
+    expect(minTopic).toBeGreaterThan(avgOther);
+    expect(items.filter((i) => i.featured).every((i) => i.type === 'topic')).toBe(true);
+  });
+  it('is deterministic', () => {
+    expect(pickSpheres(g, 26)).toEqual(pickSpheres(g, 26));
+  });
+});
+
+describe('layoutSpheres', () => {
+  const g = realGraph();
+  const items = pickSpheres(g, 40);
+  const view: View = { aspect: 1.6, fovDeg: 38, camDist: 120 };
+  const safe: SafeBox = { l: -0.5, r: 0.5, t: 0.55, b: -0.45 };
+  const hud: SafeBox = { l: -0.95, r: -0.4, t: -0.82, b: -0.97 };
+  const placements = layoutSpheres(items, view, safe, [hud]);
+
+  it('places every sphere at a finite position', () => {
+    expect(placements).toHaveLength(items.length);
+    for (const p of placements) for (const v of [p.nx, p.ny, p.z]) expect(Number.isFinite(v)).toBe(true);
+  });
+  it('keeps the text column and the HUD clear', () => {
+    placements.forEach((p, k) => {
+      const r = items[k].radius / halfHeightAt(p.z, view);
+      for (const box of [safe, hud]) {
+        const dx = Math.max(box.l * view.aspect - p.nx * view.aspect, 0, p.nx * view.aspect - box.r * view.aspect);
+        const dy = Math.max(box.b - p.ny, 0, p.ny - box.t);
+        expect(Math.hypot(dx, dy)).toBeGreaterThan(r);
+      }
+    });
+  });
+  it('uses several depth layers', () => {
+    const zs = placements.map((p) => p.z);
+    expect(Math.max(...zs) - Math.min(...zs)).toBeGreaterThan(40);
+  });
+  it('is deterministic', () => {
+    expect(layoutSpheres(items, view, safe, [hud])).toEqual(placements);
+  });
+  it('maps placements into the visible frustum', () => {
+    const w = toWorld(placements[0], view);
+    expect(Math.abs(w.y)).toBeLessThanOrEqual(halfHeightAt(w.z, view) * 1.05);
+  });
+});
+
+describe('matchSlots', () => {
+  const safe: SafeBox = { l: -0.5, r: 0.5, t: 0.55, b: -0.45 };
+  it('puts matches beside the search block on wide screens', () => {
+    const slots = matchSlots(safe, { aspect: 1.6, fovDeg: 38, camDist: 120 }, 2);
+    expect(slots).toHaveLength(2);
+    expect(slots[0].nx).toBeGreaterThan(safe.r);
+    expect(slots[1].nx).toBeLessThan(safe.l);
+  });
+  it('puts matches above or below the text on portrait screens', () => {
+    const portrait: SafeBox = { l: -0.95, r: 0.95, t: 0.6, b: -0.5 };
+    for (const s of matchSlots(portrait, { aspect: 0.46, fovDeg: 38, camDist: 120 }, 6)) {
+      expect(s.ny > portrait.t || s.ny < portrait.b).toBe(true);
+    }
   });
 });

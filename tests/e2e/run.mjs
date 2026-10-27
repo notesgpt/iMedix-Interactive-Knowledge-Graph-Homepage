@@ -106,11 +106,22 @@ console.log('Desktop');
     assert(/Accupril/.test(sub) && /quinapril/.test(sub), sub);
   });
 
-  await test('search highlights the graph and draws the connector', async () => {
+  await test('search brings the best match beside the search block, labelled, with a connector', async () => {
     await page.locator('#ku-q').fill('hypertension');
-    await page.waitForTimeout(2200);
+    await page.waitForTimeout(2600);
     await page.screenshot({ path: SHOTS + '/search.png' });
-    assert(await page.locator('.ku-label--match').count() >= 1, 'no match label');
+    const r = await page.evaluate(() => {
+      const best = [...document.querySelectorAll('.ku-label[data-kind="best"]')].find((l) => l.style.opacity === '1');
+      if (!best) return null;
+      const field = document.querySelector('.ku-search__field').getBoundingClientRect();
+      const stage = document.querySelector('[data-ku-stage]').getBoundingClientRect();
+      const [x, y] = best.dataset.anchor.split(' ').map(Number);
+      return { name: best.querySelector('.ku-label__name').textContent, x: stage.left + x, y: stage.top + y, field: [field.left, field.right, field.top, field.bottom] };
+    });
+    assert(r, 'no best-match label');
+    assert(r.name === 'Hypertension', 'best match ' + r.name);
+    assert(r.x > r.field[1] || r.x < r.field[0], 'best match is not beside the search field');
+    assert(Math.abs(r.y - (r.field[2] + r.field[3]) / 2) < 260, 'best match is far from the search field');
     assert(await page.locator('.ku-connector.is-on').count() === 1, 'connector not drawn');
   });
 
@@ -133,25 +144,23 @@ console.log('Desktop');
     await page.goBack();
   });
 
-  await test('clicking a topic in the map opens its details card', async () => {
+  await test('clicking a topic sphere opens its details card', async () => {
     await page.waitForSelector('[data-ku-stage].is-ready canvas');
-    await page.locator('[data-ku-action="motion"]').click(); // stop rotation for a stable click
-    await page.waitForTimeout(800);
+    await page.locator('#ku-q').fill('');
+    await page.keyboard.press('Escape');
+    await page.locator('[data-ku-action="motion"]').click(); // stop the drift for a stable click
+    await page.waitForTimeout(1500);
     const target = await page.evaluate(() => {
-      const inner = document.querySelector('.ku-hero__inner').getBoundingClientRect();
-      for (const el of document.querySelectorAll('.ku-label:not(.ku-label--match)')) {
-        if (Number(el.style.opacity) < 0.3) continue;
-        const m = /translate\(([-\d.]+)px, ([-\d.]+)px\)/.exec(el.style.transform);
-        if (!m) continue;
-        const stage = document.querySelector('[data-ku-stage]').getBoundingClientRect();
-        const x = stage.left + Number(m[1]);
-        const y = stage.top + Number(m[2]) + 18;
-        const outside = x < inner.left - 20 || x > inner.right + 20 || y < inner.top - 20 || y > inner.bottom + 20;
-        if (outside && y > 80 && y < window.innerHeight - 120 && x > 60 && x < window.innerWidth - 60) return { x, y, name: el.textContent };
+      const stage = document.querySelector('[data-ku-stage]').getBoundingClientRect();
+      for (const el of document.querySelectorAll('.ku-label[data-kind="featured"]')) {
+        if (el.style.opacity !== '1' || !el.dataset.anchor) continue;
+        const [x, y, r] = el.dataset.anchor.split(' ').map(Number);
+        if (r < 12) continue;
+        return { x: stage.left + x, y: stage.top + y, name: el.querySelector('.ku-label__name').textContent };
       }
       return null;
     });
-    assert(target, 'no clickable topic outside the text block');
+    assert(target, 'no labelled topic sphere');
     await page.mouse.click(target.x, target.y);
     await page.waitForSelector('[data-ku-card]:not([hidden])', { timeout: 3000 });
     const title = await page.locator('[data-ku-card-title]').textContent();
@@ -237,10 +246,24 @@ console.log('Desktop');
     assert(r.overlaps === 0, r.overlaps + ' overlapping labels');
   });
 
-  await test('categories are colour-distinct on dark and light surfaces', async () => {
+  await test('labels never cover the search block or the HUD', async () => {
+    const hits = await page.evaluate(() => {
+      const boxes = ['.ku-search', '.ku-legend', '.ku-controls'].map((s) => document.querySelector(s).getBoundingClientRect());
+      return [...document.querySelectorAll('.ku-label')]
+        .filter((l) => l.style.opacity === '1' && l.dataset.kind !== 'selected' && l.dataset.kind !== 'hover')
+        .filter((l) => {
+          const a = l.getBoundingClientRect();
+          return boxes.some((b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom);
+        })
+        .map((l) => l.textContent);
+    });
+    assert(hits.length === 0, hits.join(', '));
+  });
+
+  await test('categories are colour-distinct: sphere colours and text colours', async () => {
     const c = await page.evaluate(() => {
       const s = getComputedStyle(document.querySelector('.imedix-ku'));
-      return ['drug', 'disease', 'topic'].flatMap((k) => [s.getPropertyValue(`--ku-cat-${k}-bright`).trim(), s.getPropertyValue(`--ku-cat-${k}-strong`).trim()]);
+      return ['drug', 'disease', 'topic'].flatMap((k) => [s.getPropertyValue(`--ku-cat-${k}-sphere-1`).trim(), s.getPropertyValue(`--ku-cat-${k}-strong`).trim()]);
     });
     assert(new Set(c).size === 6 && c.every(Boolean), c.join());
   });
@@ -278,10 +301,12 @@ console.log('No WebGL');
 {
   const noGl = await chromium.launch({ args: ['--disable-webgl', '--disable-3d-apis'] });
   const { page, errors, context } = await open(noGl);
-  await test('2D SVG fallback replaces the WebGL scene', async () => {
-    await page.waitForSelector('svg.ku-fallback', { timeout: 10000 });
+  await test('CSS sphere fallback replaces the WebGL scene; statistics stay', async () => {
+    await page.waitForSelector('.ku-orbs .ku-orb', { timeout: 10000 });
     assert((await page.locator('canvas').count()) === 0, 'canvas present');
-    assert(await page.locator('[data-ku-hud]').isHidden(), 'HUD shown without controls to drive');
+    assert((await page.locator('.ku-orb').count()) >= 12, 'too few orbs');
+    assert(await page.locator('.ku-legend').isVisible(), 'statistics hidden');
+    assert(await page.locator('.ku-controls').isHidden(), 'map controls shown without a map to drive');
   });
   await test('search works without WebGL', async () => {
     await page.locator('#ku-q').fill('psoriasis');
@@ -357,15 +382,24 @@ console.log('Mobile');
     const h = await page.evaluate(() => [document.querySelector('.ku-search__input').getBoundingClientRect().height, document.querySelector('.ku-search__submit').getBoundingClientRect().height]);
     assert(h.every((x) => x >= 44), h.join());
   });
-  await test('touch devices get an explicit “Explore the map” mode', async () => {
-    const btn = page.locator('[data-ku-action="explore"]');
-    assert(await btn.isVisible(), 'explore button hidden');
-    await btn.tap();
-    assert((await page.locator('.ku-hero').getAttribute('class')).includes('is-exploring'), 'not exploring');
-    await page.screenshot({ path: SHOTS + '/mobile-explore.png' });
-    await btn.tap();
+  await test('mobile search: best match surfaces outside the text column, labelled', async () => {
+    await page.locator('#ku-q').fill('asthma');
+    await page.waitForTimeout(2600);
+    await page.screenshot({ path: SHOTS + '/mobile-search.png' });
+    const r = await page.evaluate(() => {
+      const best = [...document.querySelectorAll('.ku-label[data-kind="best"]')].find((l) => l.style.opacity === '1');
+      if (!best) return null;
+      const inner = document.querySelector('.ku-hero__inner').getBoundingClientRect();
+      const a = best.getBoundingClientRect();
+      return { name: best.querySelector('.ku-label__name').textContent, overlaps: a.top < inner.bottom && inner.top < a.bottom && a.left < inner.right && inner.left < a.right };
+    });
+    assert(r, 'no best-match label');
+    assert(r.name === 'Asthma', r.name);
+    assert(!r.overlaps, 'label covers the text column');
+    await page.locator('#ku-q').fill('');
+    await page.keyboard.press('Escape');
   });
-  await test('mobile budget samples fewer nodes (medium tier)', async () => {
+  await test('mobile stays responsive (a frame completes within 100 ms)', async () => {
     // sanity: page stays responsive — a frame completes within 100 ms
     const t = await page.evaluate(() => new Promise((r) => { const s = performance.now(); requestAnimationFrame(() => r(performance.now() - s)); }));
     assert(t < 100, String(t));

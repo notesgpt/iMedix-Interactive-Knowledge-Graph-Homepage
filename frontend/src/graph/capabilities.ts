@@ -9,6 +9,9 @@ interface NavigatorHints {
 
 /** Rendering tier from WebGL support and device hints. 'none' → 2D fallback. */
 export function detectTier(): Tier {
+  // QA override (?ku-quality=high|medium|low|none) to inspect every material tier.
+  const forced = new URLSearchParams(window.location.search).get('ku-quality');
+  if (forced === 'high' || forced === 'medium' || forced === 'low' || forced === 'none') return forced;
   const nav = navigator as Navigator & NavigatorHints;
   if (nav.connection?.saveData) return 'none';
 
@@ -26,6 +29,10 @@ export function detectTier(): Tier {
     gl = null;
   }
   if (!gl) return 'none';
+  // Software rasterisers (VMs/VDI without a GPU) pass the caveat check; detect by name.
+  const info = gl.getExtension('WEBGL_debug_renderer_info');
+  const renderer = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : '';
+  if (/swiftshader|llvmpipe|software|softpipe/i.test(renderer)) tier = 'low';
   gl.getExtension('WEBGL_lose_context')?.loseContext();
 
   const memory = nav.deviceMemory ?? 8;

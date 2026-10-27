@@ -92,10 +92,6 @@ $ku_types  = array(
 				<li class="ku-legend__item ku-legend__item--topic"><span class="ku-glyph ku-glyph--topic" aria-hidden="true"></span><?php esc_html_e( 'Editorial topics', 'imedix-ku' ); ?> <strong><?php echo esc_html( number_format_i18n( (int) $ku_counts['topic'] ) ); ?></strong></li>
 			</ul>
 			<div class="ku-controls" role="group" aria-label="<?php esc_attr_e( 'Map controls', 'imedix-ku' ); ?>">
-				<button type="button" class="ku-btn ku-btn--explore" data-ku-action="explore">
-					<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
-					<span data-ku-label-on="<?php esc_attr_e( 'Done exploring', 'imedix-ku' ); ?>" data-ku-label-off="<?php esc_attr_e( 'Explore the map', 'imedix-ku' ); ?>"><?php esc_html_e( 'Explore the map', 'imedix-ku' ); ?></span>
-				</button>
 				<button type="button" class="ku-btn ku-btn--icon" data-ku-action="zoom-in" aria-label="<?php esc_attr_e( 'Zoom in', 'imedix-ku' ); ?>">
 					<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg>
 				</button>

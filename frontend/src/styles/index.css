@@ -16,7 +16,7 @@
   font-size: 16px;
   line-height: 1.55;
   color: var(--ku-ink);
-  background: var(--ku-bg-0);
+  background: var(--ku-hero-bg);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
@@ -178,7 +178,7 @@
   padding: 7px 14px 7px 12px;
   border: 1px solid var(--ku-hairline-strong);
   border-radius: 999px;
-  background: rgb(var(--ku-navy-deep-rgb) / 0.6);
+  background: var(--ku-panel);
   font-size: 14px;
   font-weight: var(--ku-weight-semibold);
   color: var(--ku-ink);
@@ -341,7 +341,7 @@
 .ku-filter input:checked + span {
   background: var(--ku-selected-bg);
   border-color: transparent;
-  color: var(--ku-bg-0);
+  color: var(--ku-selected-ink);
 }
 .ku-filter input:focus-visible + span {
   outline: 2px solid var(--ku-focus);
@@ -418,12 +418,12 @@
   color: var(--ku-badge-ink, var(--ku-ink));
 }
 .ku-opt__type[data-type='drug'] {
-  --ku-badge-ink: var(--ku-cat-drug-bright);
+  --ku-badge-ink: var(--ku-cat-drug-strong);
   --ku-badge-line: rgb(var(--ku-cat-drug-rgb) / 0.45);
   --ku-badge-bg: rgb(var(--ku-cat-drug-rgb) / 0.1);
 }
 .ku-opt__type[data-type='disease'] {
-  --ku-badge-ink: var(--ku-cat-disease-bright);
+  --ku-badge-ink: var(--ku-cat-disease-strong);
   --ku-badge-line: rgb(var(--ku-cat-disease-rgb) / 0.45);
   --ku-badge-bg: rgb(var(--ku-cat-disease-rgb) / 0.1);
 }
@@ -473,7 +473,7 @@
 }
 .ku-chip:hover {
   border-color: var(--ku-hairline-strong);
-  background: rgb(var(--ku-navy-raised-rgb) / 0.85);
+  background: var(--ku-panel-hover);
   color: var(--ku-ink);
 }
 
@@ -507,7 +507,7 @@
   font-size: 14px;
   font-weight: var(--ku-weight-medium);
   color: var(--ku-ink);
-  background: rgb(var(--ku-navy-deep-rgb) / 0.82);
+  background: var(--ku-panel);
   border: 1px solid var(--ku-hairline-strong);
   border-radius: 999px;
 }
@@ -521,19 +521,22 @@
   font-variant-numeric: tabular-nums;
 }
 .ku-legend__item--drug strong {
-  color: var(--ku-cat-drug-bright);
+  color: var(--ku-cat-drug-strong);
 }
 .ku-legend__item--disease strong {
-  color: var(--ku-cat-disease-bright);
+  color: var(--ku-cat-disease-strong);
 }
 .ku-legend__item--topic strong {
-  color: var(--ku-cat-topic-bright);
+  color: var(--ku-cat-topic-strong);
+}
+.ku-controls[hidden] {
+  display: none !important;
 }
 .ku-controls {
   display: flex;
   gap: 6px;
   padding: 4px;
-  background: rgb(var(--ku-navy-deep-rgb) / 0.55);
+  background: var(--ku-panel);
   border: 1px solid var(--ku-hairline);
   border-radius: 999px;
 }
@@ -604,13 +607,13 @@
   color: var(--ku-ink-2);
 }
 .ku-tooltip[data-type='drug'] {
-  --ku-tip-accent: var(--ku-cat-drug-bright);
+  --ku-tip-accent: var(--ku-cat-drug-strong);
 }
 .ku-tooltip[data-type='disease'] {
-  --ku-tip-accent: var(--ku-cat-disease-bright);
+  --ku-tip-accent: var(--ku-cat-disease-strong);
 }
 .ku-tooltip[data-type='topic'] {
-  --ku-tip-accent: var(--ku-cat-topic-bright);
+  --ku-tip-accent: var(--ku-cat-topic-strong);
 }
 
 .ku-labels {
@@ -630,7 +633,7 @@
   gap: 7px;
   padding: 4px 10px 4px 8px;
   border-radius: 999px;
-  background: rgb(var(--ku-navy-deep-rgb) / 0.88);
+  background: var(--ku-panel-strong);
   border: 1px solid rgb(var(--ku-cat-topic-rgb) / 0.45);
   font-size: 13px;
   font-weight: var(--ku-weight-semibold);
@@ -646,7 +649,7 @@
   width: 7px;
   height: 7px;
   transform: rotate(45deg);
-  border: 1.5px solid var(--ku-cat-topic-bright);
+  border: 1.5px solid var(--ku-cat-topic-strong);
 }
 .ku-label--match::before {
   border: 0;
@@ -655,15 +658,15 @@
   transform: none;
 }
 .ku-label--match[data-type='drug'] {
-  --ku-match-accent: var(--ku-cat-drug-bright);
+  --ku-match-accent: var(--ku-cat-drug-strong);
 }
 .ku-label--match[data-type='disease'] {
-  --ku-match-accent: var(--ku-cat-disease-bright);
+  --ku-match-accent: var(--ku-cat-disease-strong);
 }
 .ku-label--match {
   border-color: var(--ku-match-accent, var(--ku-hairline-strong));
   font-size: 14px;
-  box-shadow: 0 0 0 4px rgb(var(--ku-navy-deep-rgb) / 0.35);
+  box-shadow: 0 6px 18px -8px rgb(var(--ku-shadow-rgb) / 0.35);
 }
 
 .ku-card {
@@ -725,20 +728,20 @@
   color: var(--ku-badge-ink, var(--ku-ink));
 }
 .ku-card[data-type='drug'] {
-  --ku-card-accent: var(--ku-cat-drug-bright);
-  --ku-badge-ink: var(--ku-cat-drug-bright);
+  --ku-card-accent: var(--ku-cat-drug-strong);
+  --ku-badge-ink: var(--ku-cat-drug-strong);
   --ku-badge-line: rgb(var(--ku-cat-drug-rgb) / 0.45);
   --ku-badge-bg: rgb(var(--ku-cat-drug-rgb) / 0.1);
 }
 .ku-card[data-type='disease'] {
-  --ku-card-accent: var(--ku-cat-disease-bright);
-  --ku-badge-ink: var(--ku-cat-disease-bright);
+  --ku-card-accent: var(--ku-cat-disease-strong);
+  --ku-badge-ink: var(--ku-cat-disease-strong);
   --ku-badge-line: rgb(var(--ku-cat-disease-rgb) / 0.45);
   --ku-badge-bg: rgb(var(--ku-cat-disease-rgb) / 0.1);
 }
 .ku-card[data-type='topic'] {
-  --ku-card-accent: var(--ku-cat-topic-bright);
-  --ku-badge-ink: var(--ku-cat-topic-bright);
+  --ku-card-accent: var(--ku-cat-topic-strong);
+  --ku-badge-ink: var(--ku-cat-topic-strong);
   --ku-badge-line: rgb(var(--ku-cat-topic-rgb) / 0.45);
   --ku-badge-bg: rgb(var(--ku-cat-topic-rgb) / 0.1);
 }
@@ -1099,7 +1102,7 @@
   margin: 0;
   padding: 8px 14px;
   border-radius: 999px;
-  background: rgb(var(--ku-navy-deep-rgb) / 0.88);
+  background: var(--ku-panel-strong);
   border: 1px solid var(--ku-hairline-strong);
   font-size: 13px;
   color: var(--ku-ink);
@@ -1775,5 +1778,206 @@
     min-height: auto;
     padding-top: 120px;
     padding-bottom: 190px;
+  }
+}
+
+/* ============================================================ Light hero */
+/* The hero is a light "specimen gallery": the semantic tokens used by every hero
+   component are re-pointed here, so search, chips, HUD, labels and the details
+   card all switch together. Ticker and library keep their own surfaces. */
+.ku-hero {
+  --ku-ink: var(--ku-hero-ink);
+  --ku-ink-2: var(--ku-hero-ink-2);
+  --ku-ink-3: var(--ku-hero-ink-3);
+  --ku-accent-on-dark: var(--ku-hero-ink);
+  --ku-glass: rgb(var(--ku-white-rgb) / 0.9);
+  --ku-glass-strong: rgb(var(--ku-white-rgb) / 0.97);
+  --ku-panel: rgb(var(--ku-white-rgb) / 0.88);
+  --ku-panel-strong: var(--ku-white);
+  --ku-panel-hover: var(--ku-white);
+  --ku-hairline: var(--ku-hero-line);
+  --ku-hairline-strong: #b4c3d2;
+  --ku-hover-on-dark: rgb(var(--ku-navy-rgb) / 0.06);
+  --ku-focus: var(--ku-blue);
+  --ku-selected-bg: var(--ku-navy);
+  --ku-selected-ink: var(--ku-white);
+  --ku-shadow-rgb: var(--ku-navy-rgb);
+  --ku-action: var(--ku-navy);
+  --ku-action-hover: #1e3a5a;
+  --ku-action-ink: var(--ku-white);
+  color: var(--ku-ink);
+  background:
+    radial-gradient(60% 55% at 50% 45%, var(--ku-white) 0%, rgb(var(--ku-white-rgb) / 0) 70%),
+    radial-gradient(80% 60% at 50% 110%, rgb(var(--ku-mist-rgb) / 0.9) 0%, rgb(var(--ku-mist-rgb) / 0) 70%),
+    var(--ku-hero-bg);
+}
+.ku-hero__veil {
+  /* Soft porcelain halo behind the text column; spheres are laid out around it. */
+  background: radial-gradient(42% 40% at 50% 48%, rgb(var(--ku-hero-bg-rgb) / 0.75) 0%, rgb(var(--ku-hero-bg-rgb) / 0) 100%);
+}
+.ku-search__field {
+  background: var(--ku-white);
+  box-shadow: 0 1px 2px rgb(var(--ku-navy-rgb) / 0.06), 0 22px 50px -28px rgb(var(--ku-navy-rgb) / 0.45);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.ku-search__field:focus-within {
+  border-color: var(--ku-blue);
+  box-shadow: 0 0 0 4px rgb(var(--ku-blue-rgb) / 0.18), 0 22px 50px -28px rgb(var(--ku-navy-rgb) / 0.45);
+}
+.ku-search__panel {
+  box-shadow: 0 30px 70px -30px rgb(var(--ku-navy-rgb) / 0.45);
+}
+.ku-opt[aria-selected='true'] {
+  background: rgb(var(--ku-blue-rgb) / 0.08);
+  box-shadow: inset 0 0 0 1.5px rgb(var(--ku-blue-rgb) / 0.55);
+}
+.ku-opt__name mark {
+  color: var(--ku-cat-drug-strong);
+}
+.ku-chip {
+  background: rgb(var(--ku-white-rgb) / 0.8);
+}
+.ku-connector path {
+  stroke: rgb(var(--ku-navy-rgb) / 0.45);
+}
+.ku-connector circle {
+  stroke: var(--ku-navy);
+}
+.ku-card {
+  box-shadow: 0 30px 80px -30px rgb(var(--ku-navy-rgb) / 0.45);
+}
+.ku-label {
+  border-color: var(--ku-hairline-strong);
+  box-shadow: 0 6px 18px -8px rgb(var(--ku-navy-rgb) / 0.3);
+}
+.ku-label::before {
+  border-color: var(--ku-cat-topic-strong);
+}
+.ku-label__type {
+  font-weight: var(--ku-weight-medium);
+  color: var(--ku-ink-3);
+}
+
+/* ======================================================== Sphere labels */
+/* Contextual only (selected, hovered, search matches, a few featured hubs);
+   solid white cards with navy text — 14.6 : 1 — never faded. */
+.ku-labels .ku-label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 6px 12px 7px 26px;
+  border-radius: 12px;
+  border: 1px solid var(--ku-hero-line);
+  background: var(--ku-white);
+  box-shadow: 0 10px 24px -14px rgb(var(--ku-navy-rgb) / 0.45);
+  color: var(--ku-hero-ink);
+  letter-spacing: normal;
+  text-transform: none;
+  text-shadow: none;
+}
+.ku-labels .ku-label::before {
+  content: '';
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--ku-label-cat, var(--ku-blue));
+  transform: translateY(-50%);
+}
+.ku-labels .ku-label[data-type='drug'] {
+  --ku-label-cat: var(--ku-cat-drug-strong);
+}
+.ku-labels .ku-label[data-type='disease'] {
+  --ku-label-cat: var(--ku-cat-disease-strong);
+}
+.ku-labels .ku-label[data-type='disease']::before {
+  background: transparent;
+  border: 2.5px solid var(--ku-label-cat);
+}
+.ku-labels .ku-label[data-type='topic'] {
+  --ku-label-cat: var(--ku-cat-topic-strong);
+}
+.ku-labels .ku-label[data-type='topic']::before {
+  width: 8px;
+  height: 8px;
+  border-radius: 1px;
+  transform: translateY(-50%) rotate(45deg);
+}
+.ku-label__name {
+  font-size: 14px;
+  font-weight: var(--ku-weight-bold);
+  line-height: 1.25;
+  white-space: nowrap;
+}
+.ku-label__type {
+  font-size: 12px;
+  font-weight: var(--ku-weight-semibold);
+  line-height: 1.2;
+  color: var(--ku-label-cat, var(--ku-hero-ink-3));
+}
+.ku-labels .ku-label[data-kind='best'] {
+  border: 2px solid var(--ku-label-cat);
+  box-shadow: 0 0 0 4px rgb(var(--ku-white-rgb) / 0.7), 0 14px 28px -14px rgb(var(--ku-navy-rgb) / 0.5);
+}
+.ku-labels .ku-label[data-kind='best'] .ku-label__type::after {
+  content: ' · best match';
+  color: var(--ku-hero-ink-3);
+}
+.ku-labels .ku-label[data-kind='selected'] {
+  border-color: var(--ku-navy);
+  background: var(--ku-navy);
+  color: var(--ku-white);
+}
+.ku-labels .ku-label[data-kind='selected'] .ku-label__type {
+  color: var(--ku-mist);
+}
+.ku-labels .ku-label[data-kind='selected']::before {
+  box-shadow: 0 0 0 2px var(--ku-white);
+}
+
+/* ===================================================== CSS sphere fallback */
+.ku-orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.ku-orb {
+  position: absolute;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 28%, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0) 22%),
+    radial-gradient(circle at 50% 50%, var(--orb) 0%, var(--orb) 58%, color-mix(in srgb, var(--orb) 65%, #0b1726) 100%);
+  box-shadow: 0 22px 34px -22px rgb(var(--ku-navy-rgb) / 0.55);
+  transition: opacity var(--ku-dur-2) var(--ku-ease), filter var(--ku-dur-2) var(--ku-ease);
+}
+.ku-orb--drug {
+  background:
+    radial-gradient(circle at 34% 28%, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0) 22%),
+    repeating-linear-gradient(90deg, rgb(255 255 255 / 0) 0 9%, rgb(255 255 255 / 0.16) 9% 13%),
+    radial-gradient(circle at 50% 50%, var(--orb) 0%, var(--orb) 58%, color-mix(in srgb, var(--orb) 65%, #0b1726) 100%);
+}
+.ku-orb--topic {
+  background:
+    radial-gradient(circle at 34% 28%, rgb(255 255 255 / 0.95) 0, rgb(255 255 255 / 0) 24%),
+    conic-gradient(from 200deg at 60% 60%, color-mix(in srgb, var(--orb) 80%, #7fd3ff), var(--orb), color-mix(in srgb, var(--orb) 75%, #ffb3e1), var(--orb)),
+    var(--orb);
+  background-blend-mode: normal, soft-light, normal;
+}
+.ku-orb.is-dim {
+  opacity: 0.25;
+  filter: grayscale(0.6);
+}
+
+/* Phones: a band above the headline and one above the stacked HUD give the
+   spheres room to frame the text instead of hiding behind it. */
+@media (max-width: 760px) {
+  .ku-hero {
+    padding-top: 104px;
+    padding-bottom: 236px;
   }
 }

@@ -12,11 +12,11 @@ import { readConfig } from './config';
 import { loadGraph } from './data/graph';
 import { SearchCombobox } from './search/combobox';
 import { NewsTicker } from './ticker/ticker';
-import { budgetFor, sampleNodes, stages } from './graph/sampling';
-import { computeLayout } from './graph/layout';
+import { sphereCount } from './graph/sphere-layout';
+import { compositionBoxes } from './graph/stage-boxes';
 import { detectTier } from './graph/capabilities';
 import { mountFallback } from './graph/fallback';
-import { coarsePointer, onIdle, prefersReducedMotion } from './util/env';
+import { onIdle, prefersReducedMotion } from './util/env';
 import type { KGraph } from './types';
 
 function boot(): void {
@@ -88,11 +88,11 @@ function boot(): void {
   const hero = root.querySelector<HTMLElement>('.ku-hero');
   const stage = root.querySelector<HTMLElement>('[data-ku-stage]');
   if (hero && stage) {
-    whenVisible(hero, () => onIdle(() => void startGraph(hero, stage, graphPromise, bus, config.budget)));
+    whenVisible(hero, () => onIdle(() => void startGraph(hero, stage, graphPromise, bus)));
   }
 }
 
-async function startGraph(hero: HTMLElement, stage: HTMLElement, graphPromise: Promise<KGraph>, bus: Bus, desktopBudget: number): Promise<void> {
+async function startGraph(hero: HTMLElement, stage: HTMLElement, graphPromise: Promise<KGraph>, bus: Bus): Promise<void> {
   let graph: KGraph;
   try {
     graph = await graphPromise;
@@ -100,11 +100,15 @@ async function startGraph(hero: HTMLElement, stage: HTMLElement, graphPromise: P
     return; // No data: the static hero background remains.
   }
   const tier = detectTier();
-  const positions = computeLayout(graph);
-  const order = sampleNodes(graph, budgetFor(tier === 'none' ? 'low' : tier, desktopBudget));
-  const reducedMotion = prefersReducedMotion();
-
-  const fallback = () => mountFallback(stage, graph, positions, order.slice(0, 220), bus);
+  const count = sphereCount(window.innerWidth, tier === 'none' ? 'low' : tier);
+  const { safe, avoid } = compositionBoxes(hero, stage);
+  const fallback = () => {
+    // Static spheres: keep the entity statistics, drop the camera controls.
+    const hud = hero.querySelector<HTMLElement>('[data-ku-hud]');
+    hud?.querySelector<HTMLElement>('.ku-controls')?.setAttribute('hidden', '');
+    if (hud) hud.hidden = false;
+    return mountFallback(stage, graph, count, safe, avoid, bus);
+  };
   if (tier === 'none') {
     fallback();
     return;
@@ -117,11 +121,9 @@ async function startGraph(hero: HTMLElement, stage: HTMLElement, graphPromise: P
       stage,
       graph,
       bus,
-      positions,
-      stages: stages(order),
+      count,
       tier,
-      reducedMotion,
-      touch: coarsePointer(),
+      reducedMotion: prefersReducedMotion(),
       onFatal: () => {
         unmount?.();
         fallback();

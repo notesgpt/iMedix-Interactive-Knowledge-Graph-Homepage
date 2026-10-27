@@ -1,102 +1,58 @@
 /**
- * Static 2D constellation (inline SVG) used when WebGL is unavailable, when
- * the user asked for reduced data, or after a lost GPU context. Decorative
- * only: search and the crawlable lists below provide the actual navigation.
+ * CSS sphere fallback (no WebGL, Save-Data, or a lost GPU context): the same
+ * curated entities and composition as the 3D scene, drawn as shaded CSS orbs.
+ * Decorative only — search and the crawlable library provide the navigation.
  */
 import type { Bus } from '../bus';
 import type { KGraph } from '../types';
-import { neighbours } from '../data/graph';
 import { colourFor, readPalette } from './palette';
+import { halfHeightAt, layoutSpheres, pickSpheres, type SafeBox, type View } from './sphere-layout';
 
-const NS = 'http://www.w3.org/2000/svg';
-
-export function mountFallback(stage: HTMLElement, graph: KGraph, positions: Float32Array, order: number[], bus: Bus): () => void {
-  stage.querySelector('svg')?.remove();
+export function mountFallback(stage: HTMLElement, graph: KGraph, count: number, safe: () => SafeBox, avoid: () => SafeBox[], bus: Bus): () => void {
+  stage.querySelector('.ku-orbs')?.remove();
   const palette = readPalette(stage);
-  const svg = document.createElementNS(NS, 'svg');
-  svg.setAttribute('viewBox', '-120 -70 240 140');
-  svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
-  svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('focusable', 'false');
-  svg.classList.add('ku-fallback');
+  const items = pickSpheres(graph, Math.min(count, 28));
+  const layer = document.createElement('div');
+  layer.className = 'ku-orbs';
+  layer.setAttribute('aria-hidden', 'true');
+  const orbs = items.map((it) => {
+    const el = document.createElement('span');
+    el.className = `ku-orb ku-orb--${it.type}`;
+    el.style.setProperty('--orb', colourFor(palette, it.type, it.variant));
+    layer.append(el);
+    return el;
+  });
+  stage.append(layer);
 
-  const shown = new Set(order);
-  const edges = document.createElementNS(NS, 'g');
-  edges.setAttribute('stroke', palette.edge);
-  edges.setAttribute('stroke-width', '0.12');
-  edges.setAttribute('opacity', '0.35');
-  for (const e of graph.edges) {
-    if (!shown.has(e.source) || !shown.has(e.target)) continue;
-    const l = document.createElementNS(NS, 'line');
-    l.setAttribute('x1', positions[e.source * 3].toFixed(1));
-    l.setAttribute('y1', (-positions[e.source * 3 + 1]).toFixed(1));
-    l.setAttribute('x2', positions[e.target * 3].toFixed(1));
-    l.setAttribute('y2', (-positions[e.target * 3 + 1]).toFixed(1));
-    edges.append(l);
-  }
-  svg.append(edges);
-
-  const marks = new Map<number, SVGElement>();
-  const nodes = document.createElementNS(NS, 'g');
-  for (const i of order) {
-    const n = graph.nodes[i];
-    const x = positions[i * 3];
-    const y = -positions[i * 3 + 1];
-    const depth = 0.55 + 0.45 * Math.max(0, Math.min(1, (positions[i * 3 + 2] + 90) / 180));
-    let el: SVGElement;
-    if (n.type === 'topic') {
-      el = document.createElementNS(NS, 'rect');
-      el.setAttribute('x', (x - 1.1).toFixed(2));
-      el.setAttribute('y', (y - 1.1).toFixed(2));
-      el.setAttribute('width', '2.2');
-      el.setAttribute('height', '2.2');
-      el.setAttribute('transform', `rotate(45 ${x.toFixed(2)} ${y.toFixed(2)})`);
-      el.setAttribute('fill', 'none');
-      el.setAttribute('stroke', palette.topic);
-      el.setAttribute('stroke-width', '0.35');
-    } else {
-      el = document.createElementNS(NS, 'circle');
-      el.setAttribute('cx', x.toFixed(2));
-      el.setAttribute('cy', y.toFixed(2));
-      el.setAttribute('r', n.type === 'disease' ? '0.75' : '0.55');
-      if (n.type === 'disease') {
-        el.setAttribute('fill', 'none');
-        el.setAttribute('stroke', palette.disease);
-        el.setAttribute('stroke-width', '0.3');
-      } else {
-        el.setAttribute('fill', colourFor(palette, n.type));
-      }
-    }
-    el.setAttribute('opacity', depth.toFixed(2));
-    el.dataset.base = depth.toFixed(2);
-    marks.set(i, el);
-    nodes.append(el);
-  }
-  svg.append(nodes);
-  stage.append(svg);
+  const draw = () => {
+    const w = Math.max(1, stage.clientWidth);
+    const h = Math.max(1, stage.clientHeight);
+    const view: View = { aspect: w / h, fovDeg: 38, camDist: 120 };
+    const placements = layoutSpheres(items, view, safe(), avoid());
+    placements.forEach((p, k) => {
+      const d = (items[k].radius / halfHeightAt(p.z, view)) * h;
+      const el = orbs[k];
+      el.style.width = el.style.height = `${d.toFixed(1)}px`;
+      el.style.left = `${(((p.nx + 1) / 2) * w - d / 2).toFixed(1)}px`;
+      el.style.top = `${(((1 - p.ny) / 2) * h - d / 2).toFixed(1)}px`;
+      el.style.zIndex = String(Math.round(p.z + 100));
+      el.style.opacity = p.z < -40 ? '0.75' : '1';
+    });
+  };
+  draw();
+  const ro = new ResizeObserver(draw);
+  ro.observe(stage);
   stage.classList.add('is-ready');
 
   const highlight = (ids: string[]) => {
-    const strong = new Set<number>();
-    const soft = new Set<number>();
-    for (const id of ids) {
-      const i = graph.byId.get(id);
-      if (i === undefined) continue;
-      strong.add(i);
-      neighbours(graph, i, 'in_topic').forEach((j) => soft.add(j));
-    }
-    marks.forEach((el, i) => {
-      const base = el.dataset.base ?? '1';
-      el.setAttribute('opacity', !strong.size ? base : strong.has(i) ? '1' : soft.has(i) ? '0.7' : '0.12');
-    });
+    const set = new Set(ids.map((id) => graph.byId.get(id)));
+    items.forEach((it, k) => orbs[k].classList.toggle('is-dim', set.size > 0 && !set.has(it.index)));
   };
-  const offs = [
-    bus.on('search:results', ({ ids }) => highlight(ids)),
-    bus.on('search:clear', () => highlight([])),
-  ];
+  const offs = [bus.on('search:results', ({ ids }) => highlight(ids)), bus.on('search:clear', () => highlight([]))];
   bus.emit('graph:ready', { mode: 'fallback' });
   return () => {
     offs.forEach((off) => off());
-    svg.remove();
+    ro.disconnect();
+    layer.remove();
   };
 }

@@ -75,35 +75,49 @@
   --ku-option-active-ring: rgb(var(--ku-steel-rgb) / 0.42);
   --ku-focus: var(--ku-steel); /* 8.0 : 1 on navy */
   --ku-focus-on-light: var(--ku-blue); /* 6.4 : 1 on white */
-  /* Content categories. iMedix navy/blue stay reserved for brand chrome and actions;
-     each content category gets its own hue (teal / rose / amber), used identically in the graph, legend,
-     search, cards and library, and always paired with its shape (dot / ring / diamond)
-     and a text label, so colour is never the only cue.
-       bright: on navy (≥ 7.6 : 1)   strong: text on white / tint (≥ 5.4 : 1)   tint: light surface */
-  --ku-cat-drug-bright: var(--imedix-cat-drug-bright, #4fd8c4); /* teal   — 9.2 : 1 on navy */
-  --ku-cat-drug-strong: var(--imedix-cat-drug-strong, #0b6e64); /*          6.1 : 1 on white */
-  --ku-cat-drug-tint: #e3f5f2;
-  --ku-cat-drug-rgb: 79 216 196;
-  --ku-cat-disease-bright: var(--imedix-cat-disease-bright, #f59dbb); /* rose  — 8.0 : 1 */
-  --ku-cat-disease-strong: var(--imedix-cat-disease-strong, #9c2453); /*         7.5 : 1 */
-  --ku-cat-disease-tint: #fbe7ef;
-  --ku-cat-disease-rgb: 245 157 187;
-  --ku-cat-topic-bright: var(--imedix-cat-topic-bright, #f7c55f); /* amber   — 10.0 : 1 */
-  --ku-cat-topic-strong: var(--imedix-cat-topic-strong, #8a4b00); /*           6.8 : 1 */
-  --ku-cat-topic-tint: #fcf1dc;
-  --ku-cat-topic-rgb: 247 197 95;
-  --ku-cat-other-bright: #b8a6ff; /* violet, reserved for future entity types */
-  --ku-cat-other-strong: #5b45c2;
-  --ku-cat-other-tint: #efebff;
+  /* Content categories — one hue family per category, used identically by the 3D
+     spheres, legend, search, cards and library, always paired with shape and text.
+       sphere-*: material colours (variations inside the family)
+       strong:   text/icons on white or tint (≥ 5.0 : 1)    tint: light surfaces */
+  --ku-cat-drug-sphere-1: #2f80ed; /* blue */
+  --ku-cat-drug-sphere-2: #22b5d6; /* cyan */
+  --ku-cat-drug-sphere-3: #4f6ff0; /* cornflower */
+  --ku-cat-drug-strong: var(--imedix-cat-drug-strong, #1c5dbf); /* 6.2 : 1 on white */
+  --ku-cat-drug-tint: #e5effc;
+  --ku-cat-drug-rgb: 47 128 237;
+  --ku-cat-disease-sphere-1: #f2705d; /* coral */
+  --ku-cat-disease-sphere-2: #f59a4a; /* apricot */
+  --ku-cat-disease-sphere-3: #e2574c; /* warm red */
+  --ku-cat-disease-strong: var(--imedix-cat-disease-strong, #b63a22); /* 5.8 : 1 */
+  --ku-cat-disease-tint: #fdece6;
+  --ku-cat-disease-rgb: 242 112 93;
+  --ku-cat-topic-sphere-1: #b3a4f0; /* lavender glass */
+  --ku-cat-topic-sphere-2: #c9aee9; /* lilac glass */
+  --ku-cat-topic-sphere-3: #9fb2f4; /* periwinkle glass */
+  --ku-cat-topic-strong: var(--imedix-cat-topic-strong, #6440c8); /* 6.8 : 1 */
+  --ku-cat-topic-tint: #efeafd;
+  --ku-cat-topic-rgb: 124 92 224;
+  --ku-cat-other-sphere-1: #2fa58f;
+  --ku-cat-other-strong: #1f6f60;
+  --ku-cat-other-tint: #e3f4f0;
 
   /* Graph signals (read by graph/palette.ts) */
-  --ku-drug: var(--imedix-graph-drug, var(--ku-cat-drug-bright));
-  --ku-disease: var(--imedix-graph-disease, var(--ku-cat-disease-bright));
-  --ku-topic: var(--imedix-graph-topic, var(--ku-cat-topic-bright));
-  --ku-edge: var(--imedix-graph-edge, #8fb0d0); /* derived: primary hue, lightened for visible lines */
+  --ku-drug: var(--imedix-graph-drug, var(--ku-cat-drug-sphere-1));
+  --ku-disease: var(--imedix-graph-disease, var(--ku-cat-disease-sphere-1));
+  --ku-topic: var(--imedix-graph-topic, var(--ku-cat-topic-sphere-1));
+  --ku-edge: var(--imedix-graph-edge, #8ea3ba);
   --ku-drug-on-light: var(--ku-cat-drug-strong);
   --ku-disease-on-light: var(--ku-cat-disease-strong);
   --ku-topic-on-light: var(--ku-cat-topic-strong);
+
+  /* Hero (light "specimen gallery") */
+  --ku-hero-bg: #f2f4f7; /* porcelain, a cool tint of iMedix #DBE4ED */
+  --ku-hero-bg-rgb: 242 244 247;
+  --ku-hero-ink: var(--ku-navy); /* 14.6 : 1 */
+  --ku-hero-ink-2: #33475e; /* 8.7 : 1 */
+  --ku-hero-ink-3: #4a5e74; /* 6.1 : 1 */
+  --ku-hero-line: #cfd9e3;
+  --ku-hero-surface: rgb(var(--ku-white-rgb) / 0.86);
 
   /* Font weights (families are inherited from the theme) */
   --ku-weight-regular: 400;
