@@ -51,6 +51,23 @@ function boot(): void {
     chip.addEventListener('blur', () => bus.emit('chip:hover', { id: null }));
   });
 
+  // Small screens: topic cards start collapsed to three guides (CSS, only with JS
+  // present so every link stays visible without it); the button reveals the rest.
+  root.classList.add('ku-js');
+  root.querySelectorAll<HTMLButtonElement>('[data-ku-expand]').forEach((btn) => {
+    btn.hidden = false;
+    const card = btn.closest('.ku-topic');
+    const list = card?.querySelector<HTMLElement>('.ku-topic__list');
+    if (list && !list.id) list.id = `${card?.id ?? 'ku-topic'}-list`;
+    if (list) btn.setAttribute('aria-controls', list.id);
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      card?.classList.toggle('is-open', open);
+      if (open) list?.querySelectorAll('a')[3]?.focus();
+    });
+  });
+
   // "Show on map" (topic cards) only makes sense once the interactive map exists.
   const mapButtons = root.querySelectorAll<HTMLButtonElement>('[data-ku-show-node]');
   bus.on('graph:ready', ({ mode }) => mapButtons.forEach((b) => (b.hidden = mode !== 'webgl')));

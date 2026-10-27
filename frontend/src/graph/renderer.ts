@@ -44,11 +44,14 @@ export interface RendererOptions {
   onContextLost: () => void;
 }
 
-const SIZES: Record<string, number> = { drug: 1.9, disease: 2.6, topic: 4.2 };
+const SIZES: Record<string, number> = { drug: 2.3, disease: 3.1, topic: 5 };
 const SHAPES: Record<string, number> = { drug: 0, disease: 1, topic: 2 };
 
 /** Horizontal extent the home view must fit (topic orbit + margin). */
 const FIT_HALF_WIDTH = 112;
+/** Long and short radii of the topic orbit (layout orbit × wobble). */
+const ORBIT_LONG = 103;
+const ORBIT_SHORT = 56;
 
 const VERTEX = /* glsl */ `
   attribute vec3 aColor;
@@ -58,6 +61,7 @@ const VERTEX = /* glsl */ `
   attribute float aReveal;
   uniform float uPixelRatio;
   uniform float uScale;
+  uniform float uBoost;
   uniform vec2 uFade;
   varying vec3 vColor;
   varying float vShape;
@@ -67,10 +71,10 @@ const VERTEX = /* glsl */ `
     float depth = max(-mv.z, 1.0);
     float fade = smoothstep(uFade.y, uFade.x, depth);
     float grow = 1.0 + 0.7 * max(aState - 1.0, 0.0);
-    gl_PointSize = aSize * grow * uPixelRatio * uScale / depth;
+    gl_PointSize = aSize * grow * uBoost * uPixelRatio * uScale / depth;
     vColor = aColor;
     vShape = aShape;
-    vAlpha = aReveal * mix(0.14, 1.0, clamp(aState, 0.0, 1.0)) * (0.32 + 0.68 * fade);
+    vAlpha = aReveal * mix(0.2, 1.0, clamp(aState, 0.0, 1.0)) * (0.55 + 0.45 * fade);
     gl_Position = projectionMatrix * mv;
   }
 `;
@@ -250,7 +254,7 @@ export class GraphRenderer {
     this.material = new ShaderMaterial({
       vertexShader: VERTEX,
       fragmentShader: FRAGMENT,
-      uniforms: { uPixelRatio: { value: this.pixelRatio }, uScale: { value: 400 }, uFade: this.fade },
+      uniforms: { uPixelRatio: { value: this.pixelRatio }, uScale: { value: 400 }, uBoost: { value: 1 }, uFade: this.fade },
       transparent: true,
       depthWrite: false,
       blending: AdditiveBlending,
@@ -412,7 +416,7 @@ export class GraphRenderer {
     }
     const dimming = strong.size > 0;
     for (let i = 0; i < n; i++) {
-      if (!dimming) this.stateTarget[i] = this.graph.nodes[i].degree > 0 ? 1 : 0.62;
+      if (!dimming) this.stateTarget[i] = this.graph.nodes[i].degree > 0 ? 1 : 0.78;
       else if (strong.has(i)) this.stateTarget[i] = i === focus ? 1.9 : 1.55;
       else if (soft.has(i)) this.stateTarget[i] = 1.05;
       else this.stateTarget[i] = 0.3;
@@ -524,8 +528,13 @@ export class GraphRenderer {
     this.world.updateMatrixWorld();
     // Fit the orbit's horizontal extent.
     const tanHalf = Math.tan((this.camera.fov * Math.PI) / 360);
-    const half = portrait ? FIT_HALF_WIDTH * 0.62 : FIT_HALF_WIDTH;
-    this.homeDistance = Math.min(420, Math.max(120, half / (tanHalf * this.camera.aspect)));
+    // Portrait: the upright orbit must fit vertically (long axis) and horizontally (short axis).
+    const fit = portrait
+      ? Math.max((ORBIT_LONG * 1.12) / tanHalf, (ORBIT_SHORT * 1.25) / (tanHalf * this.camera.aspect))
+      : FIT_HALF_WIDTH / (tanHalf * this.camera.aspect);
+    this.homeDistance = Math.min(420, Math.max(120, fit));
+    // A longer camera throw would shrink every point; keep on-screen node size steady.
+    this.material.uniforms.uBoost.value = Math.min(2.2, Math.max(1, this.homeDistance / 150));
     this.fade.value = [this.homeDistance - 70, this.homeDistance + 110];
     if (!this.userMoved && !this.tween) {
       this.camera.position.copy(this.home());
@@ -623,8 +632,8 @@ export class GraphRenderer {
     this.graph.edges.forEach((e, i) => {
       const vis = Math.min(this.reveal[e.source], this.reveal[e.target]);
       const emph = Math.min(this.state[e.source], this.state[e.target]);
-      const base = e.type === 'in_topic' ? 0.075 : 0.05;
-      const a = vis * (emph > 1.2 ? 0.5 : base * Math.min(1, emph));
+      const base = e.type === 'in_topic' ? 0.16 : 0.1;
+      const a = vis * (emph > 1.2 ? 0.7 : base * Math.min(1, emph));
       this.lineAlpha[i * 2] = a;
       this.lineAlpha[i * 2 + 1] = a;
     });

@@ -75,14 +75,35 @@
   --ku-option-active-ring: rgb(var(--ku-steel-rgb) / 0.42);
   --ku-focus: var(--ku-steel); /* 8.0 : 1 on navy */
   --ku-focus-on-light: var(--ku-blue); /* 6.4 : 1 on white */
-  /* Entity signals — meaning is carried by shape too (dot / ring / diamond) */
-  --ku-drug: var(--imedix-graph-drug, var(--ku-sky)); /* dot, 9.3 : 1 on deep navy */
-  --ku-disease: var(--imedix-graph-disease, var(--ku-mist)); /* ring, 14.0 : 1 */
-  --ku-topic: var(--imedix-graph-topic, var(--ku-steel)); /* diamond, 9.0 : 1 */
-  --ku-edge: var(--imedix-graph-edge, #7f9cba); /* derived: primary hue, lines */
-  --ku-drug-on-light: var(--ku-blue);
-  --ku-disease-on-light: var(--ku-navy);
-  --ku-topic-on-light: var(--ku-slate);
+  /* Content categories. iMedix navy/blue stay reserved for brand chrome and actions;
+     each content category gets its own hue (teal / rose / amber), used identically in the graph, legend,
+     search, cards and library, and always paired with its shape (dot / ring / diamond)
+     and a text label, so colour is never the only cue.
+       bright: on navy (≥ 7.6 : 1)   strong: text on white / tint (≥ 5.4 : 1)   tint: light surface */
+  --ku-cat-drug-bright: var(--imedix-cat-drug-bright, #4fd8c4); /* teal   — 9.2 : 1 on navy */
+  --ku-cat-drug-strong: var(--imedix-cat-drug-strong, #0b6e64); /*          6.1 : 1 on white */
+  --ku-cat-drug-tint: #e3f5f2;
+  --ku-cat-drug-rgb: 79 216 196;
+  --ku-cat-disease-bright: var(--imedix-cat-disease-bright, #f59dbb); /* rose  — 8.0 : 1 */
+  --ku-cat-disease-strong: var(--imedix-cat-disease-strong, #9c2453); /*         7.5 : 1 */
+  --ku-cat-disease-tint: #fbe7ef;
+  --ku-cat-disease-rgb: 245 157 187;
+  --ku-cat-topic-bright: var(--imedix-cat-topic-bright, #f7c55f); /* amber   — 10.0 : 1 */
+  --ku-cat-topic-strong: var(--imedix-cat-topic-strong, #8a4b00); /*           6.8 : 1 */
+  --ku-cat-topic-tint: #fcf1dc;
+  --ku-cat-topic-rgb: 247 197 95;
+  --ku-cat-other-bright: #b8a6ff; /* violet, reserved for future entity types */
+  --ku-cat-other-strong: #5b45c2;
+  --ku-cat-other-tint: #efebff;
+
+  /* Graph signals (read by graph/palette.ts) */
+  --ku-drug: var(--imedix-graph-drug, var(--ku-cat-drug-bright));
+  --ku-disease: var(--imedix-graph-disease, var(--ku-cat-disease-bright));
+  --ku-topic: var(--imedix-graph-topic, var(--ku-cat-topic-bright));
+  --ku-edge: var(--imedix-graph-edge, #8fb0d0); /* derived: primary hue, lightened for visible lines */
+  --ku-drug-on-light: var(--ku-cat-drug-strong);
+  --ku-disease-on-light: var(--ku-cat-disease-strong);
+  --ku-topic-on-light: var(--ku-cat-topic-strong);
 
   /* Font weights (families are inherited from the theme) */
   --ku-weight-regular: 400;

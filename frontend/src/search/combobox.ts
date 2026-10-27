@@ -176,6 +176,7 @@ export class SearchCombobox {
 
     const type = document.createElement('span');
     type.className = 'ku-opt__type';
+    type.dataset.type = hit.node.type;
     type.textContent = TYPE_LABEL[hit.node.type] ?? hit.node.type;
 
     li.append(glyph, body, type);

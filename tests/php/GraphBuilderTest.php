@@ -158,7 +158,11 @@ test( 'Real tracker snapshot', function () {
 	T::ok( strlen( json_encode( $client ) ) < 200000, 'payload < 200 KB' );
 	$topics = Discovery::topics( $client );
 	T::eq( $g['counts']['topic'], count( $topics ), 'all topics listed' );
-	T::ok( count( $topics[0]['members'] ) <= 6, 'bounded links per topic' );
+	T::ok( count( $topics[0]['members'] ) <= 10, 'bounded links per topic' );
+	foreach ( $topics as $tp ) {
+		T::eq( $tp['total'], $tp['drugs'] + $tp['diseases'], 'composition adds up for ' . $tp['name'] );
+		T::eq( $tp['id'], 'topic:' . $tp['key'], 'topic key' );
+	}
 	$sugg = Discovery::suggestions( $client );
 	T::eq( 4, count( $sugg ), 'four suggestions' );
 	foreach ( $sugg as $sg ) {

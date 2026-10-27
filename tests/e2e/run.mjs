@@ -5,6 +5,7 @@ import { createRequire } from 'node:module';
 import { readFileSync, mkdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { startServer } from './server.mjs';
+import { auditContrast } from './contrast-audit.mjs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
@@ -144,7 +145,7 @@ console.log('Desktop');
         if (!m) continue;
         const stage = document.querySelector('[data-ku-stage]').getBoundingClientRect();
         const x = stage.left + Number(m[1]);
-        const y = stage.top + Number(m[2]) + 16;
+        const y = stage.top + Number(m[2]) + 18;
         const outside = x < inner.left - 20 || x > inner.right + 20 || y < inner.top - 20 || y > inner.bottom + 20;
         if (outside && y > 80 && y < window.innerHeight - 120 && x > 60 && x < window.innerWidth - 60) return { x, y, name: el.textContent };
       }
@@ -201,6 +202,47 @@ console.log('Desktop');
   await test('no web fonts are bundled (theme fonts are inherited)', async () => {
     const fonts = await page.evaluate(() => performance.getEntriesByType('resource').filter((r) => /\.woff2?$/.test(r.name)).length);
     assert(fonts === 0, fonts + ' font files');
+  });
+
+  await test('readability: every visible text element meets WCAG AA contrast (incl. text over the map)', async () => {
+    await page.locator('#ku-q').fill('hyper');
+    await page.waitForTimeout(1200);
+    const withPanel = await auditContrast(page);
+    await page.locator('#ku-q').fill('');
+    await page.keyboard.press('Escape');
+    const page1 = await auditContrast(page);
+    const bad = [...withPanel.failures, ...page1.failures];
+    assert(page1.checked > 200, 'only ' + page1.checked + ' text elements checked');
+    assert(bad.length === 0, bad.slice(0, 4).map((f) => `${f.cls} "${f.text}" ${f.ratio}:1 < ${f.need}`).join('; '));
+    console.log(`      (${page1.checked} text elements, lowest ratio ${Math.min(page1.worst, withPanel.worst)}:1)`);
+  });
+
+  await test('map labels are fully opaque or hidden (never faded) and do not overlap', async () => {
+    await page.locator('[data-ku-action="reset"]').click();
+    await page.waitForTimeout(1600);
+    const r = await page.evaluate(() => {
+      const shown = [...document.querySelectorAll('.ku-label')].filter((l) => l.style.opacity === '1');
+      const odd = [...document.querySelectorAll('.ku-label')].filter((l) => !['0', '1', ''].includes(l.style.opacity));
+      const rects = shown.map((l) => l.getBoundingClientRect());
+      let overlaps = 0;
+      for (let i = 0; i < rects.length; i++)
+        for (let j = i + 1; j < rects.length; j++) {
+          const a = rects[i], b = rects[j];
+          if (a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom) overlaps++;
+        }
+      return { shown: shown.length, odd: odd.length, overlaps };
+    });
+    assert(r.shown >= 3, 'only ' + r.shown + ' labels visible');
+    assert(r.odd === 0, r.odd + ' half-faded labels');
+    assert(r.overlaps === 0, r.overlaps + ' overlapping labels');
+  });
+
+  await test('categories are colour-distinct on dark and light surfaces', async () => {
+    const c = await page.evaluate(() => {
+      const s = getComputedStyle(document.querySelector('.imedix-ku'));
+      return ['drug', 'disease', 'topic'].flatMap((k) => [s.getPropertyValue(`--ku-cat-${k}-bright`).trim(), s.getPropertyValue(`--ku-cat-${k}-strong`).trim()]);
+    });
+    assert(new Set(c).size === 6 && c.every(Boolean), c.join());
   });
 
   await test('axe-core: no serious or critical violations', async () => {
@@ -298,6 +340,18 @@ console.log('Mobile');
         .map((e) => e.className.baseVal ?? e.className),
     );
     assert(wide.length === 0, wide.slice(0, 5).join(', '));
+  });
+  await test('topic cards collapse to three guides and expand on demand', async () => {
+    const card = page.locator('.ku-topic').first();
+    const visible = () => card.locator('.ku-topic__list li:visible').count();
+    assert((await visible()) === 3, 'collapsed shows ' + (await visible()));
+    await card.locator('[data-ku-expand]').tap();
+    assert((await visible()) > 3, 'did not expand');
+    assert((await card.locator('[data-ku-expand]').getAttribute('aria-expanded')) === 'true', 'aria-expanded');
+  });
+  await test('mobile readability: WCAG AA contrast', async () => {
+    const r = await auditContrast(page);
+    assert(r.failures.length === 0, r.failures.slice(0, 4).map((f) => `${f.cls} "${f.text}" ${f.ratio}`).join('; '));
   });
   await test('search field and button are at least 44px tall', async () => {
     const h = await page.evaluate(() => [document.querySelector('.ku-search__input').getBoundingClientRect().height, document.querySelector('.ku-search__submit').getBoundingClientRect().height]);

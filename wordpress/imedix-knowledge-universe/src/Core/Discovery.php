@@ -14,9 +14,9 @@ final class Discovery {
 	 * Topic sections with a bounded number of links each.
 	 *
 	 * @param array<string, mixed> $graph Client graph (ClientPayload::from_graph format).
-	 * @return array<int, array{id:string, name:string, total:int, members: array<int, array{name:string, path:string, type:string}>}>
+	 * @return array<int, array{id:string, key:string, name:string, total:int, drugs:int, diseases:int, members: array<int, array{name:string, path:string, type:string}>}>
 	 */
-	public static function topics( array $graph, int $per_topic = 6, int $max_topics = 24 ): array {
+	public static function topics( array $graph, int $per_topic = 10, int $max_topics = 24 ): array {
 		$nodes = self::index( $graph );
 		$members = array();
 		foreach ( $graph['edges'] ?? array() as $edge ) {
@@ -31,7 +31,10 @@ final class Discovery {
 			$topics[] = array(
 				'id'      => $topic_id,
 				'name'    => (string) $nodes[ $topic_id ]['n'],
+				'key'     => substr( $topic_id, strlen( 'topic:' ) ),
 				'total'   => count( $list ),
+				'drugs'   => count( array_filter( $list, static fn( $n ) => 'drug' === $n['t'] ) ),
+				'diseases' => count( array_filter( $list, static fn( $n ) => 'disease' === $n['t'] ) ),
 				'members' => array_map(
 					static fn( $n ) => array(
 						'name' => (string) $n['n'],

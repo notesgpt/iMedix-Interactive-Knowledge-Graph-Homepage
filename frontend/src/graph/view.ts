@@ -93,6 +93,7 @@ export function mountWebGL(o: MountOptions): () => void {
         return;
       }
       const n = graph.nodes[index];
+      tooltip.dataset.type = n.type;
       tooltip.replaceChildren(document.createTextNode(n.name));
       const small = document.createElement('small');
       small.textContent = n.type === 'topic' ? 'Editorial topic' : n.type === 'drug' ? 'Drug' : 'Disease';
@@ -126,25 +127,57 @@ export function mountWebGL(o: MountOptions): () => void {
     const exploring = hero.classList.contains('is-exploring');
     // Keep the heading, intro and search legible: no labels inside the content block.
     const safe = exploring ? null : boxOf(inner, 14, origin);
-    topicLabels.forEach((el, i) => {
-      const s = renderer.screenOf(i);
-      if (!s || inside(safe, s.x, s.y - 16)) {
-        el.style.opacity = '0';
-        return;
-      }
-      el.style.transform = `translate(${s.x.toFixed(1)}px, ${(s.y - 16).toFixed(1)}px) translate(-50%, -50%)`;
-      el.style.opacity = String(0.25 + 0.75 * renderer.nearness(i));
-    });
+    // Labels are either fully visible or hidden — never faded to an unreadable
+    // grey. Search matches are placed first, then topics nearest the camera;
+    // a label that would overlap one already placed is skipped.
+    const placed: Box[] = [];
+    const fits = (x: number, y: number, el: HTMLElement): Box | null => {
+      const w = (el.offsetWidth || 80) / 2 + 4;
+      const h = (el.offsetHeight || 24) / 2 + 3;
+      const b = { l: x - w, t: y - h, r: x + w, b: y + h };
+      if (b.l < 4 || b.r > origin.width - 4 || b.t < 4 || b.b > origin.height - 4) return null;
+      if (safe && !(b.r < safe.l || b.l > safe.r || b.b < safe.t || b.t > safe.b)) return null;
+      for (const p of placed) if (!(b.r < p.l || b.l > p.r || b.b < p.t || b.t > p.b)) return null;
+      return b;
+    };
     let target: { x: number; y: number } | null = null;
     for (const m of matchLabels) {
       const s = renderer.screenOf(m.index);
-      if (!s || inside(safe, s.x, s.y + 18)) {
+      // The connector follows the node itself, whether or not its label fits.
+      if (s && !inside(safe, s.x, s.y)) target ??= s;
+      // Try below, above, then beside the node before giving up on the label.
+      let box: Box | null = null;
+      let at = { x: 0, y: 0 };
+      if (s) {
+        const half = (m.el.offsetWidth || 80) / 2 + 12;
+        for (const [dx, dy] of [[0, 20], [0, -20], [-half, 0], [half, 0]]) {
+          box = fits(s.x + dx, s.y + dy, m.el);
+          if (box) {
+            at = { x: s.x + dx, y: s.y + dy };
+            break;
+          }
+        }
+      }
+      if (!s || !box) {
         m.el.style.opacity = '0';
         continue;
       }
-      target ??= s;
+      placed.push(box);
       m.el.style.opacity = '1';
-      m.el.style.transform = `translate(${s.x.toFixed(1)}px, ${(s.y + 18).toFixed(1)}px) translate(-50%, -50%)`;
+      m.el.style.transform = `translate(${at.x.toFixed(1)}px, ${at.y.toFixed(1)}px) translate(-50%, -50%)`;
+    }
+    const order = [...topicLabels.keys()].sort((a, b) => renderer.nearness(b) - renderer.nearness(a));
+    for (const i of order) {
+      const el = topicLabels.get(i)!;
+      const s = renderer.screenOf(i);
+      const box = s && renderer.nearness(i) > 0.12 ? fits(s.x, s.y - 18, el) : null;
+      if (!s || !box) {
+        el.style.opacity = '0';
+        continue;
+      }
+      placed.push(box);
+      el.style.opacity = '1';
+      el.style.transform = `translate(${s.x.toFixed(1)}px, ${(s.y - 18).toFixed(1)}px) translate(-50%, -50%)`;
     }
     const f = exploring ? null : boxOf(field, 0, origin);
     if (target && f && !inside(f, target.x, target.y)) {
@@ -167,6 +200,7 @@ export function mountWebGL(o: MountOptions): () => void {
     matchLabels = indices.slice(0, MAX_MATCH_LABELS).map((index) => {
       const el = document.createElement('div');
       el.className = 'ku-label ku-label--match';
+      el.dataset.type = graph.nodes[index].type;
       el.textContent = graph.nodes[index].name;
       labels.append(el);
       return { index, el };

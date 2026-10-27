@@ -14,11 +14,11 @@ export interface GraphPalette {
 
 /** Used only when tokens are unavailable (e.g. unit tests without CSS). */
 export const FALLBACK_PALETTE: GraphPalette = {
-  drug: '#8fbfea',
-  disease: '#dbe4ed',
-  topic: '#a3bad2',
-  edge: '#7f9cba',
-  other: '#a3bad2',
+  drug: '#4fd8c4',
+  disease: '#f59dbb',
+  topic: '#f7c55f',
+  edge: '#8fb0d0',
+  other: '#b8a6ff',
 };
 
 export function readPalette(el: Element): GraphPalette {
@@ -29,7 +29,7 @@ export function readPalette(el: Element): GraphPalette {
     disease: read('--ku-disease', FALLBACK_PALETTE.disease),
     topic: read('--ku-topic', FALLBACK_PALETTE.topic),
     edge: read('--ku-edge', FALLBACK_PALETTE.edge),
-    other: read('--ku-steel', FALLBACK_PALETTE.other),
+    other: read('--ku-cat-other-bright', FALLBACK_PALETTE.other),
   };
 }
 

@@ -40,6 +40,7 @@ export class NodeCard {
       return;
     }
     const node = this.graph.nodes[index];
+    this.el.dataset.type = node.type;
     this.type.replaceChildren(glyph(node.type), document.createTextNode(TYPE_LABEL[node.type] ?? node.type));
     this.title.textContent = node.name;
     this.desc.hidden = !node.description;
