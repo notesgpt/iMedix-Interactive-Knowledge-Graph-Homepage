@@ -180,6 +180,29 @@ console.log('Desktop');
     assert(state === 'paused', state);
   });
 
+  await test('"Show on map" selects the topic in the graph', async () => {
+    const btn = page.locator('[data-ku-show-node="topic:diabetes"]');
+    assert(await btn.isVisible(), 'button hidden after WebGL mount');
+    await btn.click();
+    await page.waitForSelector('[data-ku-card]:not([hidden])', { timeout: 4000 });
+    const title = await page.locator('[data-ku-card-title]').textContent();
+    assert(title === 'Diabetes', title);
+    await page.keyboard.press('Escape');
+  });
+
+  await test('graph colours come from the design tokens', async () => {
+    const t = await page.evaluate(() => {
+      const s = getComputedStyle(document.querySelector('[data-ku-stage]'));
+      return ['--ku-drug', '--ku-disease', '--ku-topic'].map((v) => s.getPropertyValue(v).trim());
+    });
+    assert(t.every(Boolean) && new Set(t).size === 3, t.join());
+  });
+
+  await test('no web fonts are bundled (theme fonts are inherited)', async () => {
+    const fonts = await page.evaluate(() => performance.getEntriesByType('resource').filter((r) => /\.woff2?$/.test(r.name)).length);
+    assert(fonts === 0, fonts + ' font files');
+  });
+
   await test('axe-core: no serious or critical violations', async () => {
     await page.locator('#ku-q').fill('');
     await page.addScriptTag({ content: AXE });
@@ -245,15 +268,36 @@ console.log('Reduced motion');
   await context.close();
 }
 
+console.log('Tablet');
+{
+  const { page, errors, context } = await open(browser, { viewport: { width: 820, height: 1180 }, hasTouch: true, isMobile: true, deviceScaleFactor: 2 });
+  await page.waitForSelector('[data-ku-stage].is-ready', { timeout: 15000 });
+  await page.waitForTimeout(1500);
+  await page.screenshot({ path: SHOTS + '/tablet.png' });
+  await test('tablet: no horizontal overflow, no console errors', async () => {
+    const w = await page.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
+    assert(w[0] <= w[1], w.join(' > '));
+    assert(errors.length === 0, errors.join(' | '));
+  });
+  await page.locator('.ku-discover').screenshot({ path: SHOTS + '/tablet-library.png' });
+  await context.close();
+}
+
 console.log('Mobile');
 {
   const { page, errors, context } = await open(browser, { viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 2 });
   await page.waitForSelector('[data-ku-stage].is-ready', { timeout: 15000 });
   await page.waitForTimeout(2000);
   await page.screenshot({ path: SHOTS + '/mobile.png' });
-  await test('no horizontal overflow at 390px', async () => {
+  await test('no horizontal overflow at 390px (incl. content clipped by overflow-x)', async () => {
     const w = await page.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
     assert(w[0] <= w[1], w.join(' > '));
+    const wide = await page.evaluate(() =>
+      [...document.querySelectorAll('.ku-hero__inner, .ku-hero__inner *, .ku-wrap, .ku-wrap *')]
+        .filter((e) => e.getBoundingClientRect().right > window.innerWidth + 1)
+        .map((e) => e.className.baseVal ?? e.className),
+    );
+    assert(wide.length === 0, wide.slice(0, 5).join(', '));
   });
   await test('search field and button are at least 44px tall', async () => {
     const h = await page.evaluate(() => [document.querySelector('.ku-search__input').getBoundingClientRect().height, document.querySelector('.ku-search__submit').getBoundingClientRect().height]);

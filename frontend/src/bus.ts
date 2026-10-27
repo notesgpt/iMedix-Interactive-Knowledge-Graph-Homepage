@@ -9,6 +9,7 @@ export interface BusEvents {
   'graph:ready': { mode: 'webgl' | 'fallback' };
   'graph:select': { id: string | null };
   'chip:hover': { id: string | null };
+  'map:show': { id: string };
 }
 
 type Handler<K extends keyof BusEvents> = (detail: BusEvents[K]) => void;

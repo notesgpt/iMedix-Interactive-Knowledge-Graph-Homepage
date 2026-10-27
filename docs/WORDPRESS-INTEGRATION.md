@@ -55,6 +55,12 @@ full-width template without its own H1 (otherwise the page would have two H1s).
   `https://www.imedix.com/` because WordPress canonicalises the static front page to the home URL.
 * No structured data is generated.
 
+## Brand tokens
+
+The page inherits the theme's fonts and uses the iMedix palette. To apply the theme's exact
+values (or adjust graph colours) define the `--imedix-*` hooks in the theme or in
+*Appearance → Customize → Additional CSS*; see [BRAND-ALIGNMENT.md § 4](BRAND-ALIGNMENT.md#4-token-system-and-theme-hooks).
+
 ## Caching / CDN
 
 * The homepage HTML can be page-cached; the ticker and graph refresh client-side.

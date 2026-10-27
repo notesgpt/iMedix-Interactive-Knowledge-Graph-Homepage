@@ -120,13 +120,16 @@ $html = <<<HTML
 <title>iMedix Knowledge Universe — preview</title>
 <meta name="robots" content="noindex">
 <style>
-  /* Stand-in for the active WordPress theme header/footer (not part of the plugin). */
-  body { margin: 0; font-family: system-ui, sans-serif; background: #fff; }
-  .preview-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px clamp(16px, 4vw, 40px); background: #fff; border-bottom: 1px solid #e5e7eb; }
-  .preview-header a { color: #0d1526; text-decoration: none; font-size: 15px; }
+  /* Stand-in for the active WordPress theme (not part of the plugin). It deliberately uses
+     the system font: the real iMedix font is inherited from the theme in WordPress.
+     Override with ?font= or by defining --imedix-* tokens to preview brand values. */
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #fff; color: #112236; }
+  .preview-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(16px, 4vw, 40px); background: #112236; border-bottom: 1px solid rgb(163 186 210 / 0.18); }
+  .preview-header a { color: #fff; text-decoration: none; font-size: 15px; }
   .preview-logo { font-weight: 800; font-size: 22px !important; letter-spacing: -0.02em; }
   .preview-header nav { display: flex; gap: 20px; flex-wrap: wrap; }
-  .preview-footer { padding: 32px clamp(16px, 4vw, 40px); background: #0d1526; color: #b7c3d6; font-size: 14px; }
+  .preview-header nav a { color: #dbe4ed; }
+  .preview-footer { padding: 32px clamp(16px, 4vw, 40px); background: #112236; color: #a3bad2; font-size: 14px; }
 </style>
 $assets
 </head>

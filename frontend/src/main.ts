@@ -26,6 +26,7 @@ function boot(): void {
 
   const config = readConfig(root);
   const bus = new Bus();
+  adoptThemeHeadingFont(root);
 
   const form = root.querySelector<HTMLFormElement>('[data-ku-search]');
   const search = form ? safe(() => new SearchCombobox(form, bus, config)) : null;
@@ -49,6 +50,17 @@ function boot(): void {
     chip.addEventListener('focus', () => bus.emit('chip:hover', { id }));
     chip.addEventListener('blur', () => bus.emit('chip:hover', { id: null }));
   });
+
+  // "Show on map" (topic cards) only makes sense once the interactive map exists.
+  const mapButtons = root.querySelectorAll<HTMLButtonElement>('[data-ku-show-node]');
+  bus.on('graph:ready', ({ mode }) => mapButtons.forEach((b) => (b.hidden = mode !== 'webgl')));
+  mapButtons.forEach((b) =>
+    b.addEventListener('click', () => {
+      const hero = root.querySelector<HTMLElement>('.ku-hero');
+      hero?.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+      bus.emit('map:show', { id: b.dataset.kuShowNode ?? '' });
+    }),
+  );
 
   const graphPromise = loadGraph([config.graphUrl, config.graphRestUrl], config.graphVersion, config.siteOrigin);
   graphPromise.then(
@@ -101,6 +113,18 @@ async function startGraph(hero: HTMLElement, stage: HTMLElement, graphPromise: P
   } catch {
     fallback();
   }
+}
+
+/**
+ * Headings (h1–h3) already use the theme's own heading rules. Non-heading display
+ * text (stat numerals, card titles) mirrors them through --ku-font-heading, read
+ * from the rendered H1 so no font name is ever hard-coded.
+ */
+function adoptThemeHeadingFont(root: HTMLElement): void {
+  const h1 = root.querySelector('h1');
+  if (!h1) return;
+  const family = getComputedStyle(h1).fontFamily;
+  if (family) root.style.setProperty('--ku-font-heading', family);
 }
 
 function whenVisible(el: HTMLElement, cb: () => void): void {

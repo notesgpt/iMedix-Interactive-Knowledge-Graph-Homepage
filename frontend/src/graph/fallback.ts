@@ -6,12 +6,13 @@
 import type { Bus } from '../bus';
 import type { KGraph } from '../types';
 import { neighbours } from '../data/graph';
+import { colourFor, readPalette } from './palette';
 
 const NS = 'http://www.w3.org/2000/svg';
-const FILL: Record<string, string> = { drug: '#5fd4c4', disease: '#f2b880', topic: '#c9d3ff' };
 
 export function mountFallback(stage: HTMLElement, graph: KGraph, positions: Float32Array, order: number[], bus: Bus): () => void {
   stage.querySelector('svg')?.remove();
+  const palette = readPalette(stage);
   const svg = document.createElementNS(NS, 'svg');
   svg.setAttribute('viewBox', '-120 -70 240 140');
   svg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
@@ -21,7 +22,7 @@ export function mountFallback(stage: HTMLElement, graph: KGraph, positions: Floa
 
   const shown = new Set(order);
   const edges = document.createElementNS(NS, 'g');
-  edges.setAttribute('stroke', '#9fb3d9');
+  edges.setAttribute('stroke', palette.edge);
   edges.setAttribute('stroke-width', '0.12');
   edges.setAttribute('opacity', '0.35');
   for (const e of graph.edges) {
@@ -51,7 +52,7 @@ export function mountFallback(stage: HTMLElement, graph: KGraph, positions: Floa
       el.setAttribute('height', '2.2');
       el.setAttribute('transform', `rotate(45 ${x.toFixed(2)} ${y.toFixed(2)})`);
       el.setAttribute('fill', 'none');
-      el.setAttribute('stroke', FILL.topic);
+      el.setAttribute('stroke', palette.topic);
       el.setAttribute('stroke-width', '0.35');
     } else {
       el = document.createElementNS(NS, 'circle');
@@ -60,10 +61,10 @@ export function mountFallback(stage: HTMLElement, graph: KGraph, positions: Floa
       el.setAttribute('r', n.type === 'disease' ? '0.75' : '0.55');
       if (n.type === 'disease') {
         el.setAttribute('fill', 'none');
-        el.setAttribute('stroke', FILL.disease);
+        el.setAttribute('stroke', palette.disease);
         el.setAttribute('stroke-width', '0.3');
       } else {
-        el.setAttribute('fill', FILL[n.type] ?? '#b7c3d6');
+        el.setAttribute('fill', colourFor(palette, n.type));
       }
     }
     el.setAttribute('opacity', depth.toFixed(2));

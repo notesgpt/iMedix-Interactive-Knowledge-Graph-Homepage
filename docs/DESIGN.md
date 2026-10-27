@@ -1,5 +1,11 @@
 # Design — research, three directions, decision
 
+> **Update 2026-10-27 — brand alignment.** Typography and colours were aligned with the iMedix
+> site: theme fonts are now inherited (Newsreader/Figtree removed) and the palette is iMedix navy/blue.
+> The token values in the table below are historical; the current ones are in
+> `frontend/src/styles/tokens.css` and [BRAND-ALIGNMENT.md](BRAND-ALIGNMENT.md). Layout, motion and
+> interaction decisions in this document are unchanged.
+
 All research used the **UI UX Pro Max** skill installed in `.claude/skills/ui-ux-pro-max`
 (v2.15.0). Commands are reproducible from the repository root:
 

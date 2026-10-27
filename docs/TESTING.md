@@ -9,8 +9,8 @@
 | TypeScript | `cd frontend && npm run typecheck` | clean (strict) |
 | Front-end unit (Vitest) | `cd frontend && npm test` | **30 / 30** |
 | Production build | `cd frontend && npm run build` | ok |
-| Browser e2e (Chromium, real template + production bundle) | `node tests/e2e/run.mjs` | **27 / 27** |
-| WordPress integration (WordPress 6.5, SQLite, WP-CLI, PHP built-in server; classic **and** block theme) | `tests/wordpress/run.sh` | **76 / 76** |
+| Browser e2e (Chromium, real template + production bundle; desktop, tablet, mobile) | `node tests/e2e/run.mjs` | **31 / 31** |
+| WordPress integration (WordPress 6.5, SQLite, WP-CLI, PHP built-in server; classic **and** block theme) | `tests/wordpress/run.sh` | **79 / 79** |
 | Dependency audit | `cd frontend && npm audit --omit=dev` | 0 vulnerabilities |
 
 ### What is covered
@@ -84,4 +84,4 @@ The same suites run in GitHub Actions (`.github/workflows/ci.yml`).
 ## Screenshots
 
 `docs/screenshots/` (from the browser suite): `desktop.jpg`, `search.jpg`, `card.jpg`,
-`mobile.jpg`, `mobile-explore.jpg`, `no-webgl.jpg`.
+`mobile.jpg`, `mobile-explore.jpg`, `no-webgl.jpg`, `tablet.jpg`, `library.jpg`.

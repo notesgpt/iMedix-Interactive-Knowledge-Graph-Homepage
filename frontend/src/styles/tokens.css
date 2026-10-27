@@ -1,0 +1,112 @@
+/*
+ * iMedix Knowledge Universe — design tokens (single source of truth).
+ *
+ * Three layers:
+ *   1. Brand primitives  — the iMedix palette. Each one reads an optional theme hook
+ *      (--imedix-*) first, so the live theme can supply its exact values without a
+ *      plugin change; the fallback is the iMedix reference palette (#112236 #436280
+ *      #A3BAD2 #DBE4ED #FFFFFF) plus a few shades derived from it (marked "derived").
+ *   2. Semantic tokens   — what components use (surfaces, text, borders, states, graph).
+ *   3. Component tokens  — kept next to the components in index.css.
+ *
+ * Typography is NOT defined here on purpose: Knowledge Universe inherits the theme's
+ * fonts (body font via inheritance, heading font from the theme's own h1–h3 rules).
+ * See docs/DESIGN.md § "Typography" and docs/WORDPRESS-INTEGRATION.md § "Brand tokens".
+ *
+ * Colours with alpha use space-separated RGB channels: rgb(var(--ku-navy-rgb) / 0.7).
+ */
+.imedix-ku {
+  /* 1. Brand primitives ------------------------------------------------- */
+  --ku-navy: var(--imedix-color-navy, #112236); /* nav / footer / hero surface */
+  --ku-navy-rgb: var(--imedix-color-navy-rgb, 17 34 54);
+  --ku-navy-deep: var(--imedix-color-navy-deep, #0b1726); /* derived: navy −35 % L, depth */
+  --ku-navy-deep-rgb: var(--imedix-color-navy-deep-rgb, 11 23 38);
+  --ku-navy-raised: var(--imedix-color-navy-raised, #1a3049); /* derived: navy +8 % L */
+  --ku-navy-raised-rgb: 26 48 73;
+  --ku-blue: var(--imedix-color-primary, #436280); /* primary accent */
+  --ku-blue-rgb: var(--imedix-color-primary-rgb, 67 98 128);
+  --ku-blue-strong: var(--imedix-color-primary-strong, #35516e); /* derived: hover on light */
+  --ku-blue-bright: var(--imedix-color-primary-bright, #4f7395); /* derived: hover on dark */
+  --ku-steel: var(--imedix-color-secondary, #a3bad2); /* secondary / accents on dark */
+  --ku-steel-rgb: var(--imedix-color-secondary-rgb, 163 186 210);
+  --ku-mist: var(--imedix-color-light, #dbe4ed); /* light surfaces, borders */
+  --ku-mist-rgb: 219 228 237;
+  --ku-cloud: var(--imedix-color-background, #f3f6f9); /* derived: mist +50 % toward white */
+  --ku-white: #ffffff;
+  --ku-white-rgb: 255 255 255;
+  --ku-sky: #8fbfea; /* derived: primary hue, lightened for luminous graph points */
+  --ku-slate: #6c8aa8; /* derived: primary hue, mid tone (≥ 3:1 on white for glyphs) */
+
+  /* 2. Semantic tokens --------------------------------------------------- */
+  /* Dark surfaces (hero, ticker, panels) */
+  --ku-bg-0: var(--ku-navy);
+  --ku-bg-1: var(--ku-navy-deep);
+  --ku-bg-2: var(--ku-navy-raised);
+  --ku-glass: rgb(var(--ku-navy-rgb) / 0.78);
+  --ku-glass-strong: rgb(var(--ku-navy-deep-rgb) / 0.94);
+  --ku-scrim: rgb(var(--ku-navy-deep-rgb) / 0.6);
+  --ku-shadow-rgb: var(--ku-navy-deep-rgb);
+  /* Text on dark — 16.1 / 12.5 / 8.0 : 1 on --ku-navy */
+  --ku-ink: var(--ku-white);
+  --ku-ink-2: var(--ku-mist);
+  --ku-ink-3: var(--ku-steel);
+  --ku-accent-on-dark: var(--ku-steel);
+  /* Borders on dark */
+  --ku-hairline: rgb(var(--ku-steel-rgb) / 0.18);
+  --ku-hairline-strong: rgb(var(--ku-steel-rgb) / 0.34);
+  /* Light surfaces */
+  --ku-paper: var(--ku-cloud);
+  --ku-card: var(--ku-white);
+  --ku-text: var(--ku-navy); /* 14.8 : 1 on paper */
+  --ku-text-2: var(--ku-blue); /* 5.9 : 1 on paper, 6.4 : 1 on white */
+  --ku-rule: var(--ku-mist);
+  --ku-rule-soft: #e9eef3; /* derived divider inside cards */
+  --ku-link: var(--ku-blue);
+  --ku-link-hover: var(--ku-navy);
+  /* Interactive */
+  --ku-action: var(--ku-blue); /* white label 6.4 : 1 */
+  --ku-action-ink: var(--ku-white);
+  --ku-action-hover: var(--ku-blue-bright);
+  --ku-action-active: var(--ku-blue-strong);
+  --ku-selected-bg: var(--ku-mist);
+  --ku-selected-ink: var(--ku-navy);
+  --ku-hover-on-dark: rgb(var(--ku-white-rgb) / 0.08);
+  --ku-option-active: rgb(var(--ku-steel-rgb) / 0.16);
+  --ku-option-active-ring: rgb(var(--ku-steel-rgb) / 0.42);
+  --ku-focus: var(--ku-steel); /* 8.0 : 1 on navy */
+  --ku-focus-on-light: var(--ku-blue); /* 6.4 : 1 on white */
+  /* Entity signals — meaning is carried by shape too (dot / ring / diamond) */
+  --ku-drug: var(--imedix-graph-drug, var(--ku-sky)); /* dot, 9.3 : 1 on deep navy */
+  --ku-disease: var(--imedix-graph-disease, var(--ku-mist)); /* ring, 14.0 : 1 */
+  --ku-topic: var(--imedix-graph-topic, var(--ku-steel)); /* diamond, 9.0 : 1 */
+  --ku-edge: var(--imedix-graph-edge, #7f9cba); /* derived: primary hue, lines */
+  --ku-drug-on-light: var(--ku-blue);
+  --ku-disease-on-light: var(--ku-navy);
+  --ku-topic-on-light: var(--ku-slate);
+
+  /* Font weights (families are inherited from the theme) */
+  --ku-weight-regular: 400;
+  --ku-weight-medium: 500;
+  --ku-weight-semibold: 600;
+  --ku-weight-bold: 700;
+
+  /* Rhythm */
+  --ku-radius-s: 10px;
+  --ku-radius-m: 14px;
+  --ku-radius-l: 20px;
+  --ku-gutter: clamp(16px, 4vw, 40px);
+  --ku-maxw: 1200px;
+
+  /* Motion */
+  --ku-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ku-dur-1: 140ms;
+  --ku-dur-2: 240ms;
+  --ku-dur-3: 600ms;
+
+  /* Layers */
+  --ku-z-stage: 0;
+  --ku-z-veil: 1;
+  --ku-z-content: 10;
+  --ku-z-hud: 20;
+  --ku-z-panel: 40;
+}

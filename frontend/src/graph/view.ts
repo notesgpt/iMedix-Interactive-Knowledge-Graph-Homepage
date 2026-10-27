@@ -6,6 +6,7 @@ import type { Bus } from '../bus';
 import type { KGraph } from '../types';
 import { GraphRenderer } from './renderer';
 import { NodeCard } from './card';
+import { readPalette } from './palette';
 
 export interface MountOptions {
   hero: HTMLElement;
@@ -83,6 +84,7 @@ export function mountWebGL(o: MountOptions): () => void {
     positions: o.positions,
     stages: o.stages,
     reducedMotion: o.reducedMotion,
+    palette: readPalette(stage),
     tier: o.tier,
     touch: o.touch,
     onHover: (index, x, y) => {
@@ -188,6 +190,10 @@ export function mountWebGL(o: MountOptions): () => void {
     }),
     bus.on('search:active', ({ id }) => renderer.setFocus(id ? (graph.byId.get(id) ?? null) : null)),
     bus.on('chip:hover', ({ id }) => renderer.setFocus(id ? (graph.byId.get(id) ?? null) : null)),
+    bus.on('map:show', ({ id }) => {
+      const index = graph.byId.get(id);
+      if (index !== undefined) renderer.select(index);
+    }),
   ];
 
   // HUD controls

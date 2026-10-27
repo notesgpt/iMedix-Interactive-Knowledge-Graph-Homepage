@@ -43,7 +43,8 @@ header, footer and SEO setup.
 * [AUDIT.md](docs/AUDIT.md) — Phase 1 findings (repository, sheet, WordPress, skill)
 * [ARCHITECTURE.md](docs/ARCHITECTURE.md) — stack, integration method, search, caching, security, SEO
 * [DATA-PIPELINE.md](docs/DATA-PIPELINE.md) — sync, eligibility rules, graph schema, provenance
-* [DESIGN.md](docs/DESIGN.md) — UI UX Pro Max research, three directions, decision, tokens
+* [DESIGN.md](docs/DESIGN.md) — UI UX Pro Max research, three directions, decision
+* [BRAND-ALIGNMENT.md](docs/BRAND-ALIGNMENT.md) — iMedix typography and colour alignment, tokens, before/after
 * [WORDPRESS-INTEGRATION.md](docs/WORDPRESS-INTEGRATION.md) — install, configure, staging pre-flight
 * [DEPLOYMENT.md](docs/DEPLOYMENT.md) — build, rollout, rollback
 * [TESTING.md](docs/TESTING.md) — test suites and results

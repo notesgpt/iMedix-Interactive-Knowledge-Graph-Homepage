@@ -156,6 +156,12 @@ check "news titles plain text" contains "$n" '"title":"Integration test news ite
 check "news limit validated" contains "$(curl -s -o /dev/null -w '%{http_code}' "$URL/wp-json/imedix-ku/v1/news?limit=999")" "400"
 check "news CPT not exposed by core REST (unchanged config)" contains "$(curl -s -o /dev/null -w '%{http_code}' "$URL/wp-json/wp/v2/news")" "404"
 
+echo "== Brand alignment"
+css=$(cat "$W"/wp-content/plugins/imedix-knowledge-universe/assets/dist/assets/*.css)
+check "no bundled web fonts (theme fonts inherited)" bash -c '! ls "$1"/wp-content/plugins/imedix-knowledge-universe/assets/dist/assets/*.woff2 2>/dev/null | grep -q .' _ "$W"
+check "no hard-coded font families in CSS" bash -c '! grep -oE "font-family:[^;}]*" <<<"$1" | grep -vqE "font-family:(var\(--[a-z-]+\)|inherit)$"' _ "$css"
+check "theme colour hooks available (--imedix-color-*)" contains "$css" "--imedix-color-navy"
+
 echo "== Admin"
 admin=$(wp eval 'wp_set_current_user(1); \Imedix\KnowledgeUniverse\WordPress\Admin::render();')
 check "settings page renders sync status" contains "$admin" "Sync status"

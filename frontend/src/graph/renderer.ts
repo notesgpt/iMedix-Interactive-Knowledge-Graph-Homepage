@@ -28,12 +28,14 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import type { KGraph } from '../types';
 import { neighbours } from '../data/graph';
+import { colourFor, type GraphPalette } from './palette';
 
 export interface RendererOptions {
   positions: Float32Array;
   /** node indices in priority order, grouped into progressive stages */
   stages: number[][];
   reducedMotion: boolean;
+  palette: GraphPalette;
   tier: 'high' | 'medium' | 'low';
   touch: boolean;
   onHover: (index: number | null, x: number, y: number) => void;
@@ -42,7 +44,6 @@ export interface RendererOptions {
   onContextLost: () => void;
 }
 
-const COLORS: Record<string, string> = { drug: '#5fd4c4', disease: '#f2b880', topic: '#c9d3ff' };
 const SIZES: Record<string, number> = { drug: 1.9, disease: 2.6, topic: 4.2 };
 const SHAPES: Record<string, number> = { drug: 0, disease: 1, topic: 2 };
 
@@ -235,7 +236,7 @@ export class GraphRenderer {
     const shapes = new Float32Array(n);
     const c = new Color();
     graph.nodes.forEach((node, i) => {
-      c.set(COLORS[node.type] ?? '#b7c3d6');
+      c.set(colourFor(opts.palette, node.type));
       colors.set([c.r, c.g, c.b], i * 3);
       sizes[i] = (SIZES[node.type] ?? 2) * (node.type === 'topic' ? 1 : 1 + Math.min(node.degree, 6) * 0.04);
       shapes[i] = SHAPES[node.type] ?? 0;
@@ -272,7 +273,7 @@ export class GraphRenderer {
       new ShaderMaterial({
         vertexShader: LINE_VERTEX,
         fragmentShader: LINE_FRAGMENT,
-        uniforms: { uColor: { value: new Color('#9fb3d9') }, uFade: this.fade },
+        uniforms: { uColor: { value: new Color(opts.palette.edge) }, uFade: this.fade },
         transparent: true,
         depthWrite: false,
         blending: AdditiveBlending,

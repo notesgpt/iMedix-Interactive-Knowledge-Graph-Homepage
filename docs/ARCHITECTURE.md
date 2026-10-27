@@ -57,8 +57,9 @@ docs/                                  This documentation
   a generic renderer (≈ 2× the bytes), runs a physics simulation on every visit, and offers less
   control over the aesthetic (shape-coded nodes, depth fade, connector, safe zone). The layout here
   is deterministic and computed in < 5 ms, so physics brings no value.
-* Fonts are self-hosted (Fontsource, `font-display: swap`, unicode-range subsets): no third-party
-  requests.
+* No web fonts are bundled: the page inherits the iMedix theme's body and heading fonts, so it
+  adds zero font requests (see [BRAND-ALIGNMENT.md](BRAND-ALIGNMENT.md)). Colours come from
+  `frontend/src/styles/tokens.css`, overridable by the theme through `--imedix-*` hooks.
 
 ### Loading sequence (Core Web Vitals)
 
