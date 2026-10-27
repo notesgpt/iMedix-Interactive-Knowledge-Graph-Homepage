@@ -224,7 +224,8 @@ test( 'Discovery::areas: one area per category, plus medicines used for its cond
 	);
 	$areas = Discovery::areas( $client );
 	T::eq( 3, count( $areas ), 'every category with a guide is shown (Asthma too)' );
-	$bp = $areas[0];
+	T::eq( array( 'Asthma', 'Blood Pressure', 'Heart Disease' ), array_column( $areas, 'name' ), 'areas in alphabetical order' );
+	$bp = array_column( $areas, null, 'name' )['Blood Pressure'];
 	T::eq( 'Blood Pressure', $bp['name'], 'categories are not merged' );
 	T::eq( 3, $bp['total'], 'tracker members plus the linked drug' );
 	T::eq( 2, $bp['drugs']['count'], 'Lisinopril (tracker) and Atenolol (FDA-approved for hypertension, signed KG)' );

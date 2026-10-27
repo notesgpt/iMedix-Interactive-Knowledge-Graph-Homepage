@@ -157,7 +157,8 @@ final class Discovery {
 				'diseases' => $list( $by_type['disease'] ),
 			);
 		}
-		usort( $areas, static fn( $a, $b ) => ( $b['total'] <=> $a['total'] ) ?: strcmp( $a['name'], $b['name'] ) );
+		// Alphabetical: readers scan for their area by name.
+		usort( $areas, static fn( $a, $b ) => strcasecmp( $a['name'], $b['name'] ) );
 		return $areas;
 	}
 
