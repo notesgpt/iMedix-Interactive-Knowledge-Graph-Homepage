@@ -43,7 +43,7 @@ final class Topics {
 		'Sleep Aid',
 		'Quit Smoking',
 		'Weight Loss',
-		"Woman's Health",
+		"Women's Health",
 	);
 
 	/**
@@ -56,8 +56,8 @@ final class Topics {
 		'cardiovascular'    => 'Heart Disease',
 		'analgesics'        => 'Pain Relief',
 		"men's"             => "Men's Health",
-		"woman's"           => "Woman's Health",
-		"women's health"    => "Woman's Health",
+		"woman's"           => "Women's Health",
+		"woman's health"    => "Women's Health", // Tracker spelling.
 		'antifungal'        => 'Anti Fungal',
 		'antiviral'         => 'Anti Viral',
 		'hiv'               => 'Anti Viral',

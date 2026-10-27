@@ -192,7 +192,7 @@ final class Discovery {
 		'sleep-aid'            => array( 'Sleep Aid', 'depression', array( 'sleep-aid' ) ),
 		'quit-smoking'         => array( 'Quit Smoking', 'cardio', array( 'quit-smoking' ) ),
 		'weight-loss'          => array( 'Weight Loss', 'diabetes', array( 'weight-loss' ) ),
-		'womans-health'        => array( "Woman's Health", 'womens-health', array( 'womans-health' ) ),
+		'womens-health'        => array( "Women's Health", 'womens-health', array( 'womens-health' ) ),
 	);
 
 	/**

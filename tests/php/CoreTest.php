@@ -43,7 +43,7 @@ test( 'Topics::parse', function () {
 	T::eq( array( 'Erectile Dysfunction' ), Topics::parse( 'ED (v1)' ), 'alias + annotation' );
 	T::eq( array( 'Erectile Dysfunction', "Men's Health" ), Topics::parse( "ED / Men's Health" ), 'split' );
 	T::eq( array( 'Gastrointestinal', 'Antibiotics' ), Topics::parse( 'Gastrointestinal / Antibiotics (rename → H. pylori infection)' ), 'rename note' );
-	T::eq( array( "Men's Health", "Woman's Health" ), Topics::parse( "Men's/Woman's Health" ), 'slash without spaces' );
+	T::eq( array( "Men's Health", "Women's Health" ), Topics::parse( "Men's/Woman's Health" ), 'slash without spaces; tracker spelling → Women\'s Health' );
 	T::eq( array( 'Heart Disease' ), Topics::parse( 'Batch A - Cardiovascular' ), 'batch prefix + alias' );
 	T::eq( array(), Topics::parse( 'Other (hub)' ), 'Other is never a topic' );
 	T::eq( array(), Topics::parse( 'Unknown grouping' ), 'unknown label → no topic' );
