@@ -11,8 +11,10 @@
 > * **Identity**: badge "iMedix: Independent Drug & Health Platform" (official title, one line
 >   down to ~360 px); lede aligned with the official description — independent, evidence-based,
 >   traceable sources — without claims beyond it.
-> * **Floating guide labels**: real drugs and diseases only, white pills with a 1 px hairline, a
->   category glyph (dot / ring) and a type word, navy text ≥ 12 : 1; never over the headline,
+> * **Floating guide labels**: real drugs and diseases only, white two-line cards (14 px radius,
+>   soft shadow): a filled category dot, the name (semibold, navy ≥ 12 : 1) over its type word;
+>   a faint decorative network (hairlines, junction dots with halos, a few blurred depth dots)
+>   ties them into the composition — lines never join two labels, so no relationship is implied; never over the headline,
 >   search, chips or statistics; slow drift (off for reduced motion). Search moves the best match
 >   beside the field with a category-coloured edge; other labels step back with a lighter edge,
 >   never faded text.

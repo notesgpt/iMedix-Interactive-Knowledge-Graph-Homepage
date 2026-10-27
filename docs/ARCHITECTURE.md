@@ -81,6 +81,10 @@ docs/                                  This documentation
   best one and let the others step back with a lighter edge — text is never faded. The active
   autocomplete option and hovered "Recently updated" chips highlight their label. Entities already
   shown as chips are not repeated.
+* `buildNetwork` (pure, unit-tested) draws the decorative network behind the labels in an
+  `aria-hidden` SVG: junction dots in free space, each label tied to its nearest junctions,
+  junctions to their neighbours, a few blurred depth dots. Lines never join two labels directly
+  (no implied medical relationship) and never cross the text column, statistics or a label.
 * Motion: a slow CSS drift per label, paused on hover/focus, removed for `prefers-reduced-motion`.
 * No data → no labels; the server-rendered hero is complete without them.
 

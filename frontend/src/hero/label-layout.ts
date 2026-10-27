@@ -121,3 +121,144 @@ export function layoutLabels(input: LayoutInput): (Point | null)[] {
     return best.p;
   });
 }
+
+/* ------------------------------------------------------------- network */
+
+export interface NetNode {
+  x: number;
+  y: number;
+  r: number;
+  /** colour family of the dot: brand blue, disease coral or neutral steel */
+  tone: 'drug' | 'disease' | 'steel';
+  /** out-of-focus depth dot (drawn blurred, no edges) */
+  blur: boolean;
+}
+
+export interface Network {
+  nodes: NetNode[];
+  /** line segments [x1, y1, x2, y2] */
+  edges: [number, number, number, number][];
+}
+
+export interface NetworkInput {
+  width: number;
+  height: number;
+  safe: Rect;
+  avoid: Rect[];
+  /** placed labels (their centres are network endpoints) */
+  labels: Rect[];
+  /** number of junction dots (blurred depth dots are added on top) */
+  count: number;
+  seed?: number;
+}
+
+/** Does segment p→q cross rectangle r (Liang–Barsky clip)? */
+export function segmentHitsRect(x1: number, y1: number, x2: number, y2: number, r: Rect): boolean {
+  let t0 = 0;
+  let t1 = 1;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  for (const [p, q] of [
+    [-dx, x1 - r.l],
+    [dx, r.r - x1],
+    [-dy, y1 - r.t],
+    [dy, r.b - y1],
+  ]) {
+    if (p === 0) {
+      if (q < 0) return false;
+    } else {
+      const t = q / p;
+      if (p < 0) t0 = Math.max(t0, t);
+      else t1 = Math.min(t1, t);
+      if (t0 > t1) return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Decorative network behind the labels, as in a molecule/graph illustration:
+ * small junction dots in the free space, each label tied to its nearest
+ * junctions, junctions tied to their nearest neighbours, plus a few large
+ * blurred dots for depth. It is ornament, not data: lines never join two
+ * labels directly (that would read as a medical relationship) and never cross
+ * the text column, the statistics or a label.
+ */
+export function buildNetwork(input: NetworkInput): Network {
+  const { width, height, safe, avoid, labels, count } = input;
+  const rand = mulberry32(input.seed ?? 23);
+  const blocked = [safe, ...avoid];
+  const free = (x: number, y: number, pad: number) =>
+    x > pad && y > pad && x < width - pad && y < height - pad &&
+    ![...blocked, ...labels].some((r) => x > r.l - pad && x < r.r + pad && y > r.t - pad && y < r.b + pad);
+
+  const nodes: NetNode[] = [];
+  const tones: NetNode['tone'][] = ['drug', 'steel', 'disease', 'steel', 'drug'];
+  for (let k = 0; k < count * 40 && nodes.filter((n) => !n.blur).length < count; k++) {
+    const x = rand() * width;
+    const y = rand() * height;
+    if (!free(x, y, 18)) continue;
+    if (nodes.some((n) => Math.hypot(n.x - x, n.y - y) < 70)) continue;
+    nodes.push({ x, y, r: 2.5 + rand() * 2.5, tone: tones[nodes.length % tones.length], blur: false });
+  }
+  // Out-of-focus dots: a shallow depth of field, never under the text.
+  for (let k = 0, made = 0; k < 400 && made < Math.ceil(count / 2); k++) {
+    const x = rand() * width;
+    const y = rand() * height;
+    if (blocked.some((r) => x > r.l - 30 && x < r.r + 30 && y > r.t - 30 && y < r.b + 30)) continue;
+    nodes.push({ x, y, r: 7 + rand() * 9, tone: rand() < 0.65 ? 'drug' : 'disease', blur: true });
+    made++;
+  }
+
+  const sharp = nodes.filter((n) => !n.blur);
+  const edges: Network['edges'] = [];
+  const seen = new Set<string>();
+  const clear = (x1: number, y1: number, x2: number, y2: number, skip: Rect | null) =>
+    !blocked.some((r) => segmentHitsRect(x1, y1, x2, y2, r)) &&
+    !labels.some((r) => r !== skip && segmentHitsRect(x1, y1, x2, y2, r));
+  const link = (x1: number, y1: number, x2: number, y2: number, key: string, skip: Rect | null) => {
+    if (seen.has(key) || !clear(x1, y1, x2, y2, skip)) return false;
+    seen.add(key);
+    edges.push([x1, y1, x2, y2]);
+    return true;
+  };
+  const byDistance = (x: number, y: number) =>
+    sharp.map((n, i) => ({ n, i, d: Math.hypot(n.x - x, n.y - y) })).sort((a, b) => a.d - b.d);
+
+  // Each label: one or two junctions within reach (line starts at its centre, hidden under it).
+  labels.forEach((r, li) => {
+    const cx = (r.l + r.r) / 2;
+    const cy = (r.t + r.b) / 2;
+    let made = 0;
+    for (const { n, i, d } of byDistance(cx, cy)) {
+      if (made >= 2 || d > 300) break;
+      if (link(cx, cy, n.x, n.y, `L${li}-${i}`, r)) made++;
+    }
+    // Nothing in reach: give the label a junction of its own just beside it.
+    for (let k = 0; !made && k < 48; k++) {
+      const angle = (k / 16) * Math.PI * 2;
+      const dist = 40 + Math.floor(k / 16) * 35 + Math.max(r.r - r.l, r.b - r.t) / 2;
+      const x = cx + Math.cos(angle) * dist;
+      const y = cy + Math.sin(angle) * dist * 0.7;
+      if (!free(x, y, 10)) continue;
+      const node: NetNode = { x, y, r: 3, tone: 'steel', blur: false };
+      sharp.push(node);
+      nodes.push(node);
+      if (link(cx, cy, x, y, `L${li}-${sharp.length - 1}`, r)) made++;
+      else {
+        sharp.pop();
+        nodes.pop();
+      }
+    }
+  });
+  // Junctions: two nearest neighbours each.
+  sharp.forEach((a, i) => {
+    let made = 0;
+    for (const { n: b, i: j, d } of byDistance(a.x, a.y)) {
+      if (j === i) continue;
+      if (made >= 2 || d > 260) break;
+      if (link(a.x, a.y, b.x, b.y, i < j ? `N${i}-${j}` : `N${j}-${i}`, null)) made++;
+    }
+  });
+  return { nodes, edges };
+}

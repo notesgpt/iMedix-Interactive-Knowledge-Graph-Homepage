@@ -6,16 +6,23 @@
  * highlighted), the remaining labels step back. The option highlighted in the
  * autocomplete, or a hovered "Recently updated" chip, highlights its label.
  * Motion is a slow CSS drift that stops for reduced motion and on hover/focus.
+ *
+ * Behind the labels a thin decorative network (junction dots, a few blurred
+ * depth dots, hairlines) ties each label into the composition. It is drawn in an
+ * aria-hidden SVG and never joins two labels directly, so it cannot be read as
+ * a medical relationship.
  */
 import type { Bus } from '../bus';
 import type { KGraph } from '../types';
-import { labelCount, layoutLabels, pickLabels, type Rect } from './label-layout';
+import { buildNetwork, labelCount, layoutLabels, pickLabels, type Rect } from './label-layout';
 
 const TYPE_LABEL: Record<string, string> = { drug: 'Drug', disease: 'Disease' };
 const MAX_MATCHES = 4;
+const SVG = 'http://www.w3.org/2000/svg';
 
 export class FloatingLabels {
   private list: HTMLUListElement;
+  private net: SVGSVGElement;
   private items = new Map<number, HTMLLIElement>();
   private defaults: number[] = [];
   private matches: number[] = [];
@@ -31,8 +38,12 @@ export class FloatingLabels {
     this.list = document.createElement('ul');
     this.list.className = 'ku-floats';
     this.list.setAttribute('aria-label', 'Popular guides');
+    this.net = document.createElementNS(SVG, 'svg');
+    this.net.setAttribute('class', 'ku-net');
+    this.net.setAttribute('aria-hidden', 'true');
+    this.net.setAttribute('focusable', 'false');
     // After the text column in the DOM: the search stays the first stop for keyboard users.
-    (hero.querySelector('.ku-hero__inner') ?? hero.lastElementChild)?.after(this.list);
+    (hero.querySelector('.ku-hero__inner') ?? hero.lastElementChild)?.after(this.net, this.list);
 
     // Entities already offered as "Recently updated" chips are not repeated.
     const chips = new Set([...hero.querySelectorAll<HTMLElement>('[data-ku-node]')].map((c) => graph.byId.get(c.dataset.kuNode ?? '')));
@@ -78,6 +89,7 @@ export class FloatingLabels {
     this.ro?.disconnect();
     this.offs.forEach((off) => off());
     this.list.remove();
+    this.net.remove();
   }
 
   private schedule(): void {
@@ -118,15 +130,18 @@ export class FloatingLabels {
     a.className = 'ku-float';
     a.href = node.url ?? '#';
     const dot = document.createElement('span');
-    dot.className = `ku-glyph ku-glyph--${node.type}`;
+    dot.className = 'ku-float__dot';
     dot.setAttribute('aria-hidden', 'true');
+    const text = document.createElement('span');
+    text.className = 'ku-float__text';
     const name = document.createElement('span');
     name.className = 'ku-float__name';
     name.textContent = node.name;
     const type = document.createElement('span');
     type.className = 'ku-float__type';
     type.textContent = TYPE_LABEL[node.type] ?? node.type;
-    a.append(dot, name, type);
+    text.append(name, type);
+    a.append(dot, text);
     a.addEventListener('pointerenter', () => this.highlight(index));
     a.addEventListener('pointerleave', () => this.highlight(null));
     li.append(a);
@@ -192,15 +207,55 @@ export class FloatingLabels {
       anchor,
       anchored: this.matches.length,
     });
+    const placed: Rect[] = [];
     els.forEach((li, k) => {
       const p = spots[k];
       if (!p) {
         li.hidden = true;
         return;
       }
+      placed.push({ l: p.x, t: p.y, r: p.x + sizes[k].w, b: p.y + sizes[k].h });
       li.style.transform = `translate(${Math.round(p.x)}px, ${Math.round(p.y)}px)`;
       // First placement appears in place (fade only); later ones glide.
       if (li.classList.contains('is-new')) requestAnimationFrame(() => li.classList.remove('is-new'));
     });
+    this.drawNetwork(box.width, box.height, safe, avoid, placed);
+  }
+
+  /** Redraw the decorative network for the current label positions. */
+  private drawNetwork(width: number, height: number, safe: Rect, avoid: Rect[], labels: Rect[]): void {
+    const { nodes, edges } = buildNetwork({ width, height, safe, avoid, labels, count: width < 700 ? 6 : width < 1100 ? 10 : 16 });
+    const svg = this.net;
+    svg.setAttribute('viewBox', `0 0 ${Math.round(width)} ${Math.round(height)}`);
+    svg.replaceChildren();
+    const lines = document.createElementNS(SVG, 'g');
+    lines.setAttribute('class', 'ku-net__lines');
+    for (const [x1, y1, x2, y2] of edges) {
+      const line = document.createElementNS(SVG, 'line');
+      line.setAttribute('x1', x1.toFixed(1));
+      line.setAttribute('y1', y1.toFixed(1));
+      line.setAttribute('x2', x2.toFixed(1));
+      line.setAttribute('y2', y2.toFixed(1));
+      lines.append(line);
+    }
+    svg.append(lines);
+    for (const n of nodes) {
+      const c = document.createElementNS(SVG, 'circle');
+      c.setAttribute('cx', n.x.toFixed(1));
+      c.setAttribute('cy', n.y.toFixed(1));
+      c.setAttribute('r', n.r.toFixed(1));
+      c.setAttribute('class', `ku-net__dot ku-net__dot--${n.tone}${n.blur ? ' ku-net__dot--blur' : ''}`);
+      svg.append(c);
+      if (!n.blur) {
+        // Soft halo around each junction.
+        const halo = document.createElementNS(SVG, 'circle');
+        halo.setAttribute('cx', n.x.toFixed(1));
+        halo.setAttribute('cy', n.y.toFixed(1));
+        halo.setAttribute('r', (n.r * 2.6).toFixed(1));
+        halo.setAttribute('class', `ku-net__halo ku-net__dot--${n.tone}`);
+        svg.insertBefore(halo, c);
+      }
+    }
+    svg.classList.toggle('is-quiet', this.matches.length > 0);
   }
 }
