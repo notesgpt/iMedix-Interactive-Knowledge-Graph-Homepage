@@ -239,6 +239,26 @@ console.log('Desktop');
     assert(state === 'paused', state);
   });
 
+  await test('library: compact entry cards without numbers; health areas fill the grid', async () => {
+    const cats = await page.locator('.ku-cat').allInnerTexts();
+    assert(cats.length === 2 && cats.every((t) => !/\d/.test(t)), cats.join(' | '));
+    const h = await page.evaluate(() => Math.max(...[...document.querySelectorAll('.ku-cat__link')].map((e) => e.getBoundingClientRect().height)));
+    assert(h <= 110, 'entry card ' + h + 'px tall');
+    const r = await page.evaluate(() => {
+      const areas = [...document.querySelectorAll('.ku-area')];
+      const grid = document.querySelector('.ku-areas').getBoundingClientRect();
+      const links = [...document.querySelectorAll('.ku-area__list a')].map((a) => a.getAttribute('href'));
+      // Every row of the grid is full: cards end at the grid's right edge in pairs or span it.
+      const rows = {};
+      for (const a of areas) { const b = a.getBoundingClientRect(); rows[Math.round(b.top)] = (rows[Math.round(b.top)] ?? 0) + b.width; }
+      return { n: areas.length, links, full: Object.values(rows).every((w) => w > grid.width - 40), meta: areas.map((a) => a.querySelector('.ku-area__meta').textContent) };
+    });
+    assert(r.n >= 6, r.n + ' areas');
+    assert(r.full, 'a grid row has a hole');
+    assert(r.links.every((u) => /^https:\/\/www\.imedix\.com\/(drugs|diseases)\/[a-z0-9-]+\/$/.test(u)), 'non-guide link');
+    assert(r.meta.every((m) => /\d+ (condition|medicine)/.test(m)), r.meta.join(' | '));
+  });
+
   await test('category colours come from the design tokens', async () => {
     const t = await page.evaluate(() => {
       const s = getComputedStyle(document.querySelector('.imedix-ku'));
@@ -260,7 +280,7 @@ console.log('Desktop');
     await page.keyboard.press('Escape');
     const page1 = await auditContrast(page);
     const bad = [...withPanel.failures, ...page1.failures];
-    assert(page1.checked > 200, 'only ' + page1.checked + ' text elements checked');
+    assert(page1.checked > 150, 'only ' + page1.checked + ' text elements checked');
     assert(bad.length === 0, bad.slice(0, 4).map((f) => `${f.cls} "${f.text}" ${f.ratio}:1 < ${f.need}`).join('; '));
     console.log(`      (${page1.checked} text elements, lowest ratio ${Math.min(page1.worst, withPanel.worst)}:1)`);
   });
@@ -377,18 +397,17 @@ console.log('Mobile');
     assert(w[0] <= w[1], w.join(' > '));
     const wide = await page.evaluate(() =>
       [...document.querySelectorAll('.ku-hero__inner, .ku-hero__inner *, .ku-wrap, .ku-wrap *')]
+        .filter((e) => !e.closest('.ku-area-index')) // an intentional swipe row
         .filter((e) => e.getBoundingClientRect().right > window.innerWidth + 1)
         .map((e) => e.className.baseVal ?? e.className),
     );
     assert(wide.length === 0, wide.slice(0, 5).join(', '));
   });
-  await test('health-area cards collapse to three guides and expand on demand', async () => {
-    const card = page.locator('.ku-topic').first();
-    const visible = () => card.locator('.ku-topic__list li:visible').count();
-    assert((await visible()) === 3, 'collapsed shows ' + (await visible()));
-    await card.locator('[data-ku-expand]').tap();
-    assert((await visible()) > 3, 'did not expand');
-    assert((await card.locator('[data-ku-expand]').getAttribute('aria-expanded')) === 'true', 'aria-expanded');
+  await test('health areas stack in one column; the area index is one swipeable row', async () => {
+    const cols = await page.evaluate(() => getComputedStyle(document.querySelector('.ku-areas')).gridTemplateColumns.split(' ').length);
+    assert(cols === 1, cols + ' columns');
+    const idx = await page.evaluate(() => { const u = document.querySelector('.ku-area-index ul'); return [getComputedStyle(u).flexWrap, u.scrollWidth > u.clientWidth]; });
+    assert(idx[0] === 'nowrap' && idx[1], idx.join());
   });
   await test('mobile readability: WCAG AA contrast', async () => {
     const r = await auditContrast(page);
@@ -432,7 +451,7 @@ console.log('JavaScript disabled');
     assert((await page.locator('h1').count()) === 1, 'h1');
     assert((await page.locator('form[role="search"] input[name="s"]').count()) === 1, 'form');
     assert((await page.locator('.ku-news__item a').count()) >= 5, 'news');
-    assert((await page.locator('.ku-topic__list a').count()) >= 40, 'topic links');
+    assert((await page.locator('.ku-area__list a').count()) >= 40, 'health-area links');
   });
   await test('heading hierarchy h1 → h2 → h3', async () => {
     const levels = await page.$$eval('.imedix-ku h1, .imedix-ku h2, .imedix-ku h3', (els) => els.map((e) => Number(e.tagName[1])));

@@ -108,7 +108,7 @@ if ( isset( $opts['news-live'] ) || isset( $opts['news-feed'] ) ) {
 $vm = array(
 	'counts'         => $client['counts'],
 	'hasGraph'       => true,
-	'topics'         => Discovery::topics( $client ),
+	'areas'          => Discovery::areas( $client ),
 	'suggestions'    => Discovery::suggestions( $client ),
 	'news'           => $news,
 	'newsArchive'    => $news ? $site . '/news/' : null,
@@ -171,23 +171,11 @@ $html = <<<HTML
      the system font: the real iMedix font is inherited from the theme in WordPress.
      Override with ?font= or by defining --imedix-* tokens to preview brand values. */
   body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: #fff; color: #112236; }
-  /* Header stand-in modelled on the live iMedix header: dark bar, white logo, text nav. */
-  .preview-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px clamp(16px, 4vw, 40px); background: #262b31; }
-  .preview-header a { color: #fff; text-decoration: none; font-size: 15px; }
-  .preview-logo { display: inline-flex; align-items: center; min-height: 40px; color: #fff; font-weight: 800; font-size: 24px; }
-  .preview-logo img { display: block; height: 40px; width: auto; }
-  .preview-header nav { display: flex; gap: 20px; flex-wrap: wrap; }
-  .preview-header nav a { color: #dfe3e8; }
-  @media (max-width: 480px) { .preview-logo img { height: 32px; } .preview-header nav { gap: 14px; } }
   .preview-footer { padding: 32px clamp(16px, 4vw, 40px); background: #112236; color: #a3bad2; font-size: 14px; }
 </style>
 $assets
 </head>
 <body class="page-template imedix-ku-page">
-<header class="preview-header" role="banner">
-  <a class="preview-logo" href="$site/" rel="home"><img src="$site/wp-content/uploads/2024/09/iMedix-logo-1.png" alt="iMedix" height="40" decoding="async" fetchpriority="high"></a>
-  <nav aria-label="Primary (theme stand-in)"><a href="$site/news/">News</a><a href="$site/drugs/">Drugs</a><a href="$site/diseases/">Diseases</a></nav>
-</header>
 <main id="primary" class="imedix-ku-main">
 $body
 </main>

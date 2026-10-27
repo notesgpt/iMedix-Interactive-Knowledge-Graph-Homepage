@@ -26,7 +26,7 @@ final class ViewModel {
 		$vm = array(
 			'counts'      => $counts,
 			'hasGraph'    => null !== $graph,
-			'topics'      => $graph ? Discovery::topics( $graph ) : array(),
+			'areas'       => $graph ? Discovery::areas( $graph ) : array(),
 			'suggestions' => $graph ? Discovery::suggestions( $graph ) : array(),
 			'news'        => $news['items'],
 			'newsArchive' => News::archive_url(),

@@ -56,6 +56,10 @@ export class SearchCombobox {
       if (this.input.value.trim()) this.update();
     });
     this.input.addEventListener('keydown', (e) => this.onKey(e));
+    // Choosing a type keeps the caret in the field (the filter only shows while searching).
+    this.filterBox?.addEventListener('mousedown', (e) => {
+      if ((e.target as Element).closest('label')) e.preventDefault();
+    });
     this.filterBox?.addEventListener('change', () => {
       this.update();
       this.input.focus();

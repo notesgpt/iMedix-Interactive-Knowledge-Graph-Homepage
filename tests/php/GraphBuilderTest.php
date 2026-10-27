@@ -169,3 +169,38 @@ test( 'Real tracker snapshot', function () {
 		T::ok( 0 === strpos( $sg['path'], '/d' ), 'suggestion has a path' );
 	}
 } );
+
+test( 'Discovery::areas merges tracker groupings and adds real article links only', function () {
+	$n = static fn( $id, $t, $name ) => array( 'id' => $id, 't' => $t, 'n' => $name, 'c' => $t, 'd' => 1, 'p' => '/' . $t . 's/' . substr( $id, strpos( $id, ':' ) + 1 ) . '/', 's' => 'completed' );
+	$client = array(
+		'nodes' => array(
+			$n( 'disease:hypertension', 'disease', 'Hypertension' ),
+			$n( 'disease:heart-failure', 'disease', 'Heart Failure' ),
+			$n( 'drug:lisinopril', 'drug', 'Lisinopril' ),
+			$n( 'drug:atenolol', 'drug', 'Atenolol' ),
+			$n( 'drug:unrelated', 'drug', 'Unrelated' ),
+			$n( 'disease:asthma', 'disease', 'Asthma' ),
+			array( 'id' => 'topic:blood-pressure', 't' => 'topic', 'n' => 'Blood Pressure', 'c' => 'topic', 'd' => 2 ),
+			array( 'id' => 'topic:heart-disease', 't' => 'topic', 'n' => 'Heart Disease', 'c' => 'topic', 'd' => 1 ),
+			array( 'id' => 'topic:asthma', 't' => 'topic', 'n' => 'Asthma', 'c' => 'topic', 'd' => 1 ),
+		),
+		'edges' => array(
+			array( 'disease:hypertension', 'topic:blood-pressure', 'in_topic' ),
+			array( 'drug:lisinopril', 'topic:blood-pressure', 'in_topic' ),
+			array( 'disease:heart-failure', 'topic:heart-disease', 'in_topic' ),
+			array( 'disease:asthma', 'topic:asthma', 'in_topic' ),
+			// The Hypertension guide links to Atenolol's guide (WordPress content).
+			array( 'disease:hypertension', 'drug:atenolol', 'links_to' ),
+		),
+	);
+	$areas = Discovery::areas( $client );
+	T::eq( 1, count( $areas ), 'areas below three guides are left out (Asthma)' );
+	$heart = $areas[0];
+	T::eq( 'Heart & Blood Pressure', $heart['name'], 'Blood Pressure + Heart Disease merge into one area' );
+	T::eq( 4, $heart['total'], 'tracker members plus the linked drug' );
+	T::eq( 2, $heart['drugs']['count'], 'Lisinopril (tracker) and Atenolol (article link)' );
+	T::eq( 2, $heart['diseases']['count'], 'Hypertension and Heart Failure' );
+	$names = array_merge( array_column( $heart['drugs']['items'], 'name' ), array_column( $heart['diseases']['items'], 'name' ) );
+	T::ok( ! in_array( 'Unrelated', $names, true ), 'nothing joins an area without a tracker grouping or an article link' );
+	T::eq( 'cardiovascular', $heart['icon'], 'area icon' );
+} );

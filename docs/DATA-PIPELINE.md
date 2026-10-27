@@ -134,3 +134,34 @@ carry the same editorial label.
 WordPress `post_title` is used when validated. Offline builds use a humaniser
 (`Core\Text::humanize_slug`) that knows trailing acronyms (`…-copd` → "(COPD)"), eponyms
 ("Parkinson's") and units ("HCl").
+
+## Health areas (library)
+
+`Core\Discovery::areas()` builds the "Health areas" in the library from real data only:
+
+1. **Tracker groupings.** The drug sheet's `Batch` and the disease sheet's `Cluster` are
+   editorial work groupings. On their own they are lopsided (in the current tracker the drug
+   batches and disease clusters barely overlap, and 599 of 797 drugs have no batch), so related
+   groupings are merged into reader-facing areas by a small documented map:
+
+   | Area | Tracker groupings |
+   |---|---|
+   | Heart & Blood Pressure | Cardiovascular, Blood Pressure, Heart Disease |
+   | Pain & Arthritis | Analgesics, Pain Relief, Arthritis |
+   | Diabetes | Diabetes |
+   | Infections | Antibiotics (disease cluster of bacterial infections) |
+   | Mental Health | Depression |
+   | Women's Health · Men's & Sexual Health · Digestive Health · Skin · Respiratory | Women's Health · Men's Health + ED · Gastrointestinal · Skincare · Asthma |
+
+   A new grouping that appears in the tracker becomes its own area under its own name.
+2. **Article links.** Each area is enriched with the `links_to` edges the sync reads from
+   published WordPress content: a disease guide that links to a drug guide (for example the
+   Hypertension guide's list of FDA-approved medicines) brings that drug into the area, and the
+   reverse. Nothing is inferred; a guide is in an area only through the tracker or a real link.
+3. Areas with fewer than three linkable guides are not shown; each card lists up to four
+   conditions and four medicines (eight when the area has one type), ranked completed guides
+   first, and states its totals.
+
+The offline fixture has no article links (the live site is unreachable from the build sandbox),
+so the preview shows tracker groupings only; after a sync on staging the areas also contain the
+linked guides.
