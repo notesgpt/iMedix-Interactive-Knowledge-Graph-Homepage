@@ -17,6 +17,8 @@ use Imedix\KnowledgeUniverse\Core\GraphBuilder;
 final class Sync {
 
 	public const HOOK          = 'imedix_ku_sync';
+	/** One-off rebuild shortly after a guide is published or unpublished. */
+	public const HOOK_SOON     = 'imedix_ku_sync_soon';
 	public const OPTION_GRAPH  = 'imedix_ku_graph';
 	public const OPTION_STATE  = 'imedix_ku_state';
 	public const OPTION_REPORT = 'imedix_ku_report';
@@ -28,6 +30,7 @@ final class Sync {
 		add_action( 'update_option_' . Settings::OPTION, array( self::class, 'reschedule' ) );
 		add_action( 'transition_post_status', array( self::class, 'mark_dirty_on_transition' ), 10, 3 );
 		add_action( 'post_updated', array( self::class, 'mark_dirty_on_update' ), 10, 1 );
+		add_action( self::HOOK_SOON, array( self::class, 'cron' ) );
 	}
 
 	public static function activate(): void {
@@ -36,6 +39,7 @@ final class Sync {
 
 	public static function deactivate(): void {
 		wp_clear_scheduled_hook( self::HOOK );
+		wp_clear_scheduled_hook( self::HOOK_SOON );
 	}
 
 	public static function reschedule(): void {
@@ -318,6 +322,11 @@ final class Sync {
 				if ( empty( $state['dirty'] ) ) {
 					$state['dirty'] = true;
 					self::save_state( $state );
+				}
+				// A newly published (or withdrawn) guide reaches the homepage within minutes, not at the
+				// next twice-daily run. Debounced: one pending rebuild covers a batch of edits.
+				if ( ! wp_next_scheduled( self::HOOK_SOON ) ) {
+					wp_schedule_single_event( time() + 10 * MINUTE_IN_SECONDS, self::HOOK_SOON );
 				}
 				return;
 			}

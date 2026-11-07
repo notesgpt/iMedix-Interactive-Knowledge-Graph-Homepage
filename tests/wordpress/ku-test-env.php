@@ -44,3 +44,36 @@ add_filter(
 	10,
 	3
 );
+
+// "Drug Categories" taxonomy, as on iMedix.
+add_action(
+	'init',
+	static function () {
+		register_taxonomy( 'drug-category', 'drugs', array( 'public' => true, 'hierarchical' => true, 'label' => 'Drug Categories' ) );
+	}
+);
+
+/*
+ * XML sitemaps the way the SEO plugin serves them (option ku_test_sitemap = on):
+ * every published drug / disease post, except those marked noindex.
+ */
+add_filter(
+	'pre_http_request',
+	static function ( $pre, $args, $url ) {
+		if ( 'on' !== get_option( 'ku_test_sitemap', 'off' ) || ! preg_match( '#/(drugs|diseases|ingredients)-sitemap(\d*)\.xml$#', (string) $url, $m ) ) {
+			return $pre;
+		}
+		if ( 'ingredients' === $m[1] || '' !== $m[2] ) {
+			return array( 'headers' => array(), 'body' => '', 'response' => array( 'code' => 404, 'message' => 'Not Found' ), 'cookies' => array(), 'filename' => null );
+		}
+		$ids  = get_posts( array( 'post_type' => $m[1], 'post_status' => 'publish', 'numberposts' => -1, 'fields' => 'ids', 'meta_query' => array( array( 'key' => 'ku_noindex', 'compare' => 'NOT EXISTS' ) ) ) );
+		$body = '<?xml version="1.0" encoding="UTF-8"?><urlset>';
+		foreach ( $ids as $id ) {
+			$body .= '<url><loc>' . esc_url( get_permalink( $id ) ) . '</loc></url>';
+		}
+		$body .= '</urlset>';
+		return array( 'headers' => array( 'content-type' => 'application/xml' ), 'body' => $body, 'response' => array( 'code' => 200, 'message' => 'OK' ), 'cookies' => array(), 'filename' => null );
+	},
+	10,
+	3
+);

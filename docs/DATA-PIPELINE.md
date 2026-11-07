@@ -13,8 +13,18 @@ The Google Sheet is the source of the **entity inventory**; WordPress is the sou
 * **Categories**: the fixed iMedix list (`Topics::CATEGORIES`). Drugs use the sheet column
   `Disease Category` (Batch as fallback), diseases `Cluster`. "Other" and unknown labels give no
   category and are never shown. One Health area per category, no merging.
+* **Published but not in the tracker** (2026-11-07): every drug / disease page in the sitemap is on
+  the homepage, even before the tracker lists it. Name, categories (the post type's public
+  hierarchical taxonomies, e.g. "Drug Categories") and approval status come from WordPress; the
+  editorial label is `untracked`. The homepage count therefore equals the sitemap; the admin page
+  reconciles "Published in WordPress / in the sitemap / on the homepage" (a gap between the first
+  two is noindex posts the SEO plugin leaves out of the sitemap) and lists untracked guides.
 * **Unregistered products**: Drugs column `Registration` = `Unregistered` (gray-market generics,
-  look-alike brands). Searchable, never featured (hero, areas, suggestions), never related.
+  look-alike brands), **or** the guide's own `drug_status` field says "Not Approved" /
+  "Not FDA-approved" / "Unapproved" (field name filterable: `imedix_ku_approval_fields`).
+  Searchable, never featured (hero, areas, suggestions), never related.
+* **Freshness**: publishing, unpublishing or editing a drug / disease guide schedules a one-off
+  rebuild ten minutes later (`imedix_ku_sync_soon`), on top of the scheduled runs.
 * **Clinical relationships come only from the signed knowledge graph** in the theme's Disease
   Registry (seeded from the iMedix KG packages), read by `WordPress\KgSource` through
   `Imedix_DR_Repository::panelRows()` + `Imedix_DR_GraphPanel::view()` — the same gates as the

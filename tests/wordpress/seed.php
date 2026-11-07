@@ -44,4 +44,20 @@ for ( $i = 1; $i <= 15; $i++ ) {
 		)
 	);
 }
+// Published on the site but not (yet) in the tracker: a new guide with WordPress categories,
+// and an imported product whose own status field says it is not FDA-approved.
+foreach ( array( 'venlor-new' => array( 'Venlor New', 'Not Approved' ), 'lithium-new' => array( 'Lithium New', '' ) ) as $slug => [ $title, $status ] ) {
+	$id = wp_insert_post( array( 'post_type' => 'drugs', 'post_name' => $slug, 'post_title' => $title, 'post_status' => 'publish', 'post_content' => '<p>New guide.</p>' ) );
+	wp_set_object_terms( $id, array( 'Depression' ), 'drug-category' );
+	if ( '' !== $status ) {
+		update_post_meta( $id, 'drug_status', $status );
+	}
+}
+// A published guide the SEO plugin keeps out of the sitemap (noindex).
+$noindex = get_page_by_path( 'aldactone', OBJECT, 'drugs' );
+if ( $noindex ) {
+	update_post_meta( $noindex->ID, 'ku_noindex', '1' );
+}
+wp_insert_post( array( 'post_type' => 'page', 'post_title' => 'Editorial policy', 'post_name' => 'editorial-policy', 'post_status' => 'publish' ) );
+wp_insert_post( array( 'post_type' => 'page', 'post_title' => 'About us', 'post_name' => 'about-us', 'post_status' => 'draft' ) );
 echo "seeded $count entity posts\n";

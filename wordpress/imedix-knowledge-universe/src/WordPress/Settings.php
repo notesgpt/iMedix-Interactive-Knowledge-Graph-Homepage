@@ -39,6 +39,9 @@ final class Settings {
 			'news_post_type'    => 'news',
 			'news_count'        => 12,
 			'news_refresh_secs' => 600,
+			// YMYL: the homepage says "medically reviewed" only once an editor confirms it is true.
+			'claim_medical_review' => false,
+			'review_url'           => '',
 		);
 	}
 
@@ -96,6 +99,10 @@ final class Settings {
 		$out['news_post_type']    = '' !== $pt ? $pt : $d['news_post_type'];
 		$out['news_count']        = isset( $in['news_count'] ) ? max( 4, min( 20, (int) $in['news_count'] ) ) : $d['news_count'];
 		$out['news_refresh_secs'] = isset( $in['news_refresh_secs'] ) ? max( 120, min( 3600, (int) $in['news_refresh_secs'] ) ) : $d['news_refresh_secs'];
+
+		$out['claim_medical_review'] = ! empty( $in['claim_medical_review'] );
+		$url                         = isset( $in['review_url'] ) ? esc_url_raw( trim( (string) $in['review_url'] ), array( 'https', 'http' ) ) : '';
+		$out['review_url']           = '' !== $url && 0 === strpos( $url, home_url( '/' ) ) ? $url : '';
 
 		return $out;
 	}

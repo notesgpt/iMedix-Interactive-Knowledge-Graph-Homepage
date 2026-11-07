@@ -60,7 +60,49 @@ final class WpResolver {
 			// Active ingredient(s) as written in the drug guide, e.g. "Amoxicillin + Clavulanate potassium".
 			'active'   => 'drug' === $type ? trim( wp_strip_all_tags( (string) get_post_meta( $post->ID, 'product_info_activeingredient', true ) ) ) : '',
 			'path'     => null === $permalink_path ? $path : $permalink_path,
+			// Editorial categories (e.g. the "Drug Categories" taxonomy) for guides the tracker does not categorise.
+			'categories' => $this->categories( $post ),
+			// The guide's own regulatory status field, e.g. "Not Approved" for imported products.
+			'approval' => 'drug' === $type ? $this->approval( $post->ID ) : '',
 		);
+	}
+
+	/**
+	 * Term names from the post type's public, hierarchical taxonomies.
+	 *
+	 * @return string[]
+	 */
+	private function categories( \WP_Post $post ): array {
+		$names = array();
+		foreach ( get_object_taxonomies( $post, 'objects' ) as $tax ) {
+			if ( ! $tax->public || ! $tax->hierarchical ) {
+				continue;
+			}
+			$terms = get_the_terms( $post, $tax->name );
+			if ( is_array( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$names[] = html_entity_decode( (string) $term->name, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+				}
+			}
+		}
+		return array_values( array_unique( $names ) );
+	}
+
+	/**
+	 * Regulatory status as written on the guide. The field name is filterable
+	 * (`imedix_ku_approval_fields`); ACF fields are read through ACF when present.
+	 */
+	private function approval( int $post_id ): string {
+		foreach ( (array) apply_filters( 'imedix_ku_approval_fields', array( 'drug_status' ) ) as $field ) {
+			$value = function_exists( 'get_field' ) ? get_field( (string) $field, $post_id, false ) : get_post_meta( $post_id, (string) $field, true );
+			if ( is_array( $value ) ) {
+				$value = implode( ' ', array_map( 'strval', $value ) );
+			}
+			if ( is_string( $value ) && '' !== trim( $value ) ) {
+				return trim( wp_strip_all_tags( $value ) );
+			}
+		}
+		return '';
 	}
 
 	/**

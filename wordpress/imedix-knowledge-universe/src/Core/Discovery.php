@@ -231,6 +231,40 @@ final class Discovery {
 	}
 
 	/**
+	 * Facts for the "How iMedix guides are made" block, all counted from the
+	 * synced data: guides on the current editorial standard (tracker status
+	 * Completed) out of all published guides, and guides updated recently.
+	 *
+	 * @param array<string, mixed> $graph Client graph.
+	 * @param string               $today YYYY-MM-DD (site time).
+	 * @return array{drug: array{done:int, total:int}, disease: array{done:int, total:int}, recent:int, days:int}
+	 */
+	public static function standard( array $graph, string $today, int $days = 30 ): array {
+		$out   = array(
+			'drug'    => array( 'done' => 0, 'total' => 0 ),
+			'disease' => array( 'done' => 0, 'total' => 0 ),
+			'recent'  => 0,
+			'days'    => $days,
+		);
+		$since = gmdate( 'Y-m-d', (int) strtotime( $today . ' -' . $days . ' days' ) );
+		foreach ( $graph['nodes'] ?? array() as $n ) {
+			$t = (string) ( $n['t'] ?? '' );
+			if ( ! in_array( $t, array( 'drug', 'disease' ), true ) || empty( $n['p'] ) ) {
+				continue;
+			}
+			++$out[ $t ]['total'];
+			if ( 'completed' === ( $n['s'] ?? '' ) ) {
+				++$out[ $t ]['done'];
+			}
+			$u = (string) ( $n['u'] ?? '' );
+			if ( '' !== $u && $u >= $since && $u <= $today ) {
+				++$out['recent'];
+			}
+		}
+		return $out;
+	}
+
+	/**
 	 * @param array<string, mixed> $graph
 	 * @return array<string, array<string, mixed>>
 	 */

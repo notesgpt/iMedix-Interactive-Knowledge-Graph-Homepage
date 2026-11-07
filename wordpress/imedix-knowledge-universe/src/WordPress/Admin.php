@@ -102,6 +102,37 @@ final class Admin {
 						}
 						?>
 					</td></tr>
+					<?php if ( ! empty( $report['published'] ) ) : ?>
+						<?php
+						$bases = array(
+							'drug'    => array( __( 'Drug guides', 'imedix-ku' ), (string) $s['base_drug'] ),
+							'disease' => array( __( 'Disease guides', 'imedix-ku' ), (string) $s['base_disease'] ),
+						);
+						?>
+						<?php foreach ( $bases as $type => [ $label, $base ] ) : ?>
+							<?php
+							$wp_count = ViewModel::published_for_base( $base );
+							$row      = $report['published'][ $type ] ?? array( 'sitemap' => 0, 'graph' => 0 );
+							$matches  = null === $wp_count || ( $wp_count === (int) $row['sitemap'] && (int) $row['sitemap'] === (int) $row['graph'] );
+							?>
+							<tr><th><?php echo esc_html( $label ); ?></th><td>
+								<?php
+								/* translators: 1: published in WordPress, 2: in the XML sitemap, 3: on the homepage. */
+								printf( esc_html__( 'Published in WordPress: %1$s · in the sitemap: %2$s · on the homepage: %3$s', 'imedix-ku' ), esc_html( null === $wp_count ? '—' : (string) $wp_count ), esc_html( (string) (int) $row['sitemap'] ), esc_html( (string) (int) $row['graph'] ) );
+								if ( ! $matches ) {
+									echo '<br><span class="description">' . esc_html__( 'Different numbers: published posts set to noindex are left out of the sitemap by the SEO plugin; sitemap pages missing from the homepage are listed under "Rejected records" (e.g. redirected in the redirect sheet). Sync after publishing to refresh.', 'imedix-ku' ) . '</span>';
+								}
+								?>
+							</td></tr>
+						<?php endforeach; ?>
+						<?php if ( ! empty( $report['untracked'] ) ) : ?>
+							<tr><th><?php esc_html_e( 'Published, not in the tracker', 'imedix-ku' ); ?></th><td>
+								<?php echo esc_html( (string) count( (array) $report['untracked'] ) ); ?> —
+								<code><?php echo esc_html( implode( ' ', array_slice( (array) $report['untracked'], 0, 40 ) ) ); ?></code>
+								<p class="description"><?php esc_html_e( 'Shown on the homepage with their WordPress categories; add them to the tracker to manage them there.', 'imedix-ku' ); ?></p>
+							</td></tr>
+						<?php endif; ?>
+					<?php endif; ?>
 					<tr><th><?php esc_html_e( 'Static graph file', 'imedix-ku' ); ?></th><td><?php echo ! empty( $state['file'] ) ? '<code>' . esc_html( $state['file'] ) . '</code>' : esc_html__( 'none (REST endpoint is used)', 'imedix-ku' ); ?></td></tr>
 					<tr><th><?php esc_html_e( 'Next scheduled run', 'imedix-ku' ); ?></th><td><?php $next = wp_next_scheduled( Sync::HOOK ); echo $next ? esc_html( gmdate( 'c', $next ) ) : '—'; ?></td></tr>
 				</tbody>
@@ -161,6 +192,12 @@ final class Admin {
 							<label><?php esc_html_e( 'Items', 'imedix-ku' ); ?> <input type="number" min="4" max="20" class="small-text" name="<?php echo esc_attr( $opt ); ?>[news_count]" value="<?php echo esc_attr( (string) $s['news_count'] ); ?>"></label>
 							<label><?php esc_html_e( 'Browser refresh (s)', 'imedix-ku' ); ?> <input type="number" min="120" max="3600" class="small-text" name="<?php echo esc_attr( $opt ); ?>[news_refresh_secs]" value="<?php echo esc_attr( (string) $s['news_refresh_secs'] ); ?>"></label>
 							<p class="description"><?php echo post_type_exists( $s['news_post_type'] ) ? esc_html__( 'Post type found.', 'imedix-ku' ) : esc_html__( 'Post type not registered — the ticker stays hidden.', 'imedix-ku' ); ?></p>
+						</td></tr>
+					<tr><th scope="row"><?php esc_html_e( 'Medical review claim', 'imedix-ku' ); ?></th>
+						<td>
+							<label><input type="checkbox" name="<?php echo esc_attr( $opt ); ?>[claim_medical_review]" value="1" <?php checked( ! empty( $s['claim_medical_review'] ) ); ?>> <?php esc_html_e( 'Guides are reviewed by licensed clinicians, and each guide names its reviewer and review date', 'imedix-ku' ); ?></label><br>
+							<label><?php esc_html_e( 'Page that lists the reviewers', 'imedix-ku' ); ?> <input type="url" class="regular-text code" name="<?php echo esc_attr( $opt ); ?>[review_url]" value="<?php echo esc_attr( (string) $s['review_url'] ); ?>" placeholder="<?php echo esc_attr( home_url( '/medical-review-board/' ) ); ?>"></label>
+							<p class="description"><?php esc_html_e( 'YMYL: the homepage says "medically reviewed" only when this is ticked and the page is on this site. Leave it off until every featured guide carries a named reviewer.', 'imedix-ku' ); ?></p>
 						</td></tr>
 				</table>
 				<?php submit_button(); ?>

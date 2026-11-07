@@ -60,16 +60,15 @@ out=$(wp imedix-ku sync --force 2>&1 || true)
 echo "  $out"
 check "first sync builds the graph" contains "$out" "Success: built"
 state=$(wp imedix-ku status)
-check "drafts are excluded (797 - 2 drug drafts)" contains "$state" '"drug": 795'
-check "draft disease excluded (96 - 1)" contains "$state" '"disease": 95'
+# No sitemap yet: the tracker fallback shows Completed guides that are published.
+check "tracker fallback: Completed + published drugs only" contains "$state" '"drug": 336'
+check "tracker fallback: Completed + published diseases only" contains "$state" '"disease": 13'
 check "static versioned file written" contains "$state" "/wp-content/uploads/imedix-ku/graph-"
 rej=$(wp imedix-ku rejected --format=csv)
-check "draft posts logged as not published / not found" bash -c 'grep -Eq "abilify,(wp_not_found|wp_not_published)" <<<"$1"' _ "$rej"
+check "draft posts logged as not published / not found" bash -c 'grep -Eq "zoloft,(wp_not_found|wp_not_published)" <<<"$1"' _ "$rej"
 check "retired rows logged" contains "$rej" "status_retired"
 graph=$(wp option get imedix_ku_graph)
 check "WordPress titles replace slug names" contains "$graph" '"n":"WP title: Metformin"'
-check "content links become links_to edges" contains "$graph" '["drug:metformin","disease:diabetes-mellitus","links_to"]'
-check "relative content links resolved" contains "$graph" '["drug:metformin","disease:metabolic-syndrome","links_to"]'
 check "excerpt stripped of markup" contains "$graph" '"x":"Excerpt with markup & entities."'
 check "node paths are site-relative" contains "$graph" '"p":"/drugs/metformin/"'
 
@@ -92,6 +91,26 @@ out=$(wp imedix-ku sync --force 2>&1 || true)
 check "collapse guard refuses a truncated sheet" contains "$out" "Refusing to publish"
 check "last good graph still kept" equals "$before" "$(wp option get imedix_ku_graph | md5sum)"
 wp option update ku_test_sheet ok >/dev/null
+
+echo "== Sitemap mode (production): published = homepage"
+wp option update ku_test_sitemap on >/dev/null
+out=$(wp imedix-ku sync --force 2>&1 || true)
+check "sitemap sync builds the graph" contains "$out" "Success: built"
+graph=$(wp option get imedix_ku_graph)
+report=$(wp option get imedix_ku_report --format=json)
+published=$(wp post list --post_type=drugs --post_status=publish --format=count)
+in_graph=$(php -r 'echo json_decode(stream_get_contents(STDIN), true)["counts"]["drug"];' <<<"$graph")
+check "every sitemap drug is on the homepage (published − 1 noindex)" equals "$in_graph" "$(( published - 1 ))"
+check "reconciliation: sitemap count = homepage count" equals "$(php -r '$r=json_decode(stream_get_contents(STDIN), true)["published"]["drug"]; echo $r["sitemap"] === $r["graph"] ? "ok" : json_encode($r);' <<<"$report")" "ok"
+check "published guide missing from the tracker is included" contains "$graph" '"id":"drug:lithium-new"'
+check "its WordPress category is used" contains "$graph" '["drug:lithium-new","topic:depression","in_topic"]'
+check "untracked guides listed for editors" contains "$report" 'lithium-new'
+venlor=$(php -r 'foreach (json_decode(stream_get_contents(STDIN), true)["nodes"] as $n) if ($n["id"] === "drug:venlor-new") echo $n["r"] ?? "featured";' <<<"$graph")
+check "guide marked Not Approved: searchable, never featured" equals "$venlor" "0"
+check "content links within a category become links_to edges" contains "$graph" '["drug:metformin","disease:diabetes-mellitus","links_to"]'
+check "relative content links resolved" contains "$graph" '["drug:metformin","disease:metabolic-syndrome","links_to"]'
+wp post update "$(wp post list --post_type=drugs --name=lithium-new --field=ID)" --post_content="<p>Edited.</p>" >/dev/null
+check "editing a guide schedules a quick rebuild" contains "$(wp cron event list --fields=hook --format=csv)" "imedix_ku_sync_soon"
 
 echo "== Front end"
 home_id=$(wp post create --post_type=page --post_title=Home --post_status=publish --porcelain)
@@ -117,12 +136,17 @@ run_frontend_checks() {
   check "[$theme] homepage renders the Knowledge Universe" contains "$html" 'data-ku-root'
   check "[$theme] exactly one <h1>" equals "$(grep -o '<h1' <<<"$html" | wc -l | tr -d ' ')" "1"
   check "[$theme] search form works without JS (GET ?s=)" contains "$html" 'name="s"'
-  check "[$theme] counts rendered server-side" contains "$html" 'Drugs <strong>795</strong>'
+  check "[$theme] counts rendered server-side (= guides in the sitemap)" contains "$html" "Drugs <strong>$(wp option get imedix_ku_graph | php -r 'echo json_decode(stream_get_contents(STDIN), true)["counts"]["drug"];')</strong>"
   check "[$theme] official platform title as the H1" contains "$html" '<span>iMedix:</span> Independent Drug &amp; Health Platform'
   check "[$theme] news ticker under the hero" equals "$(php -r '$h=stream_get_contents(STDIN); echo strpos($h,"class=\"ku-hero\"") < strpos($h,"class=\"ku-news\"") ? "ok" : "bad";' <<<"$html")" "ok"
   check "[$theme] plugin adds no meta description (SEO plugin owns it)" not_contains "$html" 'name="description"'
   check "[$theme] at most one <title> (plugin adds no SEO title)" equals "$(( $(grep -o '<title' <<<"$html" | wc -l) <= 1 ))" "1"
   check "[$theme] no 3D renderer markup" not_contains "$html" 'data-ku-card'
+  check "[$theme] YMYL: how-guides-are-made block" contains "$html" 'How iMedix guides are made'
+  check "[$theme] YMYL: US help lines" contains "$html" 'href="tel:988"'
+  check "[$theme] YMYL: link to a published transparency page" contains "$html" "$URL/editorial-policy/"
+  check "[$theme] YMYL: no link to an unpublished page" not_contains "$html" 'about-us'
+  check "[$theme] YMYL: no medical-review claim until confirmed" not_contains "$html" 'Medically reviewed'
   check "[$theme] crawlable topic links" contains "$html" "href=\"$URL/diseases/hypertension/\""
   check "[$theme] news titles escaped, tags stripped" contains "$html" 'Integration test news item 14: A&amp;B trial'
   check "[$theme] no raw script injection" not_contains "$html" '<script>alert(1)'
@@ -170,7 +194,9 @@ check "theme colour hooks available (--imedix-color-*)" contains "$css" "--imedi
 echo "== Admin"
 admin=$(wp eval 'wp_set_current_user(1); \Imedix\KnowledgeUniverse\WordPress\Admin::render();')
 check "settings page renders sync status" contains "$admin" "Sync status"
-check "settings page lists rejected records" contains "$admin" "status_retired"
+check "settings page lists rejected records" contains "$admin" "not_in_sitemap"
+check "settings page reconciles published / sitemap / homepage" contains "$admin" "Published in WordPress: $published · in the sitemap: $(( published - 1 )) · on the homepage: $(( published - 1 ))"
+check "settings page lists guides missing from the tracker" contains "$admin" "/drugs/lithium-new/"
 noadmin=$(wp eval 'wp_set_current_user(0); \Imedix\KnowledgeUniverse\WordPress\Admin::render(); echo "END";')
 check "settings page hidden from anonymous users" equals "$noadmin" "END"
 san=$(wp eval 'echo json_encode(\Imedix\KnowledgeUniverse\WordPress\Settings::sanitize(array("spreadsheet_id"=>"<script>","news_count"=>999,"base_drug"=>"javascript:x","sheet_host"=>"evil host","source_mode"=>"x")));')
@@ -194,7 +220,7 @@ wp plugin deactivate imedix-knowledge-universe >/dev/null
 wp eval 'define("WP_UNINSTALL_PLUGIN", true); include WP_PLUGIN_DIR . "/imedix-knowledge-universe/uninstall.php";'
 check "options removed" equals "$(wp option get imedix_ku_graph 2>/dev/null || echo gone)" "gone"
 check "generated files removed" bash -c "[ ! -d '$W/wp-content/uploads/imedix-ku' ]"
-check "posts untouched" equals "$(wp post list --post_type=drugs --format=count --post_status=any)" "797"
+check "posts untouched" equals "$(wp post list --post_type=drugs --format=count --post_status=any)" "799"
 
 echo
 echo "WordPress integration: $pass passed, $fail failed"

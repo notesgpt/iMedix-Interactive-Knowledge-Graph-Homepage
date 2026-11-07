@@ -86,6 +86,9 @@ final class GraphBuilder {
 	/** @var array<int, array<string, string>> */
 	private array $rejected = array();
 
+	/** @var string[] Published paths added from the sitemap (not in the tracker). */
+	private array $untracked = array();
+
 	/** @var array<int, array<string, string>> */
 	private array $warnings = array();
 
@@ -189,6 +192,7 @@ final class GraphBuilder {
 		foreach ( $disease_rows as $row ) {
 			$this->add_disease( $row );
 		}
+		$this->add_untracked();
 
 		$this->add_aliases();
 		$this->add_ingredients();
@@ -365,6 +369,17 @@ final class GraphBuilder {
 			}
 		}
 
+		// Guides the tracker does not (yet) categorise take their categories from WordPress.
+		if ( ! $topics && is_callable( $resolver ) && ! empty( $live['categories'] ) && is_array( $live['categories'] ) ) {
+			foreach ( $live['categories'] as $label ) {
+				$cat = Topics::category( (string) $label );
+				if ( '' !== $cat && 'Other' !== $cat && ! in_array( $cat, $topics, true ) ) {
+					$topics[] = $cat;
+				}
+			}
+			$topic_source = 'WordPress.Category';
+		}
+
 		$topic_keys = array();
 		foreach ( $topics as $label ) {
 			$topic_keys[] = $this->ensure_topic( $label, $topic_source );
@@ -390,6 +405,10 @@ final class GraphBuilder {
 			'urlDerived'  => $url_derived,
 		);
 		$this->by_path[ $expected ] = $id;
+		// The guide itself says the product is not FDA-approved: searchable, never featured.
+		if ( 'drug' === $type && is_callable( $resolver ) && self::not_approved( (string) ( $live['approval'] ?? '' ) ) ) {
+			$this->nodes[ $id ]['registered'] = false;
+		}
 
 		foreach ( $topic_keys as $key ) {
 			$this->add_edge( $id, 'topic:' . $key, 'in_topic', $topic_source );
@@ -815,6 +834,54 @@ final class GraphBuilder {
 	/**
 	 * @return array<string, mixed>
 	 */
+	/**
+	 * Published guides the tracker does not list yet (new pages): the sitemap
+	 * says readers can see them, so they belong on the homepage too. Their
+	 * names, categories and approval status come from WordPress.
+	 */
+	private function add_untracked(): void {
+		if ( ! $this->sitemap_mode() || ! is_callable( $this->options['resolver'] ) ) {
+			return; // Without WordPress there is no reliable name or status to show.
+		}
+		foreach ( array( 'drug' => 'Drugs', 'disease' => 'Diseases' ) as $type => $sheet ) {
+			$prefix = $this->entity_path( $type, '' );
+			if ( null === $prefix ) {
+				continue;
+			}
+			$prefix = substr( $prefix, 0, -1 );
+			foreach ( array_keys( $this->options['published_paths'] ) as $path ) {
+				if ( 0 !== strpos( $path, $prefix ) || isset( $this->by_path[ $path ] ) ) {
+					continue;
+				}
+				$slug = substr( $path, strlen( $prefix ), -1 );
+				if ( ! Text::is_slug( $slug ) || isset( $this->nodes[ $type . ':' . $slug ] ) ) {
+					continue;
+				}
+				$this->add_entity(
+					$type,
+					$sheet,
+					array(
+						'_row' => 'sitemap',
+						'slug' => $slug,
+						'url'  => 'https://' . $this->host() . $path,
+					),
+					'untracked',
+					'Published, not in the tracker',
+					array(),
+					'WordPress.Category'
+				);
+				if ( isset( $this->nodes[ $type . ':' . $slug ] ) ) {
+					$this->untracked[] = $path;
+				}
+			}
+		}
+	}
+
+	/** "Not Approved", "Not FDA approved", "Unapproved" … as written in the guide's status field. */
+	private static function not_approved( string $status ): bool {
+		return 1 === preg_match( '/\bnot\s+(?:fda[\s-]*)?approved\b|\bunapproved\b|\bunregistered\b/i', $status );
+	}
+
 	private function report( int $drug_rows, int $disease_rows ): array {
 		$reasons = array();
 		foreach ( $this->rejected as $r ) {
@@ -829,9 +896,36 @@ final class GraphBuilder {
 				'redirects'   => count( $this->redirects->sources() ),
 			),
 			'rejectedByReason' => $reasons,
+			'published'   => $this->published_counts(),
+			'untracked'   => $this->untracked,
 			'rejected'    => $this->rejected,
 			'warnings'    => $this->warnings,
 		);
+	}
+
+	/**
+	 * Guides the sitemap lists versus guides in the graph, per type: the two
+	 * numbers an editor compares with "Published" in WordPress.
+	 *
+	 * @return array<string, array{sitemap:int, graph:int}>
+	 */
+	private function published_counts(): array {
+		$out = array();
+		foreach ( array( 'drug', 'disease' ) as $type ) {
+			$prefix = $this->entity_path( $type, '' );
+			$in_map = 0;
+			if ( $this->sitemap_mode() && null !== $prefix ) {
+				$prefix = substr( $prefix, 0, -1 );
+				foreach ( array_keys( $this->options['published_paths'] ) as $path ) {
+					$in_map += ( 0 === strpos( $path, $prefix ) && strlen( $path ) > strlen( $prefix ) ) ? 1 : 0;
+				}
+			}
+			$out[ $type ] = array(
+				'sitemap' => $in_map,
+				'graph'   => count( array_filter( $this->nodes, static fn( $n ) => $type === $n['type'] ) ),
+			);
+		}
+		return $out;
 	}
 
 	private function sitemap_mode(): bool {

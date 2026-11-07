@@ -353,3 +353,54 @@ test( 'Signed knowledge graph: only registry claims, US FDA labels, ANDA never a
 	$brand = array_values( array_filter( ClientPayload::kg_links( $only_anda, (array) $g['kgSources'] ), fn( $p ) => 'drug:maxalt' === $p[0] ) );
 	T::eq( '', $brand[0][3], 'a brand never shows an ANDA label' );
 } );
+
+test( 'Published guides missing from the tracker are included; "Not Approved" guides are never featured', function () {
+	$drugs    = ku_csv(
+		array(
+			array( '#', 'Drug slug', 'URL', 'Status', 'Batch', 'Note', 'Completed on', 'Disease Category', 'Registration' ),
+			array( '1', 'zoloft', 'https://www.imedix.com/drugs/zoloft/', 'Completed', '', '', '', 'Depression', '' ),
+			array( '2', 'bimat', 'https://www.imedix.com/drugs/bimat/', 'Completed', '', '', '', 'Hair Loss', '' ),
+		)
+	);
+	$diseases = ku_csv(
+		array(
+			array( '#', 'Disease slug', 'URL', 'Decision', 'Target (301)', 'Cluster', 'Standard', 'Status', 'Note', 'Updated on' ),
+			array( '1', 'asthma', 'https://www.imedix.com/diseases/asthma/', 'KEEP', '', 'Asthma', 'v1.3', 'Completed (v1.3)', '', '2026-11-01' ),
+		)
+	);
+	$live     = array(
+		'zoloft' => array( 'Zoloft', array( 'Depression' ), 'Approved' ),
+		'bimat'  => array( 'Bimat', array( 'Drugs', 'Glaucoma', 'Hair Loss' ), 'Not Approved' ),
+		'venlor' => array( 'Venlor', array( 'Anxiety', 'Depression' ), 'Not FDA-approved' ),
+		'lithium' => array( 'Lithium', array( 'Bipolar Disorder', 'Drugs' ), '' ),
+		'asthma' => array( 'Asthma', array(), '' ),
+	);
+	$resolver = function ( string $type, string $slug, string $path ) use ( $live ) {
+		return isset( $live[ $slug ] ) ? array( 'status' => 'publish', 'title' => $live[ $slug ][0], 'path' => $path, 'categories' => $live[ $slug ][1], 'approval' => $live[ $slug ][2] ) : null;
+	};
+	$out   = ( new GraphBuilder(
+		array(
+			'generated_at'    => 'T',
+			'resolver'        => $resolver,
+			'published_paths' => array( '/diseases/asthma/', '/drugs/bimat/', '/drugs/lithium/', '/drugs/venlor/', '/drugs/zoloft/', '/ingredients/sertraline/' ),
+		)
+	) )->build( $drugs, $diseases, null );
+	$nodes = array_column( $out['graph']['nodes'], null, 'id' );
+
+	T::ok( isset( $nodes['drug:venlor'], $nodes['drug:lithium'] ), 'published but not in the tracker → on the homepage' );
+	T::eq( 'Lithium', $nodes['drug:lithium']['name'], 'name from WordPress' );
+	T::eq( 'untracked', $nodes['drug:lithium']['status']['editorial'], 'labelled as not in the tracker' );
+	T::eq( 4, $out['graph']['counts']['drug'], 'drug count equals drug pages in the sitemap' );
+	T::eq( array( 'sitemap' => 4, 'graph' => 4 ), $out['report']['published']['drug'], 'reconciliation: sitemap = homepage' );
+	T::eq( array( '/drugs/lithium/', '/drugs/venlor/' ), $out['report']['untracked'], 'untracked guides listed for editors' );
+
+	$edges = array_map( fn( $e ) => $e['source'] . '>' . $e['target'], array_filter( $out['graph']['edges'], fn( $e ) => 'in_topic' === $e['type'] ) );
+	T::ok( in_array( 'drug:venlor>topic:depression', $edges, true ), 'untracked guide takes its WordPress categories' );
+	T::ok( ! in_array( 'drug:bimat>topic:glaucoma', $edges, true ), 'tracker category wins when the tracker has one' );
+
+	T::ok( false === ( $nodes['drug:bimat']['registered'] ?? true ), 'guide marked "Not Approved" is never featured' );
+	T::ok( false === ( $nodes['drug:venlor']['registered'] ?? true ), '"Not FDA-approved" too' );
+	T::ok( true === ( $nodes['drug:zoloft']['registered'] ?? true ), 'approved product featured as before' );
+	$client = array_column( ClientPayload::from_graph( $out['graph'] )['nodes'], null, 'id' );
+	T::eq( 0, $client['drug:bimat']['r'] ?? null, 'client payload: search only' );
+} );

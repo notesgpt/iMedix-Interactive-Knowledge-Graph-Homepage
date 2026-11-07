@@ -120,6 +120,86 @@ $ku_types  = array(
 		</div>
 	</section>
 
+	<?php
+	$ku_trust = $vm['trust'] ?? array();
+	$ku_std   = $ku_trust['standard'] ?? null;
+	?>
+	<section class="ku-trust" aria-labelledby="ku-trust-title">
+		<div class="ku-wrap">
+			<div class="ku-trust__head">
+				<h2 class="ku-trust__title" id="ku-trust-title"><?php esc_html_e( 'How iMedix guides are made', 'imedix-ku' ); ?></h2>
+				<?php if ( $ku_std && ( $ku_std['drug']['total'] || $ku_std['disease']['total'] ) ) : ?>
+					<p class="ku-trust__lede">
+						<?php
+						printf(
+							/* translators: 1: drug guides on the current standard, 2: all drug guides, 3: condition guides on the standard, 4: all condition guides. */
+							esc_html__( 'Our current editorial standard covers %1$s of %2$s drug guides and %3$s of %4$s condition guides, and every rewrite follows it.', 'imedix-ku' ),
+							esc_html( number_format_i18n( (int) $ku_std['drug']['done'] ) ),
+							esc_html( number_format_i18n( (int) $ku_std['drug']['total'] ) ),
+							esc_html( number_format_i18n( (int) $ku_std['disease']['done'] ) ),
+							esc_html( number_format_i18n( (int) $ku_std['disease']['total'] ) )
+						);
+						?>
+					</p>
+				<?php endif; ?>
+			</div>
+			<ul class="ku-trust__grid">
+				<li class="ku-pillar">
+					<span class="ku-pillar__icon" aria-hidden="true"><svg class="ku-icon" viewBox="0 0 24 24" focusable="false"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg></span>
+					<h3 class="ku-pillar__title"><?php esc_html_e( 'FDA labels first', 'imedix-ku' ); ?></h3>
+					<p class="ku-pillar__text"><?php esc_html_e( 'Drug guides are built from the FDA-approved prescribing information, citing the label version and date. Products not approved in the US are marked as such.', 'imedix-ku' ); ?></p>
+				</li>
+				<li class="ku-pillar">
+					<span class="ku-pillar__icon" aria-hidden="true"><svg class="ku-icon" viewBox="0 0 24 24" focusable="false"><path d="M5 5h14v10H9l-4 4z"/><path d="M9 9h6M9 12h4"/></svg></span>
+					<h3 class="ku-pillar__title"><?php esc_html_e( 'Every claim is sourced', 'imedix-ku' ); ?></h3>
+					<p class="ku-pillar__text"><?php esc_html_e( 'Numbered references to labels, clinical studies and guidelines, each with the date we last checked it.', 'imedix-ku' ); ?></p>
+				</li>
+				<li class="ku-pillar">
+					<span class="ku-pillar__icon" aria-hidden="true"><svg class="ku-icon" viewBox="0 0 24 24" focusable="false"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v4h-4M12 8v4l3 2"/></svg></span>
+					<h3 class="ku-pillar__title"><?php esc_html_e( 'Kept current', 'imedix-ku' ); ?></h3>
+					<p class="ku-pillar__text">
+						<?php if ( $ku_std && $ku_std['recent'] ) : ?>
+							<?php
+							printf(
+								/* translators: 1: number of guides, 2: number of days. */
+								esc_html( _n( '%1$s guide updated in the last %2$s days.', '%1$s guides updated in the last %2$s days.', (int) $ku_std['recent'], 'imedix-ku' ) ),
+								'<strong>' . esc_html( number_format_i18n( (int) $ku_std['recent'] ) ) . '</strong>', // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above.
+								esc_html( (string) (int) $ku_std['days'] )
+							);
+							?>
+						<?php endif; ?>
+						<?php esc_html_e( 'When a label changes or a product is discontinued, the guide is revised or merged into its generic.', 'imedix-ku' ); ?>
+					</p>
+				</li>
+				<?php if ( ! empty( $ku_trust['review'] ) ) : ?>
+					<li class="ku-pillar">
+						<span class="ku-pillar__icon" aria-hidden="true"><svg class="ku-icon" viewBox="0 0 24 24" focusable="false"><path d="M12 3 5 6v5c0 4.5 3 8.4 7 10 4-1.6 7-5.5 7-10V6z"/><path d="m9 12 2 2 4-4"/></svg></span>
+						<h3 class="ku-pillar__title"><?php esc_html_e( 'Medically reviewed', 'imedix-ku' ); ?></h3>
+						<p class="ku-pillar__text"><?php esc_html_e( 'Reviewed by licensed clinicians; each guide names its reviewer and review date.', 'imedix-ku' ); ?> <a href="<?php echo esc_url( $ku_trust['review'] ); ?>"><?php esc_html_e( 'Meet the reviewers', 'imedix-ku' ); ?></a></p>
+					</li>
+				<?php endif; ?>
+			</ul>
+			<?php if ( ! empty( $ku_trust['links'] ) ) : ?>
+				<nav class="ku-trust__links" aria-label="<?php esc_attr_e( 'About iMedix', 'imedix-ku' ); ?>">
+					<?php foreach ( $ku_trust['links'] as $ku_l ) : ?>
+						<a href="<?php echo esc_url( $ku_l['url'] ); ?>"><?php echo esc_html( $ku_l['label'] ); ?></a>
+					<?php endforeach; ?>
+				</nav>
+			<?php endif; ?>
+
+			<aside class="ku-safety" aria-labelledby="ku-safety-title">
+				<p class="ku-safety__title" id="ku-safety-title"><?php esc_html_e( 'Need help now?', 'imedix-ku' ); ?></p>
+				<ul class="ku-safety__list">
+					<li><a href="tel:911"><strong>911</strong> <?php esc_html_e( 'Medical emergency', 'imedix-ku' ); ?></a></li>
+					<li><a href="tel:988"><strong>988</strong> <?php esc_html_e( 'Suicide & Crisis Lifeline — call or text', 'imedix-ku' ); ?></a></li>
+					<li><a href="tel:18002221222"><strong>1-800-222-1222</strong> <?php esc_html_e( 'Poison Help', 'imedix-ku' ); ?></a></li>
+					<li><a href="https://www.fda.gov/safety/medwatch-fda-safety-information-and-adverse-event-reporting-program" rel="noopener" target="_blank"><strong><?php esc_html_e( 'FDA MedWatch', 'imedix-ku' ); ?></strong> <?php esc_html_e( 'Report a side effect', 'imedix-ku' ); ?><span class="ku-visually-hidden"> <?php esc_html_e( '(opens in a new tab)', 'imedix-ku' ); ?></span></a></li>
+				</ul>
+				<p class="ku-safety__note"><?php esc_html_e( 'iMedix provides information, not medical advice. Talk to your doctor or pharmacist before starting, stopping or changing a medicine.', 'imedix-ku' ); ?></p>
+			</aside>
+		</div>
+	</section>
+
 	<section class="ku-discover" aria-labelledby="ku-discover-title">
 		<div class="ku-wrap">
 			<div class="ku-discover__head">
