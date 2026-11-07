@@ -259,17 +259,10 @@ console.log('Desktop');
     assert(r.meta.every((m) => /\d+ (condition|medicine)/.test(m)), r.meta.join(' | '));
   });
 
-  await test('YMYL: guides-made block with real coverage, US help lines, no unconfirmed review claim', async () => {
-    const lede = await page.locator('.ku-trust__lede').innerText();
-    assert(/covers \d+ of \d+ drug guides and \d+ of \d+ condition guides/.test(lede), lede);
-    const pillars = await page.locator('.ku-pillar__title').allTextContents();
-    assert(pillars.join('|') === 'FDA labels first|Every claim is sourced|Kept current', pillars.join('|'));
-    const tel = await page.$$eval('.ku-safety a', (as) => as.map((a) => a.getAttribute('href')));
-    assert(['tel:911', 'tel:988', 'tel:18002221222'].every((t) => tel.includes(t)), tel.join());
-    assert(tel.some((h) => /^https:\/\/www\.fda\.gov\/safety\/medwatch/.test(h)), 'MedWatch link');
-    const body = await page.locator('body').innerText();
-    assert(!/medically reviewed/i.test(body), 'review claim shown without editor confirmation');
-    assert((await page.locator('.ku-trust__links').count()) === 0, 'no transparency links without real pages (preview)');
+  await test('YMYL: nothing duplicated from the footer; no unconfirmed review claim', async () => {
+    assert((await page.locator('.imedix-ku a[href^="tel:"]').count()) === 0, 'help lines duplicated');
+    const body = await page.locator('.imedix-ku').innerText();
+    assert(!/medically reviewed|reviewed by licensed/i.test(body), 'review claim shown without editor confirmation');
   });
 
   await test('category colours come from the design tokens', async () => {

@@ -58,6 +58,4 @@ $noindex = get_page_by_path( 'aldactone', OBJECT, 'drugs' );
 if ( $noindex ) {
 	update_post_meta( $noindex->ID, 'ku_noindex', '1' );
 }
-wp_insert_post( array( 'post_type' => 'page', 'post_title' => 'Editorial policy', 'post_name' => 'editorial-policy', 'post_status' => 'publish' ) );
-wp_insert_post( array( 'post_type' => 'page', 'post_title' => 'About us', 'post_name' => 'about-us', 'post_status' => 'draft' ) );
 echo "seeded $count entity posts\n";

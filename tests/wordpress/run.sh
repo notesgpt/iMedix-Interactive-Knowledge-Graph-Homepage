@@ -142,11 +142,8 @@ run_frontend_checks() {
   check "[$theme] plugin adds no meta description (SEO plugin owns it)" not_contains "$html" 'name="description"'
   check "[$theme] at most one <title> (plugin adds no SEO title)" equals "$(( $(grep -o '<title' <<<"$html" | wc -l) <= 1 ))" "1"
   check "[$theme] no 3D renderer markup" not_contains "$html" 'data-ku-card'
-  check "[$theme] YMYL: how-guides-are-made block" contains "$html" 'How iMedix guides are made'
-  check "[$theme] YMYL: US help lines" contains "$html" 'href="tel:988"'
-  check "[$theme] YMYL: link to a published transparency page" contains "$html" "$URL/editorial-policy/"
-  check "[$theme] YMYL: no link to an unpublished page" not_contains "$html" 'about-us'
-  check "[$theme] YMYL: no medical-review claim until confirmed" not_contains "$html" 'Medically reviewed'
+  check "[$theme] YMYL: footer links are not duplicated" not_contains "$html" 'tel:'
+  check "[$theme] YMYL: no clinician-review claim until confirmed" not_contains "$html" 'Reviewed by licensed clinicians'
   check "[$theme] crawlable topic links" contains "$html" "href=\"$URL/diseases/hypertension/\""
   check "[$theme] news titles escaped, tags stripped" contains "$html" 'Integration test news item 14: A&amp;B trial'
   check "[$theme] no raw script injection" not_contains "$html" '<script>alert(1)'

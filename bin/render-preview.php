@@ -109,10 +109,8 @@ $vm = array(
 	'counts'         => $client['counts'],
 	'hasGraph'       => true,
 	'areas'          => Discovery::areas( $client ),
-	// Transparency pages are found in WordPress at render time; the preview has none.
 	'trust'          => array(
 		'standard' => Discovery::standard( $client, gmdate( 'Y-m-d' ) ),
-		'links'    => array(),
 		'review'   => null,
 	),
 	'suggestions'    => Discovery::suggestions( $client ),

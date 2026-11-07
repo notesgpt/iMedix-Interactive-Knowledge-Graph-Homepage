@@ -35,7 +35,6 @@ final class ViewModel {
 			'diseaseArchive' => self::archive_for_base( (string) Settings::get( 'base_disease' ) ),
 			'trust'       => array(
 				'standard' => $graph ? Discovery::standard( $graph, current_time( 'Y-m-d' ) ) : null,
-				'links'    => self::trust_links(),
 				// Shown only when an editor has confirmed it and named the page that proves it.
 				'review'   => Settings::get( 'claim_medical_review' ) && '' !== (string) Settings::get( 'review_url' ) ? (string) Settings::get( 'review_url' ) : null,
 			),
@@ -63,39 +62,6 @@ final class ViewModel {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Links to the site's own transparency pages — only those that exist and are
-	 * published, found by their usual slugs (filterable: `imedix_ku_trust_pages`).
-	 *
-	 * @return array<int, array{label:string, url:string}>
-	 */
-	private static function trust_links(): array {
-		$pages = (array) apply_filters(
-			'imedix_ku_trust_pages',
-			array(
-				__( 'About iMedix', 'imedix-ku' )      => array( 'about-us', 'about', 'about-imedix' ),
-				__( 'Editorial policy', 'imedix-ku' )  => array( 'editorial-policy', 'editorial-guidelines', 'editorial-process', 'editorial-standards' ),
-				__( 'Medical review', 'imedix-ku' )    => array( 'medical-review-board', 'medical-reviewers', 'medical-review' ),
-				__( 'Advertising policy', 'imedix-ku' ) => array( 'advertising-policy', 'advertising', 'advertise' ),
-				__( 'Contact us', 'imedix-ku' )        => array( 'contact-us', 'contact' ),
-			)
-		);
-		$out = array();
-		foreach ( $pages as $label => $slugs ) {
-			foreach ( (array) $slugs as $slug ) {
-				$page = get_page_by_path( (string) $slug );
-				if ( $page instanceof \WP_Post && 'publish' === $page->post_status && '' === (string) $page->post_password ) {
-					$out[] = array(
-						'label' => (string) $label,
-						'url'   => (string) get_permalink( $page ),
-					);
-					break;
-				}
-			}
-		}
-		return $out;
 	}
 
 	/**
