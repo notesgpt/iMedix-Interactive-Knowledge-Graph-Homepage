@@ -42,6 +42,8 @@ final class Settings {
 			// YMYL: the homepage says "medically reviewed" only once an editor confirms it is true.
 			'claim_medical_review' => false,
 			'review_url'           => '',
+			// Drug guides: status badges above the content (off: the theme's panel shows them).
+			'drug_status_badges'   => false,
 		);
 	}
 
@@ -101,6 +103,7 @@ final class Settings {
 		$out['news_refresh_secs'] = isset( $in['news_refresh_secs'] ) ? max( 120, min( 3600, (int) $in['news_refresh_secs'] ) ) : $d['news_refresh_secs'];
 
 		$out['claim_medical_review'] = ! empty( $in['claim_medical_review'] );
+		$out['drug_status_badges']   = ! empty( $in['drug_status_badges'] );
 		$url                         = isset( $in['review_url'] ) ? esc_url_raw( trim( (string) $in['review_url'] ), array( 'https', 'http' ) ) : '';
 		$out['review_url']           = '' !== $url && 0 === strpos( $url, home_url( '/' ) ) ? $url : '';
 

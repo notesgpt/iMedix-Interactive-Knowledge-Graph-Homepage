@@ -14,6 +14,7 @@ final class Plugin {
 		News::register();
 		Rest::register();
 		Frontend::register();
+		DrugStatus::register();
 
 		if ( is_admin() ) {
 			Admin::register();

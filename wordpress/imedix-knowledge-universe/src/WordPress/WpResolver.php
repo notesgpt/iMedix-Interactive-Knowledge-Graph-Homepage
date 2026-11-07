@@ -62,8 +62,8 @@ final class WpResolver {
 			'path'     => null === $permalink_path ? $path : $permalink_path,
 			// Editorial categories (e.g. the "Drug Categories" taxonomy) for guides the tracker does not categorise.
 			'categories' => $this->categories( $post ),
-			// The guide's own regulatory status field, e.g. "Not Approved" for imported products.
-			'approval' => 'drug' === $type ? $this->approval( $post->ID ) : '',
+			// FDA regulatory status (editor field, FDA label or the old Drug Status field), never inferred.
+			'approval' => 'drug' === $type && 'not_approved' === DrugStatus::resolve( $post->ID )['fda'] ? 'Not Approved' : '',
 		);
 	}
 
@@ -86,23 +86,6 @@ final class WpResolver {
 			}
 		}
 		return array_values( array_unique( $names ) );
-	}
-
-	/**
-	 * Regulatory status as written on the guide. The field name is filterable
-	 * (`imedix_ku_approval_fields`); ACF fields are read through ACF when present.
-	 */
-	private function approval( int $post_id ): string {
-		foreach ( (array) apply_filters( 'imedix_ku_approval_fields', array( 'drug_status' ) ) as $field ) {
-			$value = function_exists( 'get_field' ) ? get_field( (string) $field, $post_id, false ) : get_post_meta( $post_id, (string) $field, true );
-			if ( is_array( $value ) ) {
-				$value = implode( ' ', array_map( 'strval', $value ) );
-			}
-			if ( is_string( $value ) && '' !== trim( $value ) ) {
-				return trim( wp_strip_all_tags( $value ) );
-			}
-		}
-		return '';
 	}
 
 	/**

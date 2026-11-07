@@ -46,6 +46,14 @@ function boot(): void {
     chip.addEventListener('blur', () => bus.emit('chip:hover', { id: null }));
   });
 
+  // A link to a health area (#ku-area-…) opens its accordion.
+  const openTarget = () => {
+    const el = window.location.hash ? document.getElementById(window.location.hash.slice(1)) : null;
+    if (el instanceof HTMLDetailsElement) el.open = true;
+  };
+  openTarget();
+  window.addEventListener('hashchange', openTarget);
+
   const graphPromise = loadGraph([config.graphUrl, config.graphRestUrl], config.graphVersion, config.siteOrigin);
   const hero = root.querySelector<HTMLElement>('.ku-hero');
   graphPromise.then(

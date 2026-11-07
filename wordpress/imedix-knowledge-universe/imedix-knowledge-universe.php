@@ -25,3 +25,16 @@ register_activation_hook( __FILE__, array( \Imedix\KnowledgeUniverse\WordPress\S
 register_deactivation_hook( __FILE__, array( \Imedix\KnowledgeUniverse\WordPress\Sync::class, 'deactivate' ) );
 
 add_action( 'plugins_loaded', array( \Imedix\KnowledgeUniverse\WordPress\Plugin::class, 'boot' ) );
+
+if ( ! function_exists( 'imedix_ku_drug_status' ) ) {
+	/**
+	 * FDA status and dispensing badges for a drug guide, for the theme's
+	 * Medicine Identity panel: <?php echo imedix_ku_drug_status(); ?>
+	 *
+	 * @param int|\WP_Post|null $post Post (default: current).
+	 */
+	function imedix_ku_drug_status( $post = null ): string {
+		$post = get_post( $post );
+		return $post ? \Imedix\KnowledgeUniverse\WordPress\DrugStatus::render( $post->ID ) : '';
+	}
+}

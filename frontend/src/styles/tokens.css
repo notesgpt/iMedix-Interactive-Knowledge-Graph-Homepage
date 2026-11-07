@@ -92,6 +92,9 @@
   --ku-area-strong: var(--ku-blue); /* #436280, 6.3 : 1 */
   --ku-area-tint: #eef2f6;
   --ku-area-rgb: var(--ku-blue-rgb);
+  /* Verified against the U.S. label (indications, FDA status): 5.9 : 1 on its tint. */
+  --ku-success-ink: #12704b;
+  --ku-success-rgb: 22 128 87;
 
   --ku-drug: var(--imedix-graph-drug, var(--ku-cat-drug-mark));
   --ku-disease: var(--imedix-graph-disease, var(--ku-cat-disease-mark));

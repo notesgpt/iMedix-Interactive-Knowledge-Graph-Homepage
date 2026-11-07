@@ -112,6 +112,17 @@ check "relative content links resolved" contains "$graph" '["drug:metformin","di
 wp post update "$(wp post list --post_type=drugs --name=lithium-new --field=ID)" --post_content="<p>Edited.</p>" >/dev/null
 check "editing a guide schedules a quick rebuild" contains "$(wp cron event list --fields=hook --format=csv)" "imedix_ku_sync_soon"
 
+echo "== Drug status: FDA approval and dispensing kept apart"
+ds() { wp eval "echo wp_json_encode( \Imedix\KnowledgeUniverse\WordPress\DrugStatus::resolve( (int) get_page_by_path( '$1', OBJECT, 'drugs' )->ID ) );"; }
+check "Rx in the old field → prescription only, FDA status stays unverified" contains "$(ds metformin)" '"fda":"unknown","fda_source":"none","fda_label":"","dispensing":"rx"'
+check "OTC in the old field → over the counter" contains "$(ds tylenol)" '"dispensing":"otc"'
+check "Not Approved in the old field → not FDA-approved" contains "$(ds venlor-new)" '"fda":"not_approved"'
+wp post meta update "$(wp post list --post_type=drugs --name=metformin --field=ID)" imedix_fda_status approved >/dev/null
+check "editor's choice wins" contains "$(ds metformin)" '"fda":"approved","fda_source":"editor"'
+badges=$(wp eval "echo do_shortcode( '[imedix_drug_status]' );" --url="$URL" 2>/dev/null; wp eval "global \$post; \$post = get_page_by_path( 'metformin', OBJECT, 'drugs' ); setup_postdata( \$post ); echo imedix_ku_drug_status();")
+check "template tag renders both badges" contains "$badges" 'FDA-approved</span>'
+check "dispensing badge shown" contains "$badges" 'Prescription only'
+
 echo "== Front end"
 home_id=$(wp post create --post_type=page --post_title=Home --post_status=publish --porcelain)
 wp post meta update "$home_id" _wp_page_template imedix-knowledge-universe.php >/dev/null
@@ -169,6 +180,12 @@ wp theme activate twentytwentyfour >/dev/null
 html=$(curl -s "$URL/")
 check "[block] block theme header part rendered" contains "$html" 'wp-block-template-part'
 run_frontend_checks block
+check "drug guide: no status badges by default (theme panel owns them)" not_contains "$(curl -s "$URL/drugs/tylenol/")" 'class="imx-status'
+wp option patch update imedix_ku_settings drug_status_badges 1 >/dev/null 2>&1 || wp eval '$o = get_option( "imedix_ku_settings", array() ); $o["drug_status_badges"] = true; update_option( "imedix_ku_settings", $o );'
+drug_html=$(curl -s "$URL/drugs/tylenol/")
+check "drug guide: badges above the content when enabled" contains "$drug_html" 'class="imx-status'
+check "drug guide: OTC from the old field, FDA status unverified" contains "$drug_html" 'Unverified</span>'
+check "drug guide: badge styles enqueued" contains "$drug_html" '.imx-status__badge'
 
 echo "== REST"
 g=$(curl -s -i "$URL/wp-json/imedix-ku/v1/graph")

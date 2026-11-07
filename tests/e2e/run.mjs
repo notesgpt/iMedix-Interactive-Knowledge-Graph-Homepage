@@ -247,7 +247,7 @@ console.log('Desktop');
     const r = await page.evaluate(() => {
       const areas = [...document.querySelectorAll('.ku-area')];
       const grid = document.querySelector('.ku-areas').getBoundingClientRect();
-      const links = [...document.querySelectorAll('.ku-area__list a')].map((a) => a.getAttribute('href'));
+      const links = [...document.querySelectorAll('.ku-area__list a.ku-area__link')].map((a) => a.getAttribute('href'));
       // Every row of the grid is full: cards end at the grid's right edge in pairs or span it.
       const rows = {};
       for (const a of areas) { const b = a.getBoundingClientRect(); rows[Math.round(b.top)] = (rows[Math.round(b.top)] ?? 0) + b.width; }
@@ -263,6 +263,33 @@ console.log('Desktop');
     assert((await page.locator('.imedix-ku a[href^="tel:"]').count()) === 0, 'help lines duplicated');
     const body = await page.locator('.imedix-ku').innerText();
     assert(!/medically reviewed|reviewed by licensed/i.test(body), 'review claim shown without editor confirmation');
+  });
+
+  await test('Health areas: accordions with every link in the HTML; FDA-approved only when sourced', async () => {
+    const r = await page.evaluate(() => {
+      const areas = [...document.querySelectorAll('details.ku-area')];
+      const closed = areas.filter((d) => !d.open);
+      return {
+        n: areas.length,
+        closedLinks: closed.reduce((k, d) => k + d.querySelectorAll('a.ku-area__link[href]').length, 0),
+        open: areas.filter((d) => d.open).length,
+        verified: [...document.querySelectorAll('.ku-area__claim')].map((c) => [c.textContent.trim(), c.querySelector('a.ku-area__src')?.getAttribute('href') ?? '']),
+        desc: document.querySelector('.ku-areas-head__desc').textContent,
+      };
+    });
+    assert(r.n >= 10, r.n + ' areas');
+    assert(r.open === 1, r.open + ' open');
+    assert(r.closedLinks > 30, 'links inside closed areas missing from the HTML: ' + r.closedLinks);
+    assert(r.verified.length === 1, 'verified claims: ' + JSON.stringify(r.verified));
+    assert(/^https:\/\/dailymed\.nlm\.nih\.gov\//.test(r.verified[0][1]), 'claim without its label link');
+    assert(!(await page.locator('.ku-discover').innerText()).includes('unsourced'), 'unsourced claim shown');
+    assert(/Verified FDA-approved indications are explicitly identified/.test(r.desc), r.desc);
+    const body = await page.locator('.ku-discover').innerText();
+    assert(!/under a condition are FDA-approved/i.test(body), 'old contradictory wording');
+    await page.goto(BASE + '#ku-area-skincare', { waitUntil: 'load' });
+    assert(await page.locator('#ku-area-skincare').evaluate((d) => d.open), 'deep link does not open its area');
+    await page.goto(BASE, { waitUntil: 'load' });
+    await page.waitForSelector('.ku-float-item:not([hidden])', { timeout: 10000 });
   });
 
   await test('category colours come from the design tokens', async () => {
@@ -403,17 +430,14 @@ console.log('Mobile');
     assert(w[0] <= w[1], w.join(' > '));
     const wide = await page.evaluate(() =>
       [...document.querySelectorAll('.ku-hero__inner, .ku-hero__inner *, .ku-wrap, .ku-wrap *')]
-        .filter((e) => !e.closest('.ku-area-index')) // an intentional swipe row
         .filter((e) => e.getBoundingClientRect().right > window.innerWidth + 1)
         .map((e) => e.className.baseVal ?? e.className),
     );
     assert(wide.length === 0, wide.slice(0, 5).join(', '));
   });
-  await test('health areas stack in one column; the area index is one swipeable row', async () => {
+  await test('health areas stack in one column on phones', async () => {
     const cols = await page.evaluate(() => getComputedStyle(document.querySelector('.ku-areas')).gridTemplateColumns.split(' ').length);
     assert(cols === 1, cols + ' columns');
-    const idx = await page.evaluate(() => { const u = document.querySelector('.ku-area-index ul'); return [getComputedStyle(u).flexWrap, u.scrollWidth > u.clientWidth]; });
-    assert(idx[0] === 'nowrap' && idx[1], idx.join());
   });
   await test('mobile readability: WCAG AA contrast', async () => {
     const r = await auditContrast(page);

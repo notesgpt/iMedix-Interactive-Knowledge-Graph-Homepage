@@ -53,6 +53,13 @@ foreach ( array( 'venlor-new' => array( 'Venlor New', 'Not Approved' ), 'lithium
 		update_post_meta( $id, 'drug_status', $status );
 	}
 }
+// The old combined Drug Status field: prescription status only, and OTC.
+foreach ( array( 'metformin' => 'Rx', 'tylenol' => 'OTC' ) as $slug => $value ) {
+	$p = get_page_by_path( $slug, OBJECT, 'drugs' );
+	if ( $p ) {
+		update_post_meta( $p->ID, 'drug_status', $value );
+	}
+}
 // A published guide the SEO plugin keeps out of the sitemap (noindex).
 $noindex = get_page_by_path( 'aldactone', OBJECT, 'drugs' );
 if ( $noindex ) {

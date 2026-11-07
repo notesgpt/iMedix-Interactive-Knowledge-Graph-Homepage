@@ -169,29 +169,23 @@ $ku_types  = array(
 
 			<?php if ( $vm['areas'] ) : ?>
 				<div class="ku-areas-head" id="ku-areas">
-					<p class="ku-areas-head__title"><?php esc_html_e( 'Health areas', 'imedix-ku' ); ?></p>
-					<p class="ku-areas-head__desc"><?php esc_html_e( 'Conditions grouped by our editors. Medicines under a condition are FDA-approved for it — from FDA labels, not a complete list.', 'imedix-ku' ); ?></p>
-					<nav class="ku-area-index" aria-label="<?php esc_attr_e( 'Jump to a health area', 'imedix-ku' ); ?>">
-						<ul>
-							<?php foreach ( $vm['areas'] as $ku_a ) : ?>
-								<li><a href="#<?php echo esc_attr( 'ku-area-' . $ku_a['key'] ); ?>"><?php echo \Imedix\KnowledgeUniverse\View\Icons::topic( $ku_a['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?><?php echo esc_html( $ku_a['name'] ); ?></a></li>
-							<?php endforeach; ?>
-						</ul>
-					</nav>
+					<h3 class="ku-areas-head__title"><?php esc_html_e( 'Health areas', 'imedix-ku' ); ?></h3>
+					<p class="ku-areas-head__desc"><?php esc_html_e( 'Explore conditions and medicines by health topic. Verified FDA-approved indications are explicitly identified and linked to their sources.', 'imedix-ku' ); ?></p>
+					<p class="ku-areas-key"><span class="ku-verified"><svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><?php esc_html_e( 'FDA-approved', 'imedix-ku' ); ?></span> <?php esc_html_e( 'marks an indication verified against the U.S. product label, with a link to it. Other medicines are grouped by topic only.', 'imedix-ku' ); ?></p>
 				</div>
 
 				<div class="ku-areas">
-					<?php foreach ( $vm['areas'] as $ku_a ) : ?>
+					<?php foreach ( $vm['areas'] as $ku_n => $ku_a ) : ?>
 						<?php
-						$ku_id   = 'ku-area-' . $ku_a['key'];
-						$ku_cols = array_filter(
+						$ku_id    = 'ku-area-' . $ku_a['key'];
+						$ku_cols  = array_filter(
 							array(
 								'disease' => array( __( 'Conditions', 'imedix-ku' ), $ku_a['diseases'] ),
-								'drug'    => array( __( 'Medicines', 'imedix-ku' ), $ku_a['drugs'] ),
+								'drug'    => array( __( 'Medicines in this topic', 'imedix-ku' ), $ku_a['drugs'] ),
 							),
-							static fn( $c ) => $c[1]['count'] > 0
+							static fn( $c ) => ! empty( $c[1]['items'] )
 						);
-						$ku_meta = array();
+						$ku_meta  = array();
 						if ( $ku_a['diseases']['count'] ) {
 							/* translators: %s: number of disease guides. */
 							$ku_meta[] = sprintf( _n( '%s condition', '%s conditions', $ku_a['diseases']['count'], 'imedix-ku' ), number_format_i18n( $ku_a['diseases']['count'] ) );
@@ -200,23 +194,40 @@ $ku_types  = array(
 							/* translators: %s: number of drug guides. */
 							$ku_meta[] = sprintf( _n( '%s medicine', '%s medicines', $ku_a['drugs']['count'], 'imedix-ku' ), number_format_i18n( $ku_a['drugs']['count'] ) );
 						}
+						// Verified only: a claim counts when it links to the product label on DailyMed.
+						$ku_is_verified = static fn( $m ) => ! empty( $m['claim'] ) && ! empty( $m['source'] ) && 0 === strpos( $m['source'], 'https://dailymed.nlm.nih.gov/' );
+						$ku_verified    = count( array_filter( $ku_a['drugs']['items'], $ku_is_verified ) );
 						?>
-						<section class="ku-area<?php echo 1 === count( $ku_cols ) ? ' ku-area--single' : ''; ?>" id="<?php echo esc_attr( $ku_id ); ?>" aria-labelledby="<?php echo esc_attr( $ku_id . '-title' ); ?>">
-							<div class="ku-area__head">
-								<span class="ku-area__icon"><?php echo \Imedix\KnowledgeUniverse\View\Icons::topic( $ku_a['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?></span>
-								<div>
-									<h3 class="ku-area__title" id="<?php echo esc_attr( $ku_id . '-title' ); ?>"><?php echo esc_html( $ku_a['name'] ); ?></h3>
-									<p class="ku-area__meta"><?php echo esc_html( implode( ' · ', $ku_meta ) ); ?></p>
-								</div>
-							</div>
+						<?php
+						// The first area starts open (full width); an odd number of closed ones leaves the
+						// last alone in its row, so it takes the whole row — no hole in the grid.
+						$ku_wide = count( $vm['areas'] ) - 1 === $ku_n && 1 === $ku_n % 2;
+						?>
+						<details class="ku-area<?php echo 1 === count( $ku_cols ) ? ' ku-area--single' : ''; ?><?php echo $ku_wide ? ' ku-area--wide' : ''; ?>" id="<?php echo esc_attr( $ku_id ); ?>"<?php echo 0 === $ku_n ? ' open' : ''; ?>>
+							<summary class="ku-area__head">
+								<span class="ku-area__icon" aria-hidden="true"><?php echo \Imedix\KnowledgeUniverse\View\Icons::topic( $ku_a['icon'] ); // phpcs:ignore WordPress.Security.EscapeOutput -- static SVG. ?></span>
+								<span class="ku-area__heading">
+									<span class="ku-area__title"><?php echo esc_html( $ku_a['name'] ); ?></span>
+									<span class="ku-area__meta"><?php echo esc_html( implode( ' · ', $ku_meta ) ); ?></span>
+								</span>
+								<?php if ( $ku_verified ) : ?>
+									<span class="ku-area__badge">
+										<?php
+										/* translators: %s: number of verified FDA-approved indications shown. */
+										echo esc_html( sprintf( _n( '%s FDA-verified', '%s FDA-verified', $ku_verified, 'imedix-ku' ), number_format_i18n( $ku_verified ) ) );
+										?>
+									</span>
+								<?php endif; ?>
+								<svg class="ku-icon ku-area__chev" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+							</summary>
 							<div class="ku-area__cols">
 								<?php foreach ( $ku_cols as $ku_type => $ku_col ) : ?>
 									<div class="ku-area__col ku-area__col--<?php echo esc_attr( $ku_type ); ?>">
-										<p class="ku-area__label"><span class="ku-glyph ku-glyph--<?php echo esc_attr( $ku_type ); ?>" aria-hidden="true"></span><?php echo esc_html( $ku_col[0] ); ?></p>
+										<h4 class="ku-area__label"><span class="ku-glyph ku-glyph--<?php echo esc_attr( $ku_type ); ?>" aria-hidden="true"></span><?php echo esc_html( $ku_col[0] ); ?></h4>
 										<ul class="ku-area__list">
 											<?php foreach ( $ku_col[1]['items'] as $ku_m ) : ?>
 												<li>
-													<a href="<?php echo esc_url( home_url( $ku_m['path'] ) ); ?>"><?php echo esc_html( $ku_m['name'] ); ?></a>
+													<a class="ku-area__link" href="<?php echo esc_url( home_url( $ku_m['path'] ) ); ?>"><?php echo esc_html( $ku_m['name'] ); ?></a>
 													<?php if ( ! empty( $ku_m['active'] ) && 0 !== strcasecmp( $ku_m['active'], $ku_m['name'] ) ) : ?>
 														<span class="ku-area__active"><span class="ku-visually-hidden"><?php esc_html_e( 'Active ingredient:', 'imedix-ku' ); ?> </span>
 															<?php foreach ( $ku_m['actives'] as $ku_i => $ku_g ) : ?>
@@ -229,17 +240,10 @@ $ku_types  = array(
 															<?php endforeach; ?>
 														</span>
 													<?php endif; ?>
-													<?php if ( ! empty( $ku_m['claim'] ) ) : ?>
+													<?php if ( 'drug' === $ku_type && $ku_is_verified( $ku_m ) ) : ?>
 														<span class="ku-area__claim">
-															<svg class="ku-icon ku-area__check" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
-															<span><?php echo esc_html( $ku_m['claim'] ); ?></span>
-															<?php if ( ! empty( $ku_m['source'] ) && 0 === strpos( $ku_m['source'], 'https://dailymed.nlm.nih.gov/' ) ) : ?>
-																<a class="ku-area__src" href="<?php echo esc_url( $ku_m['source'] ); ?>" target="_blank" rel="noopener noreferrer nofollow" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: medicine name */ __( 'FDA label for %s on DailyMed (opens in a new tab)', 'imedix-ku' ), $ku_m['name'] ) ); ?>">
-																	<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg>
-																	<?php esc_html_e( 'FDA label', 'imedix-ku' ); ?>
-																	<svg class="ku-icon ku-area__ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 5h5v5M19 5l-8 8M17 14v5H5V7h5"/></svg>
-																</a>
-															<?php endif; ?>
+															<span class="ku-verified"><svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg><?php echo esc_html( $ku_m['claim'] ); ?></span>
+															<a class="ku-area__src" href="<?php echo esc_url( $ku_m['source'] ); ?>" target="_blank" rel="noopener noreferrer nofollow" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: medicine name */ __( 'FDA label for %s on DailyMed (opens in a new tab)', 'imedix-ku' ), $ku_m['name'] ) ); ?>"><?php esc_html_e( 'FDA label', 'imedix-ku' ); ?><svg class="ku-icon ku-area__ext" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 5h5v5M19 5l-8 8M17 14v5H5V7h5"/></svg></a>
 														</span>
 													<?php endif; ?>
 												</li>
@@ -248,13 +252,10 @@ $ku_types  = array(
 									</div>
 								<?php endforeach; ?>
 							</div>
-						</section>
+						</details>
 					<?php endforeach; ?>
 				</div>
-				<aside class="ku-note" aria-label="<?php esc_attr_e( 'About health areas', 'imedix-ku' ); ?>">
-					<svg class="ku-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
-					<p><?php esc_html_e( 'Health areas show how iMedix organises and cross-links its guides. They are not medical advice and do not mean that a medicine treats a condition. Always read the full guide and talk to a healthcare professional.', 'imedix-ku' ); ?></p>
-				</aside>
+				<p class="ku-note"><?php esc_html_e( 'Health topics group related guides; a medicine listed in a topic is not necessarily approved to treat its conditions. This is not medical advice — talk to a healthcare professional.', 'imedix-ku' ); ?></p>
 			<?php endif; ?>
 		</div>
 	</section>

@@ -193,6 +193,11 @@ final class Admin {
 							<label><?php esc_html_e( 'Browser refresh (s)', 'imedix-ku' ); ?> <input type="number" min="120" max="3600" class="small-text" name="<?php echo esc_attr( $opt ); ?>[news_refresh_secs]" value="<?php echo esc_attr( (string) $s['news_refresh_secs'] ); ?>"></label>
 							<p class="description"><?php echo post_type_exists( $s['news_post_type'] ) ? esc_html__( 'Post type found.', 'imedix-ku' ) : esc_html__( 'Post type not registered — the ticker stays hidden.', 'imedix-ku' ); ?></p>
 						</td></tr>
+					<tr><th scope="row"><?php esc_html_e( 'Drug status badges', 'imedix-ku' ); ?></th>
+						<td>
+							<label><input type="checkbox" name="<?php echo esc_attr( $opt ); ?>[drug_status_badges]" value="1" <?php checked( ! empty( $s['drug_status_badges'] ) ); ?>> <?php esc_html_e( 'Show "FDA status" and "Dispensing" badges above drug guides', 'imedix-ku' ); ?></label>
+							<p class="description"><?php esc_html_e( 'Leave off when the theme shows them in its own panel with imedix_ku_drug_status() or the [imedix_drug_status] shortcode.', 'imedix-ku' ); ?></p>
+						</td></tr>
 					<tr><th scope="row"><?php esc_html_e( 'Medical review claim', 'imedix-ku' ); ?></th>
 						<td>
 							<label><input type="checkbox" name="<?php echo esc_attr( $opt ); ?>[claim_medical_review]" value="1" <?php checked( ! empty( $s['claim_medical_review'] ) ); ?>> <?php esc_html_e( 'Guides are reviewed by licensed clinicians, and each guide names its reviewer and review date', 'imedix-ku' ); ?></label><br>

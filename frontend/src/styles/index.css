@@ -1252,8 +1252,6 @@
 .ku-legend,
 .ku-news__bar,
 .ku-cat__link,
-.ku-area,
-.ku-area-index a,
 .ku-filter span {
   border: 0;
   background: var(--ku-glass);
@@ -1279,8 +1277,7 @@
 .ku-opt,
 .ku-hint,
 .ku-news__label,
-.ku-news__btn,
-.ku-area-index a {
+.ku-news__btn {
   border-radius: var(--ku-r-s);
 }
 .ku-opt__type {
@@ -1293,8 +1290,7 @@
 .ku-float {
   border-radius: var(--ku-r-m);
 }
-.ku-cat__link,
-.ku-area {
+.ku-cat__link {
   border-radius: var(--ku-r-l);
 }
 @media (max-width: 760px) {
@@ -1307,7 +1303,6 @@
 }
 /* States on glass */
 .ku-chip:hover,
-.ku-area-index a:hover,
 .ku-cat__link:hover {
   background: var(--ku-glass-strong);
 }
@@ -1424,266 +1419,17 @@
 }
 
 /* Health areas */
-.ku-areas-head {
-  margin-bottom: 24px;
-}
-.ku-areas-head__title {
-  margin: 0;
-  font-size: clamp(1.4rem, 1.2rem + 0.7vw, 1.75rem);
-  font-weight: var(--ku-weight-bold);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  color: var(--ku-text);
-}
-.ku-areas-head__desc {
-  margin: 6px 0 0;
-  color: var(--ku-hero-ink-2);
-  line-height: 1.5;
-}
-.ku-area-index ul {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 18px 0 0;
-  padding: 0;
-  list-style: none;
-}
-.ku-area-index a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 40px;
-  padding: 0 14px 0 12px;
-  color: var(--ku-text) !important;
-  font-size: 14px;
-  font-weight: var(--ku-weight-medium);
-  text-decoration: none;
-  transition: background var(--ku-dur-1) var(--ku-ease);
-}
-.ku-area-index .ku-icon {
-  width: 17px;
-  height: 17px;
-  color: var(--ku-area-strong);
-}
-.ku-areas {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-}
+
 /* An odd last card spans the row: no hole at the end of the grid. */
-.ku-area:last-child:nth-child(odd) {
-  grid-column: 1 / -1;
-}
-.ku-area {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  padding: clamp(18px, 2.2vw, 24px);
-  scroll-margin-top: 24px;
-}
-.ku-area:target {
-  box-shadow: var(--ku-glass-edge), 0 0 0 2px var(--ku-area-strong), var(--ku-glass-lift);
-}
-.ku-area__head {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.ku-area__icon {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 44px;
-  height: 44px;
-  border-radius: var(--ku-r-s);
-  background: var(--ku-area-tint);
-  color: var(--ku-area-strong);
-}
-.ku-area__icon .ku-icon {
-  width: 22px;
-  height: 22px;
-}
-.ku-area__title {
-  margin: 0;
-  font-size: 1.15rem;
-  line-height: 1.25;
-  color: var(--ku-text);
-}
-.ku-area__meta {
-  margin: 2px 0 0;
-  color: var(--ku-hero-ink-3);
-  font-size: 13.5px;
-}
-.ku-area__cols {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0 24px;
-}
-.ku-area__label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 0 4px;
-  color: var(--ku-hero-ink-3);
-  font-size: 12px;
-  font-weight: var(--ku-weight-semibold);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-.ku-area__list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.ku-area__list li {
-  border-top: 1px solid rgb(var(--ku-navy-rgb) / 0.07);
-}
-.ku-area__list li:first-child {
-  border-top: 0;
-}
-.ku-area__list a {
-  display: flex;
-  align-items: center;
-  min-height: 40px;
-  padding: 6px 0;
-  color: var(--ku-text) !important;
-  font-size: 15px;
-  line-height: 1.35;
-  text-decoration: none;
-}
+
 /* FDA-approved use + its label (signed KG), under the medicine. */
-.ku-area__claim {
-  display: grid;
-  grid-template-columns: 14px minmax(0, 1fr);
-  align-items: start;
-  gap: 6px 6px;
-  margin-top: -2px;
-  padding-bottom: 10px;
-  color: var(--ku-hero-ink-2);
-  font-size: 12.5px;
-  line-height: 1.4;
-}
-.ku-area__check {
-  width: 14px;
-  height: 14px;
-  margin-top: 2px;
-  color: var(--ku-cat-drug-strong);
-  stroke-width: 2.25;
-}
-.ku-area__list a.ku-area__src {
-  grid-column: 2;
-  justify-self: start;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  min-height: 24px;
-  padding: 0 8px;
-  border-radius: 999px;
-  background: rgb(var(--ku-white-rgb) / 0.85);
-  box-shadow: inset 0 0 0 1px rgb(var(--ku-navy-rgb) / 0.12);
-  color: var(--ku-cat-drug-strong) !important;
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
-}
-.ku-area__src .ku-icon {
-  width: 13px;
-  height: 13px;
-}
-.ku-area__src .ku-area__ext {
-  width: 11px;
-  height: 11px;
-  opacity: 0.7;
-}
-.ku-area__list a.ku-area__src:hover {
-  background: var(--ku-white);
-  box-shadow: inset 0 0 0 1px rgb(var(--ku-navy-rgb) / 0.22);
-}
-.ku-area__list a.ku-area__src:focus-visible,
-.ku-area__list a.ku-area__ing:focus-visible {
-  outline: 2px solid var(--ku-cat-drug-strong);
-  outline-offset: 2px;
-}
+
 /* Active ingredient → its iMedix ingredient page. */
-.ku-area__list a.ku-area__ing {
-  display: inline;
-  min-height: 0;
-  padding: 0;
-  color: inherit !important;
-  font-size: inherit;
-  text-decoration: underline;
-  text-decoration-color: rgb(var(--ku-navy-rgb) / 0.25);
-  text-underline-offset: 2px;
-}
-.ku-area__list a.ku-area__ing:hover {
-  color: var(--ku-cat-drug-strong) !important;
-  text-decoration-color: currentColor;
-}
-.ku-area__active + .ku-area__claim {
-  margin-top: -4px;
-}
+
 /* Active ingredient under the brand name (YMYL: the medicine, not just the brand). */
-.ku-area__active {
-  display: block;
-  margin-top: -8px;
-  padding-bottom: 8px;
-  color: var(--ku-hero-ink-2);
-  font-size: 13px;
-  line-height: 1.35;
-}
-.ku-area__list a:hover {
-  color: var(--ku-cat-drug-strong) !important;
-}
-.ku-area__col--disease .ku-area__list a:hover {
-  color: var(--ku-cat-disease-strong) !important;
-}
+
 /* One type only: its list runs in two columns across the card. */
-.ku-area--single .ku-area__cols {
-  grid-template-columns: minmax(0, 1fr);
-}
-.ku-area--single .ku-area__list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 24px;
-}
-.ku-area--single .ku-area__list li:nth-child(2) a {
-  border-top: 0;
-}
-.ku-note {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  margin-top: 24px;
-  padding: 16px 18px;
-  border-radius: var(--ku-r-m);
-  background: var(--ku-glass);
-  box-shadow: var(--ku-glass-edge);
-  color: var(--ku-hero-ink-2);
-  font-size: 14px;
-  line-height: 1.55;
-}
-.ku-note .ku-icon {
-  flex: none;
-  width: 20px;
-  height: 20px;
-  margin-top: 1px;
-  color: var(--ku-area-strong);
-}
-.ku-note p {
-  margin: 0;
-}
-@media (max-width: 900px) {
-  .ku-areas {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .ku-area:last-child:nth-child(odd) {
-    grid-column: auto;
-  }
-}
+
 @media (max-width: 760px) {
   .ku-cats {
     grid-template-columns: minmax(0, 1fr);
@@ -1697,33 +1443,272 @@
     height: 44px;
   }
 }
-@media (max-width: 480px) {
-  .ku-area__cols,
-  .ku-area--single .ku-area__list {
+
+
+/* ============================================================ Health areas */
+/* Native <details> accordions: every link is in the server-rendered HTML
+   (open or closed), no script is needed to reach it. One glass surface per
+   topic; inside, plain lists. "FDA-approved" appears only on indications
+   verified against the U.S. label, always with that label one tap away. */
+.ku-areas-head {
+  max-width: 760px;
+  margin-bottom: 20px;
+}
+.ku-areas-head__title {
+  margin: 0;
+  font-size: clamp(1.4rem, 1.2rem + 0.7vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ku-text);
+}
+.ku-areas-head__desc {
+  margin: 8px 0 0;
+  color: var(--ku-hero-ink-2);
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+.ku-areas-key {
+  margin: 10px 0 0;
+  color: var(--ku-hero-ink-3);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+.ku-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px 2px 6px;
+  border-radius: 8px;
+  background: rgb(var(--ku-success-rgb) / 0.1);
+  color: var(--ku-success-ink);
+  font-size: 12.5px;
+  font-weight: var(--ku-weight-semibold);
+  line-height: 1.4;
+  white-space: normal;
+}
+.ku-verified .ku-icon {
+  flex: none;
+  width: 14px;
+  height: 14px;
+  stroke-width: 2.4;
+}
+.ku-areas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-flow: row dense;
+  align-items: start;
+  gap: 12px;
+}
+.ku-area--wide {
+  grid-column: 1 / -1;
+}
+.ku-area {
+  border-radius: var(--ku-r-m);
+  background: var(--ku-glass);
+  box-shadow: var(--ku-glass-edge), 0 1px 2px rgb(var(--ku-navy-rgb) / 0.03);
+  -webkit-backdrop-filter: var(--ku-glass-blur);
+  backdrop-filter: var(--ku-glass-blur);
+  scroll-margin-top: 24px;
+  transition: box-shadow var(--ku-dur-2) var(--ku-ease), background var(--ku-dur-2) var(--ku-ease);
+}
+.ku-area[open] {
+  grid-column: 1 / -1;
+  background: var(--ku-glass-strong);
+  box-shadow: var(--ku-glass-edge), var(--ku-glass-lift);
+}
+.ku-area__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 12px 16px;
+  border-radius: var(--ku-r-m);
+  cursor: pointer;
+  list-style: none;
+}
+.ku-area__head::-webkit-details-marker {
+  display: none;
+}
+.ku-area__head:hover {
+  background: rgb(var(--ku-navy-rgb) / 0.025);
+}
+.ku-area__head:focus-visible {
+  outline: 2px solid var(--ku-focus-on-light);
+  outline-offset: 2px;
+}
+.ku-area__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--ku-r-s);
+  background: var(--ku-area-tint);
+  color: var(--ku-area-strong);
+}
+.ku-area__icon .ku-icon {
+  width: 21px;
+  height: 21px;
+}
+.ku-area__heading {
+  display: grid;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+.ku-area__title {
+  color: var(--ku-text);
+  font-size: 1.05rem;
+  font-weight: var(--ku-weight-semibold);
+  line-height: 1.3;
+}
+.ku-area__meta {
+  color: var(--ku-hero-ink-3);
+  font-size: 13px;
+}
+.ku-area__badge {
+  flex: none;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: rgb(var(--ku-success-rgb) / 0.1);
+  color: var(--ku-success-ink);
+  font-size: 12px;
+  font-weight: var(--ku-weight-semibold);
+  white-space: nowrap;
+}
+.ku-area__chev {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  color: var(--ku-hero-ink-3);
+  transition: transform var(--ku-dur-2) var(--ku-ease);
+}
+.ku-area[open] .ku-area__chev {
+  transform: rotate(180deg);
+}
+.ku-area__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+  gap: 8px 32px;
+  padding: 4px 20px 20px 70px;
+}
+.ku-area--single .ku-area__cols {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ku-area__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  color: var(--ku-hero-ink-3);
+  font-size: 12px;
+  font-weight: var(--ku-weight-semibold);
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.ku-area__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ku-area--single .ku-area__list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 32px;
+}
+.ku-area--single .ku-area__list li:nth-child(2) {
+  border-top: 0;
+}
+.ku-area__list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+  padding: 9px 0;
+  border-top: 1px solid rgb(var(--ku-navy-rgb) / 0.07);
+  break-inside: avoid;
+}
+.ku-area__list li:first-child {
+  border-top: 0;
+}
+.ku-area__link {
+  color: var(--ku-text) !important;
+  font-size: 15px;
+  font-weight: var(--ku-weight-medium);
+  line-height: 1.4;
+  text-decoration: none;
+}
+.ku-area__link:hover {
+  color: var(--ku-cat-drug-strong) !important;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ku-area__col--disease .ku-area__link:hover {
+  color: var(--ku-cat-disease-strong) !important;
+}
+.ku-area__active {
+  color: var(--ku-hero-ink-3);
+  font-size: 13px;
+}
+.ku-area__ing {
+  color: inherit !important;
+  text-decoration: underline;
+  text-decoration-color: rgb(var(--ku-navy-rgb) / 0.25);
+  text-underline-offset: 3px;
+}
+.ku-area__claim {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  flex-basis: 100%;
+}
+.ku-area__src {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--ku-cat-drug-strong) !important;
+  font-size: 12.5px;
+  font-weight: var(--ku-weight-semibold);
+  text-decoration: none;
+}
+.ku-area__src:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.ku-area__ext {
+  width: 12px;
+  height: 12px;
+}
+.ku-note {
+  margin: 20px 0 0;
+  color: var(--ku-hero-ink-3);
+  font-size: 13px;
+  line-height: 1.55;
+}
+@media (max-width: 900px) {
+  .ku-areas {
     grid-template-columns: minmax(0, 1fr);
   }
   .ku-area__cols {
-    gap: 14px;
-  }
-  .ku-area--single .ku-area__list li:nth-child(2) a {
-    border-top: 1px solid rgb(var(--ku-navy-rgb) / 0.07);
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 16px 16px;
   }
 }
-@media (max-width: 760px) {
-  /* Phones: the area index is one swipeable row instead of five wrapped ones. */
-  .ku-area-index ul {
-    flex-wrap: nowrap;
-    margin-inline: calc(-1 * var(--ku-gutter));
-    padding: 2px var(--ku-gutter) 10px;
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-    scrollbar-width: none;
+@media (max-width: 560px) {
+  .ku-area--single .ku-area__list {
+    grid-template-columns: minmax(0, 1fr);
   }
-  .ku-area-index ul::-webkit-scrollbar {
+  .ku-area--single .ku-area__list li:nth-child(2) {
+    border-top: 1px solid rgb(var(--ku-navy-rgb) / 0.07);
+  }
+  .ku-area__badge {
     display: none;
   }
-  .ku-area-index li {
-    flex: none;
-    scroll-snap-align: start;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ku-area__chev {
+    transition: none;
   }
 }

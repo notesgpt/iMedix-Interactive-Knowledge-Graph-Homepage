@@ -78,7 +78,7 @@ text LCP ≈ 60 ms locally. Real-network Lighthouse numbers must be taken on sta
 ```bash
 cd frontend && npm ci && npm run fixture && npm run typecheck && npm test && npm run build && cd ..
 php tests/php/run.php
-php bin/render-preview.php --mode=dist --news-fixture && node tests/e2e/run.mjs   # needs Playwright + Chromium
+php bin/render-preview.php --mode=dist --news-fixture --kg-fixture && node tests/e2e/run.mjs   # needs Playwright + Chromium
 WP_ZIP=… SQLITE_ZIP=… WP_CLI=… tests/wordpress/run.sh                              # see .env.example
 cd frontend && npm run dev   # live preview of the real template at http://localhost:5173
 ```

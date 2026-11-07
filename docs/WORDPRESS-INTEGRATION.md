@@ -92,3 +92,23 @@ define( 'IMEDIX_KU_SHEETS_API_KEY', '…' ); // restrict to Sheets API + server 
 
 Then select *Google Sheets API* in settings and share the sheet with the API project as needed.
 The key is never stored in the database or sent to browsers.
+
+## Drug status: FDA approval and dispensing (separate fields)
+
+The old **Drug Status** field mixed FDA approval with how a medicine is dispensed. The plugin keeps
+two independent fields on drug guides (meta box "FDA & dispensing status" on the edit screen):
+
+| Field (post meta) | Values |
+|---|---|
+| `imedix_fda_status` | `approved` · `not_approved` (Not FDA-approved in the U.S.) · `unknown` (Unverified) |
+| `imedix_dispensing_status` | `rx` (Prescription only) · `otc` (Over the counter) · `unknown` |
+
+When an editor leaves a field on "Automatic", it resolves without assumptions: an FDA label from the
+signed knowledge graph (NDA/BLA, linked to DailyMed) verifies approval; otherwise only explicit
+words in the old field count ("Not Approved" → not approved, "OTC" → over the counter, "Rx" /
+"Prescription" → prescription only). Prescription status and active ingredients never imply FDA
+approval. Products not approved in the U.S. stay searchable and are not featured on the homepage.
+
+Display on drug guides: `<?php echo imedix_ku_drug_status(); ?>` in the theme's Medicine Identity
+panel, or the `[imedix_drug_status]` shortcode, or the setting "Show status badges above drug guides"
+(off by default, so the theme's panel stays in charge).

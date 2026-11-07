@@ -11,6 +11,8 @@
  *   php bin/render-preview.php --news-live         → real latest news from the site's RSS feed
  *                                                   (/news/feed/); hidden if the feed is unreachable
  *   php bin/render-preview.php --news-fixture      → adds clearly-labelled synthetic news (tests only)
+ *   php bin/render-preview.php --kg-fixture        → two labelled test indications in Health areas (tests only):
+ *                                                   one with a DailyMed label (shown as verified), one without (not shown)
  *
  * The preview header/footer are stand-ins: in WordPress the theme's own
  * header and footer are used. Synthetic news is never part of the plugin.
@@ -22,7 +24,7 @@ use Imedix\KnowledgeUniverse\Core\Discovery;
 define( 'ABSPATH', __DIR__ );
 require __DIR__ . '/../wordpress/imedix-knowledge-universe/src/autoload.php';
 
-$opts  = getopt( '', array( 'mode::', 'news-fixture', 'news-live', 'news-feed:', 'site::' ) );
+$opts  = getopt( '', array( 'mode::', 'news-fixture', 'news-live', 'news-feed:', 'kg-fixture', 'site::' ) );
 $mode  = $opts['mode'] ?? 'dev';
 $site  = rtrim( $opts['site'] ?? 'https://www.imedix.com', '/' );
 $root  = dirname( __DIR__ );
@@ -120,6 +122,19 @@ $vm = array(
 	'drugArchive'    => null,
 	'diseaseArchive' => null,
 );
+
+if ( isset( $opts['kg-fixture'] ) ) {
+	foreach ( $vm['areas'] as &$ku_area ) {
+		if ( count( $ku_area['drugs']['items'] ) >= 2 ) {
+			$ku_area['drugs']['items'][0]['claim']  = 'FDA-approved to treat [test fixture]';
+			$ku_area['drugs']['items'][0]['source'] = 'https://dailymed.nlm.nih.gov/dailymed/search.cfm?query=test-fixture';
+			$ku_area['drugs']['items'][1]['claim']  = 'FDA-approved to treat [unsourced test fixture]';
+			$ku_area['drugs']['items'][1]['source'] = '';
+			break;
+		}
+	}
+	unset( $ku_area );
+}
 
 $out_dir = 'dist' === $mode ? $root . '/build/preview' : $root . '/frontend';
 $dev_dir = 'dist' === $mode ? $out_dir . '/dev' : $root . '/frontend/public/dev';
